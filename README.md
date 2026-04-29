@@ -1,73 +1,79 @@
-# React + TypeScript + Vite
+# twitch-text-flow-overlay
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Streamer.botを利用したオーバーレイです。
+基本的な機能はチャットで書かれたコメントがが右から左へ流れます。(ただしエモートいくつかには対応できていません。)
 
-Currently, two official plugins are available:
+## 設定方法
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- OBSの設定
+  - ブラウザソースにtwitch-text-flow-overlay.htmlを追加してください。
+- Streamer.bot側の設定
+  - Servers/ClientsタブのWebSocket ServerをOnにしてください。
+  - AddressやPort、Endpointを変更している方はブラウザソースに追加で設定が必要です。(デフォルト値はhost = 127.0.0.1,port = 8080,endpoint = /)
+  ```
+  ?port=○○&port=○○&endpoint=○○
+  ```
 
-## React Compiler
+## リンク
+- [Streamer.bot](https://streamer.bot/)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 動作確認環境
+  - Windows 11 Home (25H2)
+  - OBS Studio 32.1.2(64 bit)
+  - Streamer.bot(v1.0.4)
 
-## Expanding the ESLint configuration
+## コマンド一覧
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+基本的にはニコ動のコマンドに近しい動作です。
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+```
+[コマンド] [コメント]
+```
+でその効果が得られます。
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+例えば
+```
+shita small これはコメントです。
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- 文字サイズ
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+|コマンド|効果|
+|small|小さいサイズのコメント|
+|big|通常より大きいサイズのコメント|
+|midium|通常サイズのコメント|
+
+- 文字位置
+
+|コマンド|効果|
+|---|---|
+|ue|画面上部に配置|
+|shita|画面下部に配置|
+|naka|画面中央に配置|
+
+- 文字色
+
+|コマンド|効果|
+|---|---|
+|white|#ffffff|
+|red|#ff0000|
+|pink|#ff8080|
+|orange|#ff0000|
+|yellow|#ffff00|
+|green|#00ff00|
+|cyan|#00ffff|
+|blue|#0000ff|
+|purple|#c000ff|
+|black|#000000|
+|white2 or niconicowhite|#cccc99|
+|red2 or truered|#cc00ff|
+|pink2|#ff33cc|
+|orange2 or passionorange|#ff6600|
+|yellow2 or madyellow|#999900|
+|green2 or elementalgreen|#00cc66|
+|cyan2|#00cccc|
+|blue2 or marineblue|#3399ff|
+|purple2 or nobleviolet|#6633cc|
+|black2|#666666|
