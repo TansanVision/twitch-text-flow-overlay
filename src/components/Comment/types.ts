@@ -1,0 +1,182 @@
+import type React from "react";
+
+/**
+ * コメントからコマンドを削除する関数
+ * @param text - コメントのテキスト
+ * @returns コマンドが削除されたテキスト
+ */
+export const RemoveCommands = (text: string): string => {
+    return text.replace(
+        /(white2|red2|pink2|orange2|yellow2|madyellow|cyan2|blue2|marineblue|purple2|nobleviolet|black2|niconicowhite|small|medium|big|ue|naka|shita|white|red|orange|blue|green|yellow|pink|cyan|purple|black|truered|passionorange)/g,
+        ''
+    ).trim();
+}
+
+/**
+ * コマンドの配列から、同じ種類のコマンドを1つだけ残す関数
+ * @param commands - コマンドの配列
+ * @returns 同じ種類のコマンドが1つだけ残されたコマンドの配列
+ */
+export const UniqueCommands = (commands: Command[]): Command[] => {
+    const result: Command[] = [];
+    const seenTypes = new Set<string>();
+    for (const command of commands) {
+        const commandType = isSizeCommand(command) 
+            ? "size" 
+            : isVerticalAlignmentCommand(command) 
+            ? "verticalAlignment" 
+            : isColorCommand(command) 
+            ? "color" 
+            : null;
+
+        if (!commandType) {
+            continue;
+        }
+
+        if (!seenTypes.has(commandType)) {
+            result.push(command);
+            seenTypes.add(commandType);
+        }
+    }
+
+    return result;
+}
+
+/**
+ * コメント関連の型定義
+ */
+export type CommentState = "active" | "inactive";
+
+/**
+ * コメントのコマンドの型定義
+ */
+export type Command = SizeCommand | VerticalAlignmentCommand | ColorCommand;
+
+/**
+ * コメントのサイズを指定するコマンドの型定義
+ */
+export type SizeCommand = "small" | "medium" | "big";
+
+/**
+ * コメントのサイズコマンドかどうかを判定する関数
+ * @param command - コマンド
+ * @returns コマンドがサイズコマンドである場合はtrue、それ以外の場合はfalse
+ */
+export const isSizeCommand = (command: Command): command is SizeCommand => {
+    return command === 'small' || command === 'medium' || command === 'big';
+}
+
+/**
+ * コメントの縦位置を指定するコマンドの型定義
+ */
+export type VerticalAlignmentCommand = "ue" | "naka" | "shita";
+
+/**
+ * コメントの縦位置コマンドかどうかを判定する関数
+ * @param command - コマンド
+ * @returns コマンドが縦位置コマンドである場合はtrue、それ以外の場合はfalse
+ */
+export const isVerticalAlignmentCommand = (command: Command): command is VerticalAlignmentCommand => {
+    return command === 'ue' || command === 'naka' || command === 'shita';
+}
+
+/**
+ * コメントの色を指定するコマンドの型定義
+ */
+export type ColorCommand = BaseColorCommand | SpecialColorCommand;
+
+/**
+ * コメントの色コマンドかどうかを判定する関数
+ * @param command - コマンド
+ * @returns コマンドが色コマンドである場合はtrue、それ以外の場合はfalse
+ */
+export const isColorCommand = (command: Command): command is ColorCommand => {
+    return isBaseColorCommand(command) || isSpecialColorCommand(command);
+}
+
+
+/**
+ * コメントの横位置を指定するコマンドの型定義
+ */
+export type BaseColorCommand = "white" | "red" | "orange" | "blue" | "green" | "yellow" | "pink" | "cyan" | "purple" | "black";
+
+/**
+ * コメントの横位置コマンドかどうかを判定する関数
+ * @param command - コマンド
+ * @returns コマンドが横位置コマンドである場合はtrue、それ以外の場合はfalse
+ */
+export const isBaseColorCommand = (command: Command): command is BaseColorCommand => {
+    return command === 'white' || command === 'red' || command === 'orange' || command === 'blue' || command === 'green' || command === 'yellow' || command === 'pink' || command === 'cyan' || command === 'purple' || command === 'black';
+}
+
+/**
+ * コメントの特殊な色を指定するコマンドの型定義
+ */
+export type SpecialColorCommand = "white2" | 
+    "niconicowhite" | 
+    "red2" | 
+    "truered" | 
+    "pink2" | 
+    "orange2" | 
+    "passionorange" | 
+    "yellow2" | 
+    "madyellow" |
+    "cyan2" |
+    "blue2" | 
+    "marineblue" | 
+    "purple2" |
+    "nobleviolet" |
+    "black2";
+
+/**
+ * コメントの特殊な色コマンドかどうかを判定する関数
+ * @param command - コマンド
+ * @returns コマンドが特殊な色コマンドである場合はtrue、それ以外の場合はfalse
+ */
+export const isSpecialColorCommand = (command: Command): command is SpecialColorCommand => {
+    return command === 'white2' || 
+    command === 'niconicowhite' ||
+    command === 'red2' ||
+    command === 'truered' ||
+    command === 'pink2' ||
+    command === 'orange2' ||
+    command === 'passionorange' ||
+    command === 'yellow2' ||
+    command === 'madyellow' ||
+    command === 'cyan2' ||
+    command === 'blue2' ||
+    command === 'marineblue' ||
+    command === 'purple2' ||
+    command === 'nobleviolet' ||
+    command === 'black2';
+}
+
+/**
+ * コメントの型定義
+ */
+export type Comment = {
+    id: string;
+    node: React.ReactNode[];
+    state: CommentState;
+    commands?: Command[];
+}
+
+/**
+ * CommentContainerコンポーネントのプロパティの型定義
+ */
+export interface CommentContainerProps {
+    comment: Comment;
+    animationDuration: number;
+    onAnimationEnd?: (id: string) => void;
+}
+
+/**
+ * CommentRendererコンポーネントのプロパティの型定義
+ */
+export interface CommentRendererProps {
+    comment: Comment;
+    commands?: Command[];
+    lane: number;
+    animationDuration: number;
+    onAnimationEnd?: () => void;
+}

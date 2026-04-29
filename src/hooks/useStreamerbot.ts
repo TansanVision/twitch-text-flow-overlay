@@ -1,0 +1,115 @@
+import { StreamerbotClient } from '@streamerbot/client';
+import React, { useState, useEffect, useRef } from 'react';
+
+/**
+ * 接続状態を表す型
+ */
+type ConnectionStatus = 'connecting' | 'connected' | 'disconnected' | 'error';
+
+/**
+ * メッセージの型定義
+ */
+export type Message = {
+    text: string;
+    emotes: React.ReactNode[];
+}
+
+/**
+ * Streamerbotクライアントを使用するためのカスタムフックのオプション
+ */
+type UseStreamerBotOptions = {
+    host?: string;
+    port?: number;
+    endpoint?: string;
+    password?: string;
+    onComment: (message: Message) => void;
+}
+
+/**
+ * メッセージを取得します。
+ * @param data - データ
+ * @returns メッセージ
+ */
+function getMessage({ data }: { data: any }): Message {
+    const message = data?.message?.message || '';
+    const emotes = data?.message?.emotes || [];
+
+    return {
+        text: message || '',
+        emotes: emotes,
+    }
+}
+
+/**
+ * Streamerbotクライアントを使用するためのカスタムフック
+ * @param param0 - オプションオブジェクト
+ * @returns 接続状態
+ */
+export function useStreamerBot({ 
+    host = "127.0.0.1", 
+    port = 8080, 
+    endpoint = "/", 
+    password, 
+    onComment 
+}: UseStreamerBotOptions) {
+    const [status, setStatus] = useState<ConnectionStatus>('disconnected');
+    const clientRef = useRef<StreamerbotClient | null>(null);
+
+    useEffect(() => {
+        setStatus('connecting');
+
+        const client = new StreamerbotClient({
+            host,
+            port,
+            endpoint,
+            password,
+            autoReconnect: true,
+            onConnect: () => setStatus('connected'),
+            onDisconnect: () => setStatus('disconnected'),
+            onError: () => setStatus('error'),
+        });
+
+        clientRef.current = client;
+
+        const handleComment = ({ data }: { data: any }) => {
+            const message = getMessage({ data });
+
+            if (message) {
+                onComment(message);
+            }
+        };
+
+        client.on("Twitch.ChatMessage", handleComment);
+
+        // テスト用のコメントイベント
+        client.on("Raw.Action", ({ data }) => {
+            if (data.arguments.isTest) {
+                if (data.arguments.triggerName === "Test" &&
+                    data.arguments.triggerCategory === "Core") {
+                    handleComment({
+                        data: {
+                            message: { 
+                                message: "Kappa" + "これはU+2003エモートテストです。",
+                                emotes: [
+                                    {
+                                        id: "25",
+                                        name: "Kappa",
+                                        startIndex: 0,
+                                        endIndex: 4,
+                                    }
+                                ]
+                            },
+                        },
+                    });
+                }
+            }
+        });
+
+        return () => {
+            client.disconnect?.();
+            clientRef.current = null;
+        };
+    }, [host, port, endpoint, password, onComment]);
+
+    return status;
+}
