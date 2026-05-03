@@ -19,12 +19,12 @@ const rules = {
 export const extractTokens = (
     text: string,
 ): { 
-    tokens: Record<string, string | undefined>, 
+    tokens: Record<string, Command | undefined>, 
     remainingText: string,
     removeLength: number
  } => {
     const parts = text.split(/\s+/);
-    const tokens: Record<string, string | undefined> = {
+    const tokens: Record<string, Command | undefined> = {
         color: undefined,
         size: undefined,
         verticalAlignment: undefined,
@@ -66,8 +66,7 @@ export const extractTokens = (
     let removedLength = 0;
 
     if (commandCount > 0) {
-        const removedText = parts.slice(0, commandCount).join(' ') + ' ';
-        removedLength = removedText.length;
+        removedLength = text.length - remainingText.length;
     }
 
     return {

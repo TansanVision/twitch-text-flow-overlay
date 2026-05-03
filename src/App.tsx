@@ -70,10 +70,7 @@ function App() {
   }, [comments, getNodesAndCommands]);
 
   const clickToAddTestComment = useCallback(() => {
-    if (import.meta.env.MODE === 'production') {
-      return;
-    }
-
+    // obs上ではクリックできない = テスト用のコメントを追加
     addComment({ 
       text: "shita ue yellow red big Kappa test🍰", 
       emotes: [{

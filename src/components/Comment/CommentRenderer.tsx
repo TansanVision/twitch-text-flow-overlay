@@ -11,7 +11,7 @@ const baseStyle = (animationDuration: number): React.CSSProperties => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'start',
-    alignItems: "start",
+    alignItems: "flex-start",
     flexWrap: 'nowrap',
     width: 'fit-content',
     height: "auto",
@@ -156,7 +156,7 @@ const colorStyle = (command: string): React.CSSProperties => {
                 color: "#ff6600"
             };
         case "yellow2":
-        case "mellowyellow":
+        case "madyellow":
             return {
                 color: "#999900"
             };
@@ -225,7 +225,7 @@ const aligmentStyle = (command: string): React.CSSProperties => {
                 right: "unset",
                 animationName: "nothing",
                 justifyContent: "center",
-                alignItems: "start",
+                alignItems: "flex-start",
                 top: undefined
             };
         default:
@@ -253,7 +253,7 @@ export const CommentRenderer : React.FC<CommentRendererProps> = ({
     const combinedStyle = {
         ...baseStyle(animationDuration),
         ...sizeStyle(commands.find(cmd => cmd === "small" || cmd === "medium" || cmd === "big") || "", lane),
-        ...colorStyle(commands.find(cmd => ["red", "pink", "orange", "yellow", "green", "cyan", "blue", "purple", "black", "white2", "niconicowhite", "red2", "truered", "pink2", "orange2", "passionorange", "yellow2", "mellowyellow", "cyan2", "blue2", "marineblue", "black2"].includes(cmd) ? cmd : "") || ""),
+        ...colorStyle(commands.find(cmd => ["red", "pink", "orange", "yellow", "green", "cyan", "blue", "purple", "black", "white2", "niconicowhite", "red2", "truered", "pink2", "orange2", "passionorange", "yellow2", "madyellow", "cyan2", "blue2", "marineblue", "black2"].includes(cmd) ? cmd : "") || ""),
         ...aligmentStyle(commands.find(cmd => ["shita", "naka", "ue"].includes(cmd) ? cmd : "") || "")
     };
 
