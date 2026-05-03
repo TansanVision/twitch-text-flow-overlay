@@ -30,6 +30,22 @@ const baseStyle = (animationDuration: number): React.CSSProperties => ({
 });
 
 /**
+ * コメントの影スタイル
+ * @param size - 影のサイズ
+ * @returns コメントの影スタイルオブジェクト
+ */
+const shadowStyle = (size: number): React.CSSProperties => {
+    return {
+        textShadow: `
+            ${size}px ${size}px 0 black,
+            -${size}px ${size}px 0 black,
+            ${size}px -${size}px 0 black,
+            -${size}px -${size}px 0 black
+        `,
+    }
+}
+
+/**
  * コメントのサイズスタイル
  * @param command - コメントのサイズを指定するコマンド
  * @returns コメントのサイズスタイル
@@ -70,24 +86,6 @@ const sizeStyle = (command: string, lane: number): React.CSSProperties => {
             };
     }   
 }
-
-/**
- * コメントの影スタイル
- * @param size - コメントのサイズ
- * @returns コメントの影スタイル
- */
-const shadowStyle = (size: number): React.CSSProperties => {
-    return {
-        textShadow: `
-            ${size}px ${size}px 0 black,
-            -${size}px ${size}px 0 black,
-            ${size}px -${size}px 0 black,
-            -${size}px -${size}px 0 black
-        `,
-    }
-}
-
-
 
 /**
  * コメントの色スタイル
