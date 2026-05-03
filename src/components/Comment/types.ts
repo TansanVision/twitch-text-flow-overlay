@@ -38,12 +38,6 @@ export const isVerticalAlignmentCommand = (command: Command): command is Vertica
     return command === 'ue' || command === 'naka' || command === 'shita';
 }
 
-const all_colors = [
-    "white2", "niconicowhite", "red2", "truered", "pink2", "orange2", "passionorange", 
-    "yellow2", "madyellow", "cyan2", "blue2", "marineblue", "purple2", "nobleviolet", 
-    "black2", "white", "red", "orange", "blue", "green", "yellow", "pink", "cyan", "purple", "black",
-] as Command[];
-
 /**
  * コメントの色を指定するコマンドの型定義
  */

@@ -204,7 +204,7 @@ const aligmentStyle = (command: string): React.CSSProperties => {
                 animationName: "nothing",
                 justifyContent: "center",
                 alignItems: "flex-end",
-                top: "unset !important"
+                top: undefined
             };
         case "naka":
             return {
@@ -215,7 +215,7 @@ const aligmentStyle = (command: string): React.CSSProperties => {
                 animationName: "nothing",
                 justifyContent: "center",
                 alignItems: "center",
-                top: "unset !important"
+                top: undefined 
             };
         case "ue":
             return {
@@ -226,7 +226,7 @@ const aligmentStyle = (command: string): React.CSSProperties => {
                 animationName: "nothing",
                 justifyContent: "center",
                 alignItems: "start",
-                top: "unset !important"
+                top: undefined
             };
         default:
             return {

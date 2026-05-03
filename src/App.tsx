@@ -72,6 +72,10 @@ function App() {
   }, [comments, getNodesAndCommands]);
 
   const clickToAddTestComment = useCallback(() => {
+    if (import.meta.env.MODE === 'production') {
+      return;
+    }
+
     addComment({ 
       text: "shita ue yellow red big Kappa test🍰", 
       emotes: [{

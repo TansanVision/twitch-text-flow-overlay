@@ -81,11 +81,15 @@ async function loadSevenTvGlobal(map: EmoteMap): Promise<void> {
  * @returns 修正されたTwitchのエモートデータ
  */
 const fixTwitchEmotes = (twitchEmotes: any, removedLength: number) => {
-    if (!twitchEmotes && !twitchEmotes?.items) {
+    if (!twitchEmotes) {
         return [];
     }
 
-    const items = twitchEmotes?.items ?? twitchEmotes;
+    const items = Array.isArray(twitchEmotes?.items) 
+        ? twitchEmotes.items 
+        : Array.isArray(twitchEmotes)
+            ? twitchEmotes
+            : [];
 
     return items.map((emote: any) => ({
         ...emote,

@@ -23,7 +23,7 @@ export const extractTokens = (
     remainingText: string,
     removeLength: number
  } => {
-    const parts = text.trim().split(/\s+/);
+    const parts = text.split(/\s+/);
     const tokens: Record<string, string | undefined> = {
         color: undefined,
         size: undefined,
