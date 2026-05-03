@@ -2,6 +2,26 @@ import React, { useCallback, useState, useEffect } from 'react';
 import { CommentRenderer } from './CommentRenderer';
 import type { CommentContainerProps } from './types';
 
+// コメントのレーンの最大数を定義
+const MAX_MIDDLE_LANE = 25;
+const MAX_SMALL_LANE = 37;
+const MAX_BIG_LANE = 15;
+
+/**
+ * コメントの表示位置を決定する関数
+ * @param comment - コメントオブジェクト
+ * @returns コメントの表示位置を示す数値（レーン番号）
+ */
+const getLane = (comment: CommentContainerProps['comment']): number => {
+    const maxLane = 
+        comment.commands?.includes("small") ? MAX_SMALL_LANE :
+        comment.commands?.includes("medium") ? MAX_MIDDLE_LANE :
+        comment.commands?.includes("big") ? MAX_BIG_LANE :
+        MAX_MIDDLE_LANE;
+
+    return Math.floor(Math.random() * (maxLane - 2));
+}
+
 /**
  * コメントを表示するコンテナコンポーネント
  * @param param0 - コンテナコンポーネントのプロパティ
@@ -12,23 +32,11 @@ export const CommentContainer : React.FC<CommentContainerProps> = ({
     animationDuration,
     onAnimationEnd
 }) => {
-    const [lane, setLane] = useState(Math.floor(Math.random() * 37));
+    const [lane, setLane] = useState(getLane(comment));
 
     useEffect(() => {
-        if (!comment) return;
-
-        // サイズ感
-        if (!comment.commands) {
-            setLane(Math.floor(Math.random() * 37));
-        } else if (comment.commands.includes("small")) {
-            setLane(Math.floor(Math.random() * 37));
-        } else if (comment.commands.includes("medium")) {
-            setLane(Math.floor(Math.random() * 25));
-        } else if (comment.commands.includes("big")) {
-            setLane(Math.floor(Math.random() * 15));
-        }
-
-    }, [comment?.id]);
+        setLane(getLane(comment));
+    }, [comment.id]);
 
     const handleAnimationEnd = useCallback(() => {
         if (onAnimationEnd) {
