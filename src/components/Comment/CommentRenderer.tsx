@@ -39,12 +39,7 @@ const sizeStyle = (command: string, lane: number): React.CSSProperties => {
         return {
             fontSize: "4vh",
             top: `calc(${lane} * 4vh)`,
-            textShadow: `
-                2px 2px 0 black,
-                -2px 2px 0 black,
-                2px -2px 0 black,
-                -2px -2px 0 black
-            `,
+            ...shadowStyle(2)
         }
     }
 
@@ -53,48 +48,46 @@ const sizeStyle = (command: string, lane: number): React.CSSProperties => {
             return {
                 fontSize: "2.7vh",
                 top: `calc(${lane} * 2.7vh)`,
-                textShadow: `
-                    1px 1px 0 black,
-                    -1px 1px 0 black,
-                    1px -1px 0 black,
-                    -1px -1px 0 black
-                `,
+                ...shadowStyle(1)
             };
         case "medium":
             return {
                 fontSize: "4vh",
                 top: `calc(${lane} * 4vh)`,
-                textShadow: `
-                    2px 2px 0 black,
-                    -2px 2px 0 black,
-                    2px -2px 0 black,
-                    -2px -2px 0 black
-                `,
+                ...shadowStyle(2)
             };
         case "big":
             return {
                 fontSize: "6.7vh",
                 top: `calc(${lane} * 6.7vh)`,
-                textShadow: `
-                    2.5px 2.5px 0 black,
-                    -2.5px 2.5px 0 black,
-                    2.5px -2.5px 0 black,
-                    -2.5px -2.5px 0 black
-                `,
+                ...shadowStyle(2.5)
             };
         default:
             return {
                 fontSize: "4vh",
                 top: `calc(${lane} * 4vh)`,
-                textShadow: `
-                    2px 2px 0 black,
-                    -2px 2px 0 black,
-                    2px -2px 0 black,
-                    -2px -2px 0 black
-                `,
+                ...shadowStyle(2)
             };
     }   
 }
+
+/**
+ * コメントの影スタイル
+ * @param size - コメントのサイズ
+ * @returns コメントの影スタイル
+ */
+const shadowStyle = (size: number): React.CSSProperties => {
+    return {
+        textShadow: `
+            ${size}px ${size}px 0 black,
+            -${size}px ${size}px 0 black,
+            ${size}px -${size}px 0 black,
+            -${size}px -${size}px 0 black
+        `,
+    }
+}
+
+
 
 /**
  * コメントの色スタイル
