@@ -200,7 +200,7 @@ const aligmentStyle = (command: string): React.CSSProperties => {
                 position: "absolute",
                 width: "100vw",
                 height: "100vh",
-                right: "unset",
+                right: undefined,
                 animationName: "nothing",
                 justifyContent: "center",
                 alignItems: "flex-end",
@@ -211,7 +211,7 @@ const aligmentStyle = (command: string): React.CSSProperties => {
                 position: "absolute",
                 width: "100vw",
                 height: "100vh",
-                right: "unset",
+                right: undefined,
                 animationName: "nothing",
                 justifyContent: "center",
                 alignItems: "center",
@@ -222,11 +222,11 @@ const aligmentStyle = (command: string): React.CSSProperties => {
                 position: "absolute",
                 width: "100vw",
                 height: "100vh",
-                right: "unset",
+                right: undefined,
                 animationName: "nothing",
                 justifyContent: "center",
                 alignItems: "flex-start",
-                top: undefined
+                top: undefined,
             };
         default:
             return {

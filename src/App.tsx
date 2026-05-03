@@ -72,7 +72,7 @@ function App() {
   const clickToAddTestComment = useCallback(() => {
     // obs上ではクリックできない = テスト用のコメントを追加
     addComment({ 
-      text: "shita ue yellow red big Kappa test🍰", 
+      text: "ue shita yellow red big Kappa test🍰", 
       emotes: [{
           id: "25",
           name: "Kappa",

@@ -12,9 +12,9 @@ const rules = {
 };
 
 /**
- * コメントの横位置を指定するコマンドの型定義
+ * コメント先頭のコマンドを抽出し、抽出結果と残りのテキストを返す
  * @param text - コメントのテキスト
- * @return コメントの横位置を指定するコマンドが含まれている場合はtrue、それ以外の場合はfalse
+ * @returns 抽出したコマンドのトークン、コマンドを除いた残りのテキスト、除去した文字数
  */
 export const extractTokens = (
     text: string,
@@ -42,17 +42,17 @@ export const extractTokens = (
     while (index < parts.length && allCommands.has(parts[index] as Command)) {
         const command = parts[index] as Command;
         if (rules.color.includes(command)) {
-            if (!!rules?.color) {
+            if (!tokens?.color) {
                 tokens.color = command;
             }
             commandCount++;
         } else if (rules.size.includes(command)) {
-            if (!!rules?.size) {
+            if (!tokens?.size) {
                 tokens.size = command;
             }
             commandCount++;
         } else if (rules.verticalAlignment.includes(command)) {
-            if (!!rules?.verticalAlignment) {
+            if (!tokens?.verticalAlignment) {
                 tokens.verticalAlignment = command;
             }
             commandCount++;
@@ -61,12 +61,17 @@ export const extractTokens = (
         index++;
     }
 
+    console.log("Extracted tokens:", tokens);
+
     const remainingText = parts.slice(commandCount).join(' ');
 
     let removedLength = 0;
 
     if (commandCount > 0) {
-        removedLength = text.length - remainingText.length;
+        const startIndex = text.indexOf(remainingText);
+        if (startIndex !== -1) {
+            removedLength = startIndex;
+        }
     }
 
     return {

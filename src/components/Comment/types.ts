@@ -54,14 +54,14 @@ export const isColorCommand = (command: Command): command is ColorCommand => {
 
 
 /**
- * コメントの横位置を指定するコマンドの型定義
+ * コメントの基本色を指定するコマンドの型定義
  */
 export type BaseColorCommand = "white" | "red" | "orange" | "blue" | "green" | "yellow" | "pink" | "cyan" | "purple" | "black";
 
 /**
- * コメントの横位置コマンドかどうかを判定する関数
+ * コメントの基本色コマンドかどうかを判定する関数
  * @param command - コマンド
- * @returns コマンドが横位置コマンドである場合はtrue、それ以外の場合はfalse
+ * @returns コマンドが基本色コマンドである場合はtrue、それ以外の場合はfalse
  */
 export const isBaseColorCommand = (command: Command): command is BaseColorCommand => {
     return command === 'white' || command === 'red' || command === 'orange' || command === 'blue' || command === 'green' || command === 'yellow' || command === 'pink' || command === 'cyan' || command === 'purple' || command === 'black';
