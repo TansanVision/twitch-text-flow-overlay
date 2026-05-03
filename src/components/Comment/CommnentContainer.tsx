@@ -12,20 +12,20 @@ export const CommentContainer : React.FC<CommentContainerProps> = ({
     animationDuration,
     onAnimationEnd
 }) => {
-    const [lane, setLane] = useState(Math.min(0, Math.floor(Math.random() * 37 - 2)));
+    const [lane, setLane] = useState(Math.floor(Math.random() * 25 - 2));
 
     useEffect(() => {
         if (!comment) return;
 
         // サイズ感
         if (!comment.commands) {
-            setLane(Math.min(0, Math.floor(Math.random() * 37 - 2)));
+            setLane(Math.floor(Math.random() * 37 - 2));
         } else if (comment.commands.includes("small")) {
-            setLane(Math.min(0, Math.floor(Math.random() * 37 - 2)));
+            setLane(Math.floor(Math.random() * 37 - 2));
         } else if (comment.commands.includes("medium")) {
-            setLane(Math.min(0, Math.floor(Math.random() * 25 - 2)));
+            setLane(Math.floor(Math.random() * 25 - 2));
         } else if (comment.commands.includes("big")) {
-            setLane(Math.min(0, Math.floor(Math.random() * 15 - 2)));
+            setLane(Math.floor(Math.random() * 15 - 2));
         }
 
     }, [comment?.id]);

@@ -85,7 +85,13 @@ const sizeStyle = (command: string, lane: number): React.CSSProperties => {
         default:
             return {
                 fontSize: "4vh",
-                top: `calc(${lane} * 4vh)`
+                top: `calc(${lane} * 4vh)`,
+                textShadow: `
+                    2px 2px 0 black,
+                    -2px 2px 0 black,
+                    2px -2px 0 black,
+                    -2px -2px 0 black
+                `,
             };
     }   
 }
