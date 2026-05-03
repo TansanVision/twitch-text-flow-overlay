@@ -11,7 +11,7 @@ type ConnectionStatus = 'connecting' | 'connected' | 'disconnected' | 'error';
  */
 export type Message = {
     text: string;
-    emotes: React.ReactNode[];
+    emotes: any[];
 }
 
 /**

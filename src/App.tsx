@@ -57,8 +57,6 @@ function App() {
       commands: commands,
     };
 
-    console.log("Adding comment:", comment);
-
     if (comments.findIndex(c => c.state === 'inactive') !== -1) {
       setComments((prevComments) => {
         const index = prevComments.findIndex(c => c.state === 'inactive');
