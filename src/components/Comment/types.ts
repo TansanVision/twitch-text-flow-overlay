@@ -1,48 +1,6 @@
 import type React from "react";
 
 /**
- * コメントからコマンドを削除する関数
- * @param text - コメントのテキスト
- * @returns コマンドが削除されたテキスト
- */
-export const RemoveCommands = (text: string): string => {
-    return text.replace(
-        /(white2|red2|pink2|orange2|yellow2|madyellow|cyan2|blue2|marineblue|purple2|nobleviolet|black2|niconicowhite|small|medium|big|ue|naka|shita|white|red|orange|blue|green|yellow|pink|cyan|purple|black|truered|passionorange)/g,
-        ''
-    ).trim();
-}
-
-/**
- * コマンドの配列から、同じ種類のコマンドを1つだけ残す関数
- * @param commands - コマンドの配列
- * @returns 同じ種類のコマンドが1つだけ残されたコマンドの配列
- */
-export const UniqueCommands = (commands: Command[]): Command[] => {
-    const result: Command[] = [];
-    const seenTypes = new Set<string>();
-    for (const command of commands) {
-        const commandType = isSizeCommand(command) 
-            ? "size" 
-            : isVerticalAlignmentCommand(command) 
-            ? "verticalAlignment" 
-            : isColorCommand(command) 
-            ? "color" 
-            : null;
-
-        if (!commandType) {
-            continue;
-        }
-
-        if (!seenTypes.has(commandType)) {
-            result.push(command);
-            seenTypes.add(commandType);
-        }
-    }
-
-    return result;
-}
-
-/**
  * コメント関連の型定義
  */
 export type CommentState = "active" | "inactive";
@@ -79,6 +37,12 @@ export type VerticalAlignmentCommand = "ue" | "naka" | "shita";
 export const isVerticalAlignmentCommand = (command: Command): command is VerticalAlignmentCommand => {
     return command === 'ue' || command === 'naka' || command === 'shita';
 }
+
+const all_colors = [
+    "white2", "niconicowhite", "red2", "truered", "pink2", "orange2", "passionorange", 
+    "yellow2", "madyellow", "cyan2", "blue2", "marineblue", "purple2", "nobleviolet", 
+    "black2", "white", "red", "orange", "blue", "green", "yellow", "pink", "cyan", "purple", "black",
+] as Command[];
 
 /**
  * コメントの色を指定するコマンドの型定義

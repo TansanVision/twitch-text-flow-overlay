@@ -197,33 +197,36 @@ const aligmentStyle = (command: string): React.CSSProperties => {
     switch (command) {
         case "shita":
             return {
-                position: "unset",
+                position: "absolute",
                 width: "100vw",
                 height: "100vh",
                 right: "unset",
                 animationName: "nothing",
                 justifyContent: "center",
-                alignItems: "flex-end"
+                alignItems: "flex-end",
+                top: "unset !important"
             };
         case "naka":
             return {
-                position: "unset",
+                position: "absolute",
                 width: "100vw",
                 height: "100vh",
                 right: "unset",
                 animationName: "nothing",
                 justifyContent: "center",
-                alignItems: "center"
+                alignItems: "center",
+                top: "unset !important"
             };
         case "ue":
             return {
-                position: "unset",
+                position: "absolute",
                 width: "100vw",
                 height: "100vh",
                 right: "unset",
                 animationName: "nothing",
                 justifyContent: "center",
-                alignItems: "start"
+                alignItems: "start",
+                top: "unset !important"
             };
         default:
             return {
