@@ -1,6 +1,7 @@
-import React, { useEffect, useCallback, useRef } from 'react';
+import React, { useEffect, useCallback, useRef, useMemo } from 'react';
 import { extractTokens } from '../components/Comment/utils';
 import type { Command } from '../components/Comment/types';
+import type { CustomStampConfig, CustomStampMap } from '../types';
 
 /**
  * 外部エモートの型定義
@@ -75,6 +76,21 @@ async function loadSevenTvGlobal(map: EmoteMap): Promise<void> {
 }
 
 /**
+ * カスタムスタンプの設定をロードしてマップに追加します。
+ * @param stamps - カスタムスタンプの設定の配列
+ * @returns カスタムスタンプのマップ
+ */
+export function loadCustomStamps(stamps: CustomStampConfig[]): CustomStampMap {
+    const map: CustomStampMap = new Map();
+
+    for (const s of stamps) {
+        map.set(s.commandName, s);
+    }
+
+    return map;
+}
+
+/**
  * Twitchのエモートのポジションを修正します。
  * @param twitchEmotes - Twitchのエモートデータ
  * @param adjustmentLength - コメントテキストから削除されたコマンドの長さ
@@ -103,12 +119,14 @@ const fixTwitchEmotes = (twitchEmotes: any, adjustmentLength: number) => {
  * @param text - メッセージテキスト
  * @param twitchEmotes - Twitchのエモートデータ
  * @param externalEmotes - 外部エモートのマップ
+ * @param customStamps - カスタムスタンプのマップ
  * @returns レンダリングされたReactノードの配列
  */
 export function renderTwitchMessageEmotes(
     text: string, 
     twitchEmotes: any, 
-    externalEmotes: EmoteMap
+    externalEmotes: EmoteMap,
+    customStamps: CustomStampMap
 ): React.ReactNode[] {
     const nativeEmotes = 
         twitchEmotes?.items ??
@@ -116,8 +134,8 @@ export function renderTwitchMessageEmotes(
         [];
 
     return nativeEmotes.length > 0
-        ? renderNativeTwitchEmotes(text, nativeEmotes, externalEmotes)
-        : renderExternalEmotesOnly(text, externalEmotes);
+        ? renderNativeTwitchEmotes(text, nativeEmotes, externalEmotes, customStamps)
+        : renderExternalEmotesOnly(text, externalEmotes, customStamps);
 }
 
 /**
@@ -125,12 +143,14 @@ export function renderTwitchMessageEmotes(
  * @param text - メッセージテキスト
  * @param nativeEmotes - Twitchのネイティブエモートデータ
  * @param externalEmotes - 外部エモートのマップ
+ * @param customStamps - カスタムスタンプのマップ
  * @returns レンダリングされたReactノードの配列
  */
 function renderNativeTwitchEmotes(
     text: string, 
     nativeEmotes: any[],
-    externalEmotes: EmoteMap
+    externalEmotes: EmoteMap,
+    customStamps: CustomStampMap
 ): React.ReactNode[] {
     const result: React.ReactNode[] = [];
     let lastIndex = 0;
@@ -146,7 +166,7 @@ function renderNativeTwitchEmotes(
         const end = emote.endIndex ?? 0;
 
         if (lastIndex < start) {
-            result.push(...renderExternalEmotesOnly(text.slice(lastIndex, start), externalEmotes));
+            result.push(...renderExternalEmotesOnly(text.slice(lastIndex, start), externalEmotes, customStamps));
         }
 
         result.push(
@@ -165,7 +185,7 @@ function renderNativeTwitchEmotes(
     }
 
     if (lastIndex < text.length) {
-        result.push(...renderExternalEmotesOnly(text.slice(lastIndex), externalEmotes));
+        result.push(...renderExternalEmotesOnly(text.slice(lastIndex), externalEmotes, customStamps));
     }
 
     return result;
@@ -175,15 +195,33 @@ function renderNativeTwitchEmotes(
  * Twitchのメッセージテキストを外部エモートのみでレンダリングする関数
  * @param text - メッセージテキスト
  * @param externalEmotes - 外部エモートのマップ
+ * @param customStamps - カスタムスタンプのマップ
  * @returns レンダリングされたReactノードの配列
  */
 function renderExternalEmotesOnly(
     text: string, 
-    externalEmotes: EmoteMap
+    externalEmotes: EmoteMap,
+    customStamps: CustomStampMap
 ): React.ReactNode[] {
     const parts = text.split(/\s+/);
 
     return parts.map((part, index) => {
+        const custom = customStamps.get(part);
+        console.log(customStamps);
+        if (custom) {
+            return React.createElement("img", {
+                key: `custom-${custom.commandName}-${index}`,
+                src: custom.dataUri,
+                alt: custom.commandName,
+                "data-effect": custom.effectType,
+                style: {
+                    height: "100%",
+                    objectFit: "cover",
+                    maxHeight: "52px"
+                }
+            });
+        }
+
         const emote = externalEmotes.get(part);
 
         if (!emote) {
@@ -244,8 +282,10 @@ function renderExternalEmotesOnly(
  * Twitchのエモートをロードしてメッセージテキストをエモートでレンダリングするためのカスタムフック
  * @returns エモートマップとレンダリング関数
  */
-export function useTwitchEmotes() {
+export function useTwitchEmotes(customStamps: CustomStampConfig[] = []) {
     const emotesCache = useRef<EmoteMap>(new Map());
+    const customStampMap = useMemo(() => loadCustomStamps(customStamps), [customStamps]);
+
     const getNodesAndCommands = useCallback((text: string, twitchEmotes: any) => {
         const parsed = extractTokens(text);
 
@@ -256,9 +296,9 @@ export function useTwitchEmotes() {
 
         return {
             commands: commands,
-            nodes: renderTwitchMessageEmotes(parsed.remainingText, fixedEmotes, emotesCache.current)
+            nodes: renderTwitchMessageEmotes(parsed.remainingText, fixedEmotes, emotesCache.current, customStampMap),
         };
-    }, []);
+    }, [emotesCache, customStampMap]);
 
      useEffect(() => {
         loadExternalEmotes().then((loadedEmotes) => {

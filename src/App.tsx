@@ -5,19 +5,14 @@ import { v4 as uuid } from 'uuid';
 import { useStreamerBot } from './hooks/useStreamerbot';
 import { useTwitchEmotes } from './hooks/useTwitchEmotes';
 import type { Message } from './hooks/useStreamerbot';
+import type { AppConfig } from './types';
 
 const defaultConfig = {
   host: "127.0.0.1",
   port: 8080,
   endpoint: "/",
   password: undefined,
-};
-
-type AppConfig = {
-  host: string;
-  port: number;
-  endpoint: string;
-  password: string | undefined;
+  customStamps: [],
 };
 
 function getConfig(): AppConfig {
@@ -46,6 +41,13 @@ function getConfig(): AppConfig {
         password: typeof config.password === 'string' && config.password !== ''
           ? config.password
           : defaultConfig.password,
+        customStamps: Array.isArray(config.customStamps)
+          ? config.customStamps.map((stamp) => ({
+              commandName: typeof stamp.commandName === 'string' ? stamp.commandName : '',
+              dataUri: typeof stamp.dataUri === 'string' ? stamp.dataUri : '',
+              effectType: stamp.effectType === 'default' ? 'default' : 'default',
+            }))
+          : defaultConfig.customStamps,
       };
     } catch (error) {
       console.error('Failed to parse config JSON:', error);
@@ -64,7 +66,7 @@ function App() {
   const [comments, setComments] = useState<Comment[]>([]);
   const config = useMemo(() => getConfig(), []);
 
-  const { getNodesAndCommands } = useTwitchEmotes();
+  const { getNodesAndCommands } = useTwitchEmotes(config.customStamps);
 
   const handleComment = useCallback((message: Message) => {
     addComment(message);
