@@ -8,7 +8,7 @@ export type CommentState = "active" | "inactive";
 /**
  * コメントのコマンドの型定義
  */
-export type Command = SizeCommand | VerticalAlignmentCommand | ColorCommand;
+export type Command = SizeCommand | AlignmentCommand | ColorCommand;
 
 /**
  * コメントのサイズを指定するコマンドの型定義
@@ -25,17 +25,17 @@ export const isSizeCommand = (command: Command): command is SizeCommand => {
 }
 
 /**
- * コメントの縦位置を指定するコマンドの型定義
+ * コメントの位置を指定するコマンドの型定義
  */
-export type VerticalAlignmentCommand = "ue" | "naka" | "shita";
+export type AlignmentCommand = "ue" | "naka" | "shita" | "migi" | "hidari" | "migiue" | "migishita" | "hidariue" | "hidarishita";
 
 /**
- * コメントの縦位置コマンドかどうかを判定する関数
+ * コメントの位置コマンドかどうかを判定する関数
  * @param command - コマンド
- * @returns コマンドが縦位置コマンドである場合はtrue、それ以外の場合はfalse
+ * @returns コマンドが位置コマンドである場合はtrue、それ以外の場合はfalse
  */
-export const isVerticalAlignmentCommand = (command: Command): command is VerticalAlignmentCommand => {
-    return command === 'ue' || command === 'naka' || command === 'shita';
+export const isAlignmentCommand = (command: Command): command is AlignmentCommand => {
+    return command === 'ue' || command === 'naka' || command === 'shita' || command === 'migi' || command === 'hidari' || command === 'migiue' || command === 'migishita' || command === 'hidariue' || command === 'hidarishita';
 }
 
 /**
@@ -84,7 +84,9 @@ export type SpecialColorCommand = "white2" |
     "marineblue" | 
     "purple2" |
     "nobleviolet" |
-    "black2";
+    "black2" | 
+    "elementalgreen" |
+    "green2";
 
 /**
  * コメントの特殊な色コマンドかどうかを判定する関数

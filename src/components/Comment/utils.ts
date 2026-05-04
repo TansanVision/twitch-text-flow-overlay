@@ -6,9 +6,9 @@ import type { Command } from './types';
 const rules = {
     color: ["white2", "niconicowhite", "red2", "truered", "pink2", "orange2", "passionorange", 
         "yellow2", "madyellow", "cyan2", "blue2", "marineblue", "purple2", "nobleviolet", 
-        "black2", "white", "red", "orange", "blue", "green", "yellow", "pink", "cyan", "purple", "black"] as Command[],
+        "black2", "white", "red", "orange", "blue", "green", "yellow", "pink", "cyan", "purple", "black", "elementalgreen", "green2"] as Command[],
     size: ["small", "medium", "big"] as Command[],
-    verticalAlignment: ["ue", "naka", "shita"] as Command[],
+    alignment: ["ue", "naka", "shita", "migi", "hidari", "migiue", "migishita", "hidariue", "hidarishita"] as Command[],
 };
 
 /**
@@ -28,13 +28,13 @@ export const extractTokens = (
     const tokens: Record<string, Command | undefined> = {
         color: undefined,
         size: undefined,
-        verticalAlignment: undefined,
+        alignment: undefined,
     };
 
     const allCommands = new Set<Command>([
         ...rules.color,
         ...rules.size,
-        ...rules.verticalAlignment,
+        ...rules.alignment,
     ]);
 
     let index = 0;
@@ -52,9 +52,9 @@ export const extractTokens = (
                 tokens.size = command;
             }
             commandCount++;
-        } else if (rules.verticalAlignment.includes(command)) {
-            if (!tokens?.verticalAlignment) {
-                tokens.verticalAlignment = command;
+        } else if (rules.alignment.includes(command)) {
+            if (!tokens?.alignment) {
+                tokens.alignment = command;
             }
             commandCount++;
         }

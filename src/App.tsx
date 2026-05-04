@@ -91,6 +91,30 @@ function App() {
       addComment({ 
         text: "small blue shita test🍰", 
         emotes: [] });
+
+      addComment({ 
+        text: "small purple migi test🍰", 
+        emotes: [] });
+
+      addComment({ 
+        text: "purple2 migiue test🍰", 
+        emotes: [] });
+
+      addComment({ 
+        text: "purple2 migishita test🍰", 
+        emotes: [] });
+
+      addComment({ 
+        text: "small green2 hidari test🍰", 
+        emotes: [] });
+
+      addComment({ 
+        text: "green2 hidariue test🍰", 
+        emotes: [] });
+
+      addComment({ 
+        text: "green2 hidarishita test🍰", 
+        emotes: [] });
   }, [addComment]);
 
   const releaseComment = useCallback((id: string) => {
