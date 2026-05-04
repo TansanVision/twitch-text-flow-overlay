@@ -94,3 +94,40 @@ shita small これはコメントです。
 |blue2 or marineblue|#3399ff|
 |purple2 or nobleviolet|#6633cc|
 |black2|#666666|
+
+
+## カスタムスタンプ(実験的)
+
+- これは実験的な機能なので今後どうなるかわかりません。使う際は注意してください。この機能はなくなる可能性も変更される可能性もあります。
+
+### 設定方法
+
+- twitch-text-flow-overlay.htmlのconfig値のcustomStampsを修正してください。(※effectTypeについては現状defaultのみです)
+- commandNameが既存のコマンドと被った場合は既存のコマンドが優先されます。
+  ![カスタムスタンプ設定例](images/カスタムスタンプ設定例.png)
+
+- カスタムスタンプのデータの形は以下の通りです。
+``` json
+{
+  "commandName": "コマンド名",
+  "dataUri": "画像のデータURI",
+  "effectType": "default"
+}
+```
+
+- 以下のように複数設定することができます。
+
+``` json
+"customStamps": [
+  {
+    "commandName": "コマンド名1",
+    "dataUri": "画像のデータURI1",
+    "effectType": "default"
+  },
+  {
+    "commandName": "コマンド名2",
+    "dataUri": "画像のデータURI2",
+    "effectType": "default"
+  }
+]
+```
