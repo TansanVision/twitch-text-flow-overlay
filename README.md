@@ -117,7 +117,7 @@ shita small これはコメントです。
 - 以下のように複数設定することができます。
 
 ``` json
-customStamps: [
+"customStamps": [
   {
     "commandName": "コマンド名1",
     "dataUri": "画像のデータURI",

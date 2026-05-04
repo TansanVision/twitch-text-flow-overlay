@@ -207,19 +207,30 @@ function renderExternalEmotesOnly(
 
     return parts.map((part, index) => {
         const custom = customStamps.get(part);
-        console.log(customStamps);
         if (custom) {
-            return React.createElement("img", {
-                key: `custom-${custom.commandName}-${index}`,
-                src: custom.dataUri,
-                alt: custom.commandName,
-                "data-effect": custom.effectType,
-                style: {
-                    height: "100%",
-                    objectFit: "cover",
-                    maxHeight: "52px"
-                }
-            });
+             return index < parts.length - 1
+                 ? [React.createElement("img", {
+                     key: `custom-${custom.commandName}-${index}`,
+                     src: custom.dataUri,
+                     alt: custom.commandName,
+                     "data-effect": custom.effectType,
+                     style: {
+                         height: "100%",
+                         objectFit: "cover",
+                         maxHeight: "52px"
+                     }
+                 }), ' ']
+                 : [React.createElement("img", {
+                     key: `custom-${custom.commandName}-${index}`,
+                     src: custom.dataUri,
+                     alt: custom.commandName,
+                     "data-effect": custom.effectType,
+                     style: {
+                         height: "100%",
+                         objectFit: "cover",
+                         maxHeight: "52px"
+                     }
+                 })];
         }
 
         const emote = externalEmotes.get(part);

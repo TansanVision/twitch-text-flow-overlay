@@ -42,12 +42,22 @@ function getConfig(): AppConfig {
           ? config.password
           : defaultConfig.password,
         customStamps: Array.isArray(config.customStamps)
-          ? config.customStamps.map((stamp) => ({
-              commandName: typeof stamp.commandName === 'string' ? stamp.commandName : '',
-              dataUri: typeof stamp.dataUri === 'string' ? stamp.dataUri : '',
-              effectType: stamp.effectType === 'default' ? 'default' : 'default',
-            }))
-          : defaultConfig.customStamps,
+           ? config.customStamps
+               .filter(
+                 (stamp): stamp is { commandName: string; dataUri: string; effectType?: unknown } =>
+                   !!stamp &&
+                   typeof stamp === 'object' &&
+                   typeof stamp.commandName === 'string' &&
+                   stamp.commandName !== '' &&
+                   typeof stamp.dataUri === 'string' &&
+                   stamp.dataUri !== ''
+               )
+               .map((stamp) => ({
+                 commandName: stamp.commandName,
+                 dataUri: stamp.dataUri,
+                 effectType: 'default', // 現状はeffectTypeを固定値で設定。将来的にconfigで指定できるようにする場合はここを修正。
+               }))
+           : defaultConfig.customStamps,
       };
     } catch (error) {
       console.error('Failed to parse config JSON:', error);
