@@ -16,6 +16,15 @@ export type Command = SizeCommand | AlignmentCommand | ColorCommand;
 export type SizeCommand = "small" | "medium" | "big";
 
 /**
+ * コメントのコマンドかどうかを判定する関数
+ * @param value - 判定する文字列
+ * @returns 文字列がコメントのコマンドである場合はtrue、それ以外の場合はfalse
+ */
+export const isCommand = (value: string): value is Command => {
+    return isSizeCommand(value as Command) || isAlignmentCommand(value as Command) || isColorCommand(value as Command);
+}
+
+/**
  * コメントのサイズコマンドかどうかを判定する関数
  * @param command - コマンド
  * @returns コマンドがサイズコマンドである場合はtrue、それ以外の場合はfalse
