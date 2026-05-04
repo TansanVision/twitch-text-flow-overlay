@@ -77,7 +77,6 @@ async function loadSevenTvGlobal(map: EmoteMap): Promise<void> {
 
 /**
  * カスタムスタンプの設定をロードしてマップに追加します。
- * 既存のコマンドと重複するコマンド名や無効な設定はスキップされます。
  * @param stamps - カスタムスタンプの設定の配列
  * @returns カスタムスタンプのマップ
  */
