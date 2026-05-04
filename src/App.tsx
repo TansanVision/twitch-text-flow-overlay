@@ -25,21 +25,25 @@ function getConfig(): AppConfig {
 
   if (configElement) {
     try {
-       const rawConfigText = configElement.textContent ?? '';
-       const configText = rawConfigText.trim() === '' ? '{}' : rawConfigText;
-       const parsedConfig: unknown = JSON.parse(configText);
-       const config = parsedConfig && typeof parsedConfig === 'object'
+        const rawConfigText = configElement.textContent ?? '';
+        const configText = rawConfigText.trim() === '' ? '{}' : rawConfigText;
+        const parsedConfig: unknown = JSON.parse(configText);
+        const config = parsedConfig && typeof parsedConfig === 'object'
            ? (parsedConfig as Record<string, unknown>)
            : {};
-       const port = Number(config.port);
+        const port = Number(config.port);
 
-       return {
-         host: typeof config.host === 'string' ? config.host : defaultConfig.host,
-         port: Number.isNaN(port) ? defaultConfig.port : port,
-         endpoint: typeof config.endpoint === 'string' ? config.endpoint : defaultConfig.endpoint,
-         password: typeof config.password === 'string' && config.password !== ''
-              ? config.password
-              : defaultConfig.password,
+        return {
+          host: typeof config.host === 'string' && config.host !== '' 
+            ? config.host 
+            : defaultConfig.host,
+          port: Number.isNaN(port) ? defaultConfig.port : port,
+          endpoint: typeof config.endpoint === 'string' && config.endpoint !== '' 
+            ? config.endpoint 
+            : defaultConfig.endpoint,
+          password: typeof config.password === 'string' && config.password !== ''
+            ? config.password
+            : defaultConfig.password,
        };
     } catch (error) {
       if (import.meta.env.DEV) {
@@ -58,7 +62,7 @@ function getConfig(): AppConfig {
  */
 function App() {
   const [comments, setComments] = useState<Comment[]>([]);
-  const config = useMemo(() => getConfig(), [window.location.search]);
+  const config = useMemo(() => getConfig(), []);
 
   const { getNodesAndCommands } = useTwitchEmotes();
 

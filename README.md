@@ -21,6 +21,7 @@ Streamer.botを利用したオーバーレイです。
   - Streamer.botとtwitch-text-flow-overlayを連携
     - Servers/ClientsタブのWebSocket ServerをOnにしてください。
     - AddressやPort、Endpointを変更している方はtwitch-text-flow-overlay.htmlに変更が必要です。(デフォルト値はhost = 127.0.0.1,port = 8080,endpoint = /)(Streamer.botのWebSocketのpasswordを設定した場合はこちらにも設定してください。passwordは最初は記述されていません。)
+       - ※ password は秘密情報です。twitch-text-flow-overlay.html など配布・共有・公開され得るファイルに記述する場合は、リポジトリへコミットしないでください。また、第三者が閲覧できる場所には置かないでください。
     - twitch-text-flow-overlay.html
     ![config値の変更箇所](images/config値の変更箇所.png)
 
