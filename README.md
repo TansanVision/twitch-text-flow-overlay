@@ -52,6 +52,12 @@ shita small これはコメントです。
 |ue|画面上部に配置|
 |shita|画面下部に配置|
 |naka|画面中央に配置|
+|migi|画面中央右に配置|
+|migiue|画面右上に配置|
+|migishita|画面右下に配置|
+|hidari|画面中央左に配置|
+|hidariue|画面左上に配置|
+|hidarishita|画面左下に配置|
 
 - 文字色
 

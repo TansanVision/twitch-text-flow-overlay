@@ -1,5 +1,6 @@
 import React from 'react';
 import type { CommentRendererProps } from './types';
+import { isSizeCommand, isColorCommand, isAlignmentCommand } from './types';
 
 /**
  * コメントの基本スタイル
@@ -120,6 +121,11 @@ const colorStyle = (command: string): React.CSSProperties => {
             return {
                 color: "#00ff00"
             };
+        case "green2":
+        case "elementalgreen":
+            return {
+                color: "#00CC66"
+            };
         case "cyan":
             return {
                 color: "#00ffff"
@@ -199,39 +205,69 @@ const alignmentStyle = (command: string): React.CSSProperties => {
         }
     }
 
+    const fixedCommonStyle: React.CSSProperties = {
+        position: "absolute",
+        width: "100vw",
+        height: "100vh",
+        right: 0,
+        top: 0,
+        animationName: "nothing",
+    };
+
     switch (command) {
         case "shita":
             return {
-                position: "absolute",
-                width: "100vw",
-                height: "100vh",
-                right: 0,
-                animationName: "nothing",
+                ...fixedCommonStyle,
                 justifyContent: "center",
                 alignItems: "flex-end",
-                top: 0
             };
         case "naka":
             return {
-                position: "absolute",
-                width: "100vw",
-                height: "100vh",
-                right: 0,
-                animationName: "nothing",
+                ...fixedCommonStyle,
                 justifyContent: "center",
                 alignItems: "center",
-                top: 0 
             };
         case "ue":
             return {
-                position: "absolute",
-                width: "100vw",
-                height: "100vh",
-                right: 0,
-                animationName: "nothing",
+                ...fixedCommonStyle,
                 justifyContent: "center",
                 alignItems: "flex-start",
-                top: 0,
+            };
+        case "migiue":
+            return {
+                ...fixedCommonStyle,
+                justifyContent: "flex-end",
+                alignItems: "flex-start",
+            };
+        case "hidariue":
+            return {
+                ...fixedCommonStyle,
+                justifyContent: "flex-start",
+                alignItems: "flex-start",
+            };
+        case "migishita":
+            return {
+                ...fixedCommonStyle,
+                justifyContent: "flex-end",
+                alignItems: "flex-end",
+            };
+        case "hidarishita":
+            return {                
+                ...fixedCommonStyle,
+                justifyContent: "flex-start",
+                alignItems: "flex-end",
+            };
+        case "migi":
+            return {
+                ...fixedCommonStyle,
+                justifyContent: "flex-end",
+                alignItems: "center",
+            };
+        case "hidari":
+            return {
+                ...fixedCommonStyle,
+                justifyContent: "flex-start",
+                alignItems: "center",
             };
         default:
             return {
@@ -257,9 +293,9 @@ export const CommentRenderer : React.FC<CommentRendererProps> = ({
 }) => {
     const combinedStyle = {
         ...baseStyle(animationDuration),
-        ...sizeStyle(commands.find(cmd => cmd === "small" || cmd === "medium" || cmd === "big") || "", lane),
-        ...colorStyle(commands.find(cmd => ["red", "pink", "orange", "yellow", "green", "cyan", "blue", "purple", "black", "white2", "niconicowhite", "red2", "truered", "pink2", "orange2", "passionorange", "yellow2", "madyellow", "cyan2", "blue2", "marineblue", "black2"].includes(cmd) ? cmd : "") || ""),
-        ...alignmentStyle(commands.find(cmd => ["shita", "naka", "ue"].includes(cmd) ? cmd : "") || "")
+        ...sizeStyle(commands.find(isSizeCommand) || "", lane),
+        ...colorStyle(commands.find(isColorCommand) || ""),
+        ...alignmentStyle(commands.find(isAlignmentCommand) || "")
     };
 
     return (
