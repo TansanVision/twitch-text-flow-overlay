@@ -102,7 +102,8 @@ shita small これはコメントです。
 
 ### 設定方法
 
-- twitch-text-flow-overlay.htmlのconfig値のcustomStampsを修正してください。
+- twitch-text-flow-overlay.htmlのconfig値のcustomStampsを修正してください。(※effectTypeについては現状defaultのみです)
+- commandNameが既存のコマンドと被った場合は既存のコマンドが優先されます。
   ![カスタムスタンプ設定例](images/カスタムスタンプ設定例.png)
 
 - カスタムスタンプのデータの形は以下の通りです。

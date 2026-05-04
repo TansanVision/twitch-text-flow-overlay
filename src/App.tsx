@@ -6,6 +6,7 @@ import { useStreamerBot } from './hooks/useStreamerbot';
 import { useTwitchEmotes } from './hooks/useTwitchEmotes';
 import type { Message } from './hooks/useStreamerbot';
 import type { AppConfig } from './types';
+import { isCommand } from './components/Comment/types';
 
 const defaultConfig = {
   host: "127.0.0.1",
@@ -42,31 +43,57 @@ function getConfig(): AppConfig {
           ? config.password
           : defaultConfig.password,
         customStamps: Array.isArray(config.customStamps)
-           ? config.customStamps
-               .filter(
-                 (stamp): stamp is { commandName: string; dataUri: string; effectType?: unknown } =>
-                   !!stamp &&
-                   typeof stamp === 'object' &&
-                   typeof stamp.commandName === 'string' &&
-                   stamp.commandName !== '' &&
-                   !/\s/.test(stamp.commandName) && // コマンド名に空白が含まれないことを確認
-                   typeof stamp.dataUri === 'string' &&
-                   stamp.dataUri !== '' &&
-                   /^data:image\/(png|jpeg|gif);base64,/.test(stamp.dataUri) // data URIの形式を簡易的に検証
-               )
-                .map((stamp) => {
-                  if (typeof stamp.effectType === 'string' && stamp.effectType !== 'default') {
-                    console.warn(
-                      `Unsupported effectType "${stamp.effectType}" for custom stamp "${stamp.commandName}". Falling back to "default".`
-                    );
-                  }
-                  return {
-                    commandName: stamp.commandName,
-                    dataUri: stamp.dataUri,
-                    effectType: 'default', // 現状はdefaultのみ対応。未対応のeffectType指定時は警告してdefaultにフォールバックする。
-                  };
-                })
-            : defaultConfig.customStamps,
+           ? config.customStamps.reduce<Array<{ commandName: string; dataUri: string; effectType: 'default' }>>(
+               (validStamps, stamp, index) => {
+                 if (!stamp || typeof stamp !== 'object') {
+                   console.warn(`Invalid custom stamp at index ${index}: expected an object, but received ${typeof stamp}. Skipping.`);
+                   return validStamps;
+                 }
+                 const candidate = stamp as { commandName?: unknown; dataUri?: unknown; effectType?: unknown };
+                 if (typeof candidate.commandName !== 'string' || candidate.commandName === '') {
+                   console.warn(`Invalid custom stamp at index ${index}: "commandName" must be a non-empty string. Skipping.`);
+                   return validStamps;
+                 }
+                 if (/\s/.test(candidate.commandName)) {
+                   console.warn(
+                     `Invalid custom stamp "${candidate.commandName}" at index ${index}: "commandName" must not contain whitespace. Skipping.`
+                   );
+                   return validStamps;
+                 }
+                 // 既存のコマンドと重複するコマンド名は許容しない（後勝ちさせない）
+                 if (isCommand(candidate.commandName)) {
+                   console.warn(
+                     `Duplicate custom stamp command "${candidate.commandName}" at index ${index}: a custom stamp with this command name has already been defined. Skipping.`
+                   );
+                   return validStamps;
+                 }
+                 if (typeof candidate.dataUri !== 'string' || candidate.dataUri === '') {
+                   console.warn(
+                     `Invalid custom stamp "${candidate.commandName}" at index ${index}: "dataUri" must be a non-empty string. Skipping.`
+                   );
+                   return validStamps;
+                 }
+                 if (!/^data:image\/(png|jpeg|gif);base64,/.test(candidate.dataUri)) {
+                   console.warn(
+                     `Invalid custom stamp "${candidate.commandName}" at index ${index}: "dataUri" must be a valid png/jpeg/gif data URI. Skipping.`
+                   );
+                   return validStamps;
+                 }
+                 if (typeof candidate.effectType === 'string' && candidate.effectType !== 'default') {
+                   console.warn(
+                     `Unsupported effectType "${candidate.effectType}" for custom stamp "${candidate.commandName}". Falling back to "default".`
+                   );
+                 }
+                 validStamps.push({
+                   commandName: candidate.commandName,
+                   dataUri: candidate.dataUri,
+                   effectType: 'default', // 現状はdefaultのみ対応。未対応のeffectType指定時は警告してdefaultにフォールバックする。
+                 });
+                 return validStamps;
+               },
+               []
+             )
+           : defaultConfig.customStamps,
       };
     } catch (error) {
       console.error('Failed to parse config JSON:', error);
