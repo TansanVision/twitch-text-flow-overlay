@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useRef } from 'react';
+import { extractTokens } from '../components/Comment/utils';
+import type { Command } from '../components/Comment/types';
 
 /**
  * 外部エモートの型定義
@@ -70,6 +72,30 @@ async function loadSevenTvGlobal(map: EmoteMap): Promise<void> {
             url: `https:${emote.data.host.url}${file.name}`,
         });
     }
+}
+
+/**
+ * Twitchのエモートのポジションを修正します。
+ * @param twitchEmotes - Twitchのエモートデータ
+ * @param adjustmentLength - コメントテキストから削除されたコマンドの長さ
+ * @returns 修正されたTwitchのエモートデータ
+ */
+const fixTwitchEmotes = (twitchEmotes: any, adjustmentLength: number) => {
+    if (!twitchEmotes) {
+        return [];
+    }
+
+    const items = Array.isArray(twitchEmotes?.items) 
+        ? twitchEmotes.items 
+        : Array.isArray(twitchEmotes)
+            ? twitchEmotes
+            : [];
+
+    return items.map((emote: any) => ({
+        ...emote,
+        startIndex: Math.max(0, (emote.startIndex ?? 0) - adjustmentLength),
+        endIndex: Math.max(0, (emote.endIndex ?? 0) - adjustmentLength),
+    }));
 }
 
 /**
@@ -219,16 +245,26 @@ function renderExternalEmotesOnly(
  * @returns エモートマップとレンダリング関数
  */
 export function useTwitchEmotes() {
-    const [emotes, setEmotes] = useState<EmoteMap>(new Map());
-    const getNodes = useCallback((text: string, twitchEmotes: any) => {
-        return renderTwitchMessageEmotes(text, twitchEmotes, emotes);
-    }, [emotes]);
+    const emotesCache = useRef<EmoteMap>(new Map());
+    const getNodesAndCommands = useCallback((text: string, twitchEmotes: any) => {
+        const parsed = extractTokens(text);
+
+        const fixedEmotes = fixTwitchEmotes(twitchEmotes, parsed.removeLength);
+        const commands = parsed.tokens 
+            ? Object.values(parsed.tokens).filter((cmd): cmd is Command => !!cmd) 
+            : [];
+
+        return {
+            commands: commands,
+            nodes: renderTwitchMessageEmotes(parsed.remainingText, fixedEmotes, emotesCache.current)
+        };
+    }, []);
 
      useEffect(() => {
         loadExternalEmotes().then((loadedEmotes) => {
-            setEmotes(loadedEmotes);
+            emotesCache.current = loadedEmotes;
         });
     }, []);
 
-    return { emotes, getNodes };
+    return { getNodesAndCommands };
 }

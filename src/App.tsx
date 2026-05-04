@@ -5,8 +5,6 @@ import { v4 as uuid } from 'uuid';
 import { useStreamerBot } from './hooks/useStreamerbot';
 import { useTwitchEmotes } from './hooks/useTwitchEmotes';
 import type { Message } from './hooks/useStreamerbot';
-import { UniqueCommands, RemoveCommands } from './components/Comment/types';
-import type { Command } from "./components/Comment/types";
 
 function getConfig() {
   const params = new URLSearchParams(window.location.search);
@@ -27,7 +25,7 @@ function App() {
   const [comments, setComments] = useState<Comment[]>([]);
   const config = useMemo(() => getConfig(), [window.location.search]);
 
-  const { getNodes } = useTwitchEmotes();
+  const { getNodesAndCommands } = useTwitchEmotes();
 
   const handleComment = useCallback((message: Message) => {
     addComment(message);
@@ -50,26 +48,50 @@ function App() {
       return;
     }
 
+    const { nodes, commands } = getNodesAndCommands(message.text, message.emotes);
+
     const comment: Comment = {
       id: uuid(),
-      node: getNodes(RemoveCommands(message.text), message.emotes),
+      node: nodes,
       state: 'active',
-      commands: UniqueCommands(
-        message.text.split(' ').filter(word => word.startsWith("ue") || word.startsWith("naka") || word.startsWith("shita") || word.startsWith("small") || word.startsWith("medium") || word.startsWith("big") || ["red", "pink", "orange", "yellow", "green", "cyan", "blue", "purple", "black", "white2", "niconicowhite", "red2", "truered", "pink2", "orange2", "passionorange", "yellow2", "mellowyellow", "cyan2", "blue2", "marineblue", "black2"].includes(word) ? word : "").map(cmd => cmd.toLowerCase()) as Command[]
-      )
+      commands: commands,
     };
 
-    if (comments.findIndex(c => c.state === 'inactive') !== -1) {
-      setComments((prevComments) => {
-        const index = prevComments.findIndex(c => c.state === 'inactive');
-        const updatedComments = [...prevComments];
-        updatedComments[index] = comment;
-        return updatedComments;
-      });
-    } else {
-      setComments((prevComments) => [...prevComments, comment]);
-    }
-  }, [comments, getNodes]);
+    setComments((prevComments) => {
+      if (prevComments.findIndex(c => c.state === 'inactive') === -1) {
+        return [...prevComments, comment];
+      }
+
+      const index = prevComments.findIndex(c => c.state === 'inactive');
+      const updatedComments = [...prevComments];
+      updatedComments[index] = comment;
+      return updatedComments;
+    });
+  }, [getNodesAndCommands]);
+
+  const clickToAddTestComment = useCallback(() => {
+    // obs上ではクリックできない = テスト用のコメントを追加
+    addComment({ 
+      text: "ue shita yellow red big Kappa test🍰", 
+      emotes: [{
+          id: "25",
+          name: "Kappa",
+          startIndex: 24,
+          endIndex: 28,
+      }] });
+
+      addComment({ 
+        text: "white2 test🍰", 
+        emotes: [] });
+
+      addComment({ 
+        text: "yellow naka test🍰", 
+        emotes: [] });
+
+      addComment({ 
+        text: "small blue shita test🍰", 
+        emotes: [] });
+  }, [addComment]);
 
   const releaseComment = useCallback((id: string) => {
     setComments((prevComments) => {
@@ -81,7 +103,7 @@ function App() {
   }, []);
 
   return (
-    <div className='overlay' onClick={() => addComment({ text: "test🍰", emotes: [] })}>
+    <div className='overlay' onClick={clickToAddTestComment}>
       <CommentServiceContainer 
         comments={comments}
         onRelease={releaseComment}

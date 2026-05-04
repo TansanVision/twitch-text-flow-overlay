@@ -1,48 +1,6 @@
 import type React from "react";
 
 /**
- * コメントからコマンドを削除する関数
- * @param text - コメントのテキスト
- * @returns コマンドが削除されたテキスト
- */
-export const RemoveCommands = (text: string): string => {
-    return text.replace(
-        /(white2|red2|pink2|orange2|yellow2|madyellow|cyan2|blue2|marineblue|purple2|nobleviolet|black2|niconicowhite|small|medium|big|ue|naka|shita|white|red|orange|blue|green|yellow|pink|cyan|purple|black|truered|passionorange)/g,
-        ''
-    ).trim();
-}
-
-/**
- * コマンドの配列から、同じ種類のコマンドを1つだけ残す関数
- * @param commands - コマンドの配列
- * @returns 同じ種類のコマンドが1つだけ残されたコマンドの配列
- */
-export const UniqueCommands = (commands: Command[]): Command[] => {
-    const result: Command[] = [];
-    const seenTypes = new Set<string>();
-    for (const command of commands) {
-        const commandType = isSizeCommand(command) 
-            ? "size" 
-            : isVerticalAlignmentCommand(command) 
-            ? "verticalAlignment" 
-            : isColorCommand(command) 
-            ? "color" 
-            : null;
-
-        if (!commandType) {
-            continue;
-        }
-
-        if (!seenTypes.has(commandType)) {
-            result.push(command);
-            seenTypes.add(commandType);
-        }
-    }
-
-    return result;
-}
-
-/**
  * コメント関連の型定義
  */
 export type CommentState = "active" | "inactive";
@@ -96,14 +54,14 @@ export const isColorCommand = (command: Command): command is ColorCommand => {
 
 
 /**
- * コメントの横位置を指定するコマンドの型定義
+ * コメントの基本色を指定するコマンドの型定義
  */
 export type BaseColorCommand = "white" | "red" | "orange" | "blue" | "green" | "yellow" | "pink" | "cyan" | "purple" | "black";
 
 /**
- * コメントの横位置コマンドかどうかを判定する関数
+ * コメントの基本色コマンドかどうかを判定する関数
  * @param command - コマンド
- * @returns コマンドが横位置コマンドである場合はtrue、それ以外の場合はfalse
+ * @returns コマンドが基本色コマンドである場合はtrue、それ以外の場合はfalse
  */
 export const isBaseColorCommand = (command: Command): command is BaseColorCommand => {
     return command === 'white' || command === 'red' || command === 'orange' || command === 'blue' || command === 'green' || command === 'yellow' || command === 'pink' || command === 'cyan' || command === 'purple' || command === 'black';

@@ -11,7 +11,7 @@ const baseStyle = (animationDuration: number): React.CSSProperties => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'start',
-    alignItems: "start",
+    alignItems: "flex-start",
     flexWrap: 'nowrap',
     width: 'fit-content',
     height: "auto",
@@ -156,7 +156,7 @@ const colorStyle = (command: string): React.CSSProperties => {
                 color: "#ff6600"
             };
         case "yellow2":
-        case "mellowyellow":
+        case "madyellow":
             return {
                 color: "#999900"
             };
@@ -173,6 +173,11 @@ const colorStyle = (command: string): React.CSSProperties => {
             return {
                 color: "#333333"
             };
+        case "purple2":
+        case "nobleviolet":
+            return {
+                color: "#6633cc"
+            };
         default:
             return {
                 color: "#ffffff"
@@ -181,11 +186,11 @@ const colorStyle = (command: string): React.CSSProperties => {
 }
 
 /**
- * コメントの横位置スタイル
- * @param command - コメントの横位置を指定するコマンド
- * @returns コメントの横位置スタイル
+ * コメントの位置スタイル
+ * @param command - コメントの位置を指定するコマンド
+ * @returns コメントの位置スタイル
  */
-const aligmentStyle = (command: string): React.CSSProperties => {
+const alignmentStyle = (command: string): React.CSSProperties => {
     if (!command) {
         return {
             right: '-50%',
@@ -197,33 +202,36 @@ const aligmentStyle = (command: string): React.CSSProperties => {
     switch (command) {
         case "shita":
             return {
-                position: "unset",
+                position: "absolute",
                 width: "100vw",
                 height: "100vh",
-                right: "unset",
+                right: 0,
                 animationName: "nothing",
                 justifyContent: "center",
-                alignItems: "flex-end"
+                alignItems: "flex-end",
+                top: 0
             };
         case "naka":
             return {
-                position: "unset",
+                position: "absolute",
                 width: "100vw",
                 height: "100vh",
-                right: "unset",
+                right: 0,
                 animationName: "nothing",
                 justifyContent: "center",
-                alignItems: "center"
+                alignItems: "center",
+                top: 0 
             };
         case "ue":
             return {
-                position: "unset",
+                position: "absolute",
                 width: "100vw",
                 height: "100vh",
-                right: "unset",
+                right: 0,
                 animationName: "nothing",
                 justifyContent: "center",
-                alignItems: "start"
+                alignItems: "flex-start",
+                top: 0,
             };
         default:
             return {
@@ -250,8 +258,8 @@ export const CommentRenderer : React.FC<CommentRendererProps> = ({
     const combinedStyle = {
         ...baseStyle(animationDuration),
         ...sizeStyle(commands.find(cmd => cmd === "small" || cmd === "medium" || cmd === "big") || "", lane),
-        ...colorStyle(commands.find(cmd => ["red", "pink", "orange", "yellow", "green", "cyan", "blue", "purple", "black", "white2", "niconicowhite", "red2", "truered", "pink2", "orange2", "passionorange", "yellow2", "mellowyellow", "cyan2", "blue2", "marineblue", "black2"].includes(cmd) ? cmd : "") || ""),
-        ...aligmentStyle(commands.find(cmd => ["shita", "naka", "ue"].includes(cmd) ? cmd : "") || "")
+        ...colorStyle(commands.find(cmd => ["red", "pink", "orange", "yellow", "green", "cyan", "blue", "purple", "black", "white2", "niconicowhite", "red2", "truered", "pink2", "orange2", "passionorange", "yellow2", "madyellow", "cyan2", "blue2", "marineblue", "black2"].includes(cmd) ? cmd : "") || ""),
+        ...alignmentStyle(commands.find(cmd => ["shita", "naka", "ue"].includes(cmd) ? cmd : "") || "")
     };
 
     return (

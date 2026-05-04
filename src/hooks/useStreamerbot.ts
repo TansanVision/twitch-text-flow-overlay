@@ -1,5 +1,5 @@
 import { StreamerbotClient } from '@streamerbot/client';
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 /**
  * 接続状態を表す型
@@ -11,7 +11,7 @@ type ConnectionStatus = 'connecting' | 'connected' | 'disconnected' | 'error';
  */
 export type Message = {
     text: string;
-    emotes: React.ReactNode[];
+    emotes: any[];
 }
 
 /**
