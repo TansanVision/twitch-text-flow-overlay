@@ -13,40 +13,40 @@ const defaultConfig = {
   password: undefined,
 };
 
- type AppConfig = {
-   host: string;
-   port: number;
-   endpoint: string;
-   password: string | undefined;
- };
+type AppConfig = {
+  host: string;
+  port: number;
+  endpoint: string;
+  password: string | undefined;
+};
 
 function getConfig(): AppConfig {
   const configElement = document.getElementById('config');
 
   if (configElement) {
     try {
-        const rawConfigText = configElement.textContent ?? '';
-        const configText = rawConfigText.trim() === '' ? '{}' : rawConfigText;
-        const parsedConfig: unknown = JSON.parse(configText);
-        const config = parsedConfig && typeof parsedConfig === 'object'
-           ? (parsedConfig as Record<string, unknown>)
-           : {};
-        const port = Number(config.port);
+      const rawConfigText = configElement.textContent ?? '';
+      const configText = rawConfigText.trim() === '' ? '{}' : rawConfigText;
+      const parsedConfig: unknown = JSON.parse(configText);
+      const config = parsedConfig && typeof parsedConfig === 'object'
+        ? (parsedConfig as Record<string, unknown>)
+        : {};
+      const port = Number(config.port);
 
-        return {
-          host: typeof config.host === 'string' && config.host !== '' 
-            ? config.host 
-            : defaultConfig.host,
-          port: Number.isNaN(port) || !Number.isFinite(port) || port <= 0 || port > 65535 
-            ? defaultConfig.port 
-            : port,
-          endpoint: typeof config.endpoint === 'string' && config.endpoint !== '' 
-            ? config.endpoint 
-            : defaultConfig.endpoint,
-          password: typeof config.password === 'string' && config.password !== ''
-            ? config.password
-            : defaultConfig.password,
-       };
+      return {
+        host: typeof config.host === 'string' && config.host !== '' 
+          ? config.host 
+          : defaultConfig.host,
+        port: Number.isNaN(port) || !Number.isFinite(port) || port <= 0 || port > 65535 
+          ? defaultConfig.port 
+          : port,
+        endpoint: typeof config.endpoint === 'string' && config.endpoint !== '' 
+          ? config.endpoint 
+          : defaultConfig.endpoint,
+        password: typeof config.password === 'string' && config.password !== ''
+          ? config.password
+          : defaultConfig.password,
+      };
     } catch (error) {
       if (import.meta.env.DEV) {
         console.error('Failed to parse config JSON:', error);
