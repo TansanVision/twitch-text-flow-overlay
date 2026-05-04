@@ -7,7 +7,7 @@ Streamer.botを利用したオーバーレイです。
 
 - OBSの設定
   - ブラウザソースにtwitch-text-flow-overlay.htmlを追加してください。
-  - ツール > WebSocketサーバー > \[WebSocketサーバーの設定を有効にする\]にチェックを入れる。「認証を有効にする」のチェックを入れる
+  - ツール > WebSocketサーバー > \[WebSocketサーバーの設定を有効にする\]にチェックを入れ、「認証を有効にする」にもチェックを入れます。
   ![OBS側の設定](images/obs側の設定.png)
 - Streamer.bot側の設定
   - Twitchアカウントを連携してください。(結構な権限を付与するため、ここで同意できない場合はStreamer.botやこのオーバーレイをしないでください。)

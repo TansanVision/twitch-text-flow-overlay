@@ -37,7 +37,9 @@ function getConfig(): AppConfig {
           host: typeof config.host === 'string' && config.host !== '' 
             ? config.host 
             : defaultConfig.host,
-          port: Number.isNaN(port) ? defaultConfig.port : port,
+          port: Number.isNaN(port) || !Number.isFinite(port) || port <= 0 || port > 65535 
+            ? defaultConfig.port 
+            : port,
           endpoint: typeof config.endpoint === 'string' && config.endpoint !== '' 
             ? config.endpoint 
             : defaultConfig.endpoint,
