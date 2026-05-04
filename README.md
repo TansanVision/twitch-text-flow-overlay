@@ -7,12 +7,23 @@ Streamer.botを利用したオーバーレイです。
 
 - OBSの設定
   - ブラウザソースにtwitch-text-flow-overlay.htmlを追加してください。
+  - ツール > WebSocketサーバー > \[WebSocketサーバーの設定を有効にする\]にチェックを入れ、「認証を有効にする」にもチェックを入れます。
+    ![OBS側の設定](images/obs側の設定.png)
 - Streamer.bot側の設定
-  - Servers/ClientsタブのWebSocket ServerをOnにしてください。
-  - AddressやPort、Endpointを変更している方はブラウザソースに追加で設定が必要です。(デフォルト値はhost = 127.0.0.1,port = 8080,endpoint = /)
-  ```
-  ?port=○○&port=○○&endpoint=○○
-  ```
+  - Twitchアカウントを連携してください。(結構な権限を付与するため、ここで同意できない場合はStreamer.botやこのオーバーレイをしないでください。)
+  - Streamer.botとOBSを連携する設定を行います。
+    - Stream App > OBS Studioをクリックします
+    - Nameに任意の名前を入力します。
+    - Passwordを入力します。これはOBSのサーバーパスワードの部分です。OBSの接続情報を表示するボタンを押すことで確認することができます。
+    - 「Auto connect on Startup」と「Reconnect on disconnect」にチェックを入れます。
+    - 「OK」で適用します。
+      ![streamer.botとOBS連携](images/streamberbotとobs連携接続設定.png)
+  - Streamer.botとtwitch-text-flow-overlayを連携
+    - Servers/ClientsタブのWebSocket ServerをOnにしてください。
+    - AddressやPort、Endpointを変更している方はtwitch-text-flow-overlay.htmlに変更が必要です。(デフォルト値はhost = 127.0.0.1,port = 8080,endpoint = /)(Streamer.botのWebSocketのpasswordを設定した場合はこちらにも設定してください。passwordは最初は記述されていません。)
+       - ※ password は秘密情報です。twitch-text-flow-overlay.html など配布・共有・公開され得るファイルに記述する場合は、リポジトリへコミットしないでください。また、第三者が閲覧できる場所には置かないでください。
+    - twitch-text-flow-overlay.html
+      ![config値の変更箇所](images/config値の変更箇所.png)
 
 ## リンク
 - [Streamer.bot](https://streamer.bot/)
