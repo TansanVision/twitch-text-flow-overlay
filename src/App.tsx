@@ -67,7 +67,7 @@ function App() {
       updatedComments[index] = comment;
       return updatedComments;
     });
-  }, [comments, getNodesAndCommands]);
+  }, [getNodesAndCommands]);
 
   const clickToAddTestComment = useCallback(() => {
     // obs上ではクリックできない = テスト用のコメントを追加
