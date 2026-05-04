@@ -23,7 +23,8 @@ export const extractTokens = (
     remainingText: string,
     removeLength: number
  } => {
-    const parts = text.split(/\s+/);
+    // 先頭の空白を許容するなら、解析前に先頭の空白をスキップする
+    const parts = text.trimStart().split(/\s+/);
     const tokens: Record<string, Command | undefined> = {
         color: undefined,
         size: undefined,
@@ -64,17 +65,21 @@ export const extractTokens = (
     const remainingText = parts.slice(commandCount).join(' ');
 
     let removedLength = 0;
+    let scanIndex = 0;
 
-    if (commandCount > 0) {
-        if (remainingText.length === 0) {
-            removedLength = text.length;
-        } else {
-             const remainingStartIndex = text.indexOf(remainingText);
-             removedLength = remainingStartIndex >= 0 
-                ? remainingStartIndex
-                : 0;
+    for (let i = 0; i < commandCount; i++) {
+        // コマンドの文字列をスキャンして、スペースを含む次のトークンの開始位置まで進める
+        while (scanIndex < text.length && !/\s/.test(text[scanIndex])) {
+            scanIndex++;
+        }
+
+        // スペースをスキップして次のトークンの開始位置まで進める
+        while (scanIndex < text.length && /\s/.test(text[scanIndex])) {
+            scanIndex++;
         }
     }
+
+    removedLength = scanIndex;
 
     return {
         tokens,

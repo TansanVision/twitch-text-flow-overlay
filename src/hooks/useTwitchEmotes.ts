@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { extractTokens } from '../components/Comment/utils';
 import type { Command } from '../components/Comment/types';
 
@@ -245,7 +245,7 @@ function renderExternalEmotesOnly(
  * @returns エモートマップとレンダリング関数
  */
 export function useTwitchEmotes() {
-    const [emotes, setEmotes] = useState<EmoteMap>(new Map());
+    const emotesCache = useRef<EmoteMap>(new Map());
     const getNodesAndCommands = useCallback((text: string, twitchEmotes: any) => {
         const parsed = extractTokens(text);
 
@@ -256,15 +256,15 @@ export function useTwitchEmotes() {
 
         return {
             commands: commands,
-            nodes: renderTwitchMessageEmotes(parsed.remainingText, fixedEmotes, emotes)
+            nodes: renderTwitchMessageEmotes(parsed.remainingText, fixedEmotes, emotesCache.current)
         };
-    }, [emotes]);
+    }, []);
 
      useEffect(() => {
         loadExternalEmotes().then((loadedEmotes) => {
-            setEmotes(loadedEmotes);
+            emotesCache.current = loadedEmotes;
         });
     }, []);
 
-    return { emotes, getNodesAndCommands };
+    return { getNodesAndCommands };
 }
