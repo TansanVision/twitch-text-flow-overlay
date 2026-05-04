@@ -68,12 +68,17 @@ export const extractTokens = (
     let scanIndex = 0;
 
     for (let i = 0; i < commandCount; i++) {
-        // コマンドの文字列をスキャンして、スペースを含む次のトークンの開始位置まで進める
-        while (scanIndex < text.length && !/\s/.test(text[scanIndex])) {
-            scanIndex++;
-        }
+        // 先頭空白をスキップして現在のコマンド開始位置まで進める
+         while (scanIndex < text.length && /\s/.test(text[scanIndex])) {
+             scanIndex++;
+         }
 
-        // スペースをスキップして次のトークンの開始位置まで進める
+         // コマンド本体をスキャンして次の区切り位置まで進める
+         while (scanIndex < text.length && !/\s/.test(text[scanIndex])) {
+             scanIndex++;
+         }
+
+        // 最後のコマンドに続く空白も除去対象に含め、残りテキストの開始位置に揃える
         while (scanIndex < text.length && /\s/.test(text[scanIndex])) {
             scanIndex++;
         }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useEffect, useCallback, useRef } from 'react';
 import { extractTokens } from '../components/Comment/utils';
 import type { Command } from '../components/Comment/types';
 
@@ -77,10 +77,10 @@ async function loadSevenTvGlobal(map: EmoteMap): Promise<void> {
 /**
  * Twitchのエモートのポジションを修正します。
  * @param twitchEmotes - Twitchのエモートデータ
- * @param removedLength - コメントテキストから削除されたコマンドの長さ
+ * @param adjustmentLength - コメントテキストから削除されたコマンドの長さ
  * @returns 修正されたTwitchのエモートデータ
  */
-const fixTwitchEmotes = (twitchEmotes: any, removedLength: number) => {
+const fixTwitchEmotes = (twitchEmotes: any, adjustmentLength: number) => {
     if (!twitchEmotes) {
         return [];
     }
@@ -93,8 +93,8 @@ const fixTwitchEmotes = (twitchEmotes: any, removedLength: number) => {
 
     return items.map((emote: any) => ({
         ...emote,
-        startIndex: Math.max(0, (emote.startIndex ?? 0) - removedLength),
-        endIndex: Math.max(0, (emote.endIndex ?? 0) - removedLength),
+        startIndex: Math.max(0, (emote.startIndex ?? 0) - adjustmentLength),
+        endIndex: Math.max(0, (emote.endIndex ?? 0) - adjustmentLength),
     }));
 }
 

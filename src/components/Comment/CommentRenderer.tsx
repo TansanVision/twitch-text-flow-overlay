@@ -181,11 +181,11 @@ const colorStyle = (command: string): React.CSSProperties => {
 }
 
 /**
- * コメントの横位置スタイル
- * @param command - コメントの横位置を指定するコマンド
- * @returns コメントの横位置スタイル
+ * コメントの位置スタイル
+ * @param command - コメントの位置を指定するコマンド
+ * @returns コメントの位置スタイル
  */
-const aligmentStyle = (command: string): React.CSSProperties => {
+const alignmentStyle = (command: string): React.CSSProperties => {
     if (!command) {
         return {
             right: '-50%',
@@ -254,7 +254,7 @@ export const CommentRenderer : React.FC<CommentRendererProps> = ({
         ...baseStyle(animationDuration),
         ...sizeStyle(commands.find(cmd => cmd === "small" || cmd === "medium" || cmd === "big") || "", lane),
         ...colorStyle(commands.find(cmd => ["red", "pink", "orange", "yellow", "green", "cyan", "blue", "purple", "black", "white2", "niconicowhite", "red2", "truered", "pink2", "orange2", "passionorange", "yellow2", "madyellow", "cyan2", "blue2", "marineblue", "black2"].includes(cmd) ? cmd : "") || ""),
-        ...aligmentStyle(commands.find(cmd => ["shita", "naka", "ue"].includes(cmd) ? cmd : "") || "")
+        ...alignmentStyle(commands.find(cmd => ["shita", "naka", "ue"].includes(cmd) ? cmd : "") || "")
     };
 
     return (
