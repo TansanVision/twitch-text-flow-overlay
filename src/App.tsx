@@ -25,7 +25,9 @@ function getConfig(): AppConfig {
 
   if (configElement) {
     try {
-       const parsedConfig: unknown = JSON.parse(configElement.textContent || '{}');
+       const rawConfigText = configElement.textContent ?? '';
+       const configText = rawConfigText.trim() === '' ? '{}' : rawConfigText;
+       const parsedConfig: unknown = JSON.parse(configText);
        const config = parsedConfig && typeof parsedConfig === 'object'
            ? (parsedConfig as Record<string, unknown>)
            : {};
@@ -35,7 +37,9 @@ function getConfig(): AppConfig {
          host: typeof config.host === 'string' ? config.host : defaultConfig.host,
          port: Number.isNaN(port) ? defaultConfig.port : port,
          endpoint: typeof config.endpoint === 'string' ? config.endpoint : defaultConfig.endpoint,
-         password: typeof config.password === 'string' ? config.password : defaultConfig.password,
+         password: typeof config.password === 'string' && config.password !== ''
+              ? config.password
+              : defaultConfig.password,
        };
     } catch (error) {
       if (import.meta.env.DEV) {
