@@ -16,6 +16,10 @@ const defaultConfig = {
   customStamps: [],
 };
 
+/**
+ * アプリケーションの設定を取得する関数
+ * @returns アプリケーションの設定オブジェクト
+ */
 function getConfig(): AppConfig {
   const configElement = document.getElementById('config');
 
@@ -46,42 +50,46 @@ function getConfig(): AppConfig {
            ? config.customStamps.reduce<Array<{ commandName: string; dataUri: string; effectType: 'default' }>>(
                (validStamps, stamp, index) => {
                  if (!stamp || typeof stamp !== 'object') {
-                   console.warn(`Invalid custom stamp at index ${index}: expected an object, but received ${typeof stamp}. Skipping.`);
+                   console.warn(`
+                     無効なカスタムスタンプ at index ${index}: オブジェクトである必要があります。スキップします。
+                   `);
                    return validStamps;
                  }
                  const candidate = stamp as { commandName?: unknown; dataUri?: unknown; effectType?: unknown };
                  if (typeof candidate.commandName !== 'string' || candidate.commandName === '') {
-                   console.warn(`Invalid custom stamp at index ${index}: "commandName" must be a non-empty string. Skipping.`);
+                    console.warn(
+                      `カスタムスタンプのコマンド名が無効です at index ${index}: "commandName" 空文字列であってはならず、かつ必須です。スキップします。`
+                    );
                    return validStamps;
                  }
                  if (/\s/.test(candidate.commandName)) {
                    console.warn(
-                     `Invalid custom stamp "${candidate.commandName}" at index ${index}: "commandName" must not contain whitespace. Skipping.`
+                    `無効なカスタムスタンプのコマンド名 "${candidate.commandName}" at index ${index}: コマンド名に空白を含めることはできません。スキップします。`
                    );
                    return validStamps;
                  }
                  // 既存のコマンドと重複するコマンド名は許容しない（後勝ちさせない）
                  if (isCommand(candidate.commandName)) {
-                   console.warn(
-                     `Duplicate custom stamp command "${candidate.commandName}" at index ${index}: a custom stamp with this command name has already been defined. Skipping.`
-                   );
+                    console.warn(
+                      `既存のコマンドと重複するコマンド名 "${candidate.commandName}" at index ${index}: 既存のコマンドと同じ名前のカスタムスタンプは許容されません。スキップします。`
+                    );
                    return validStamps;
                  }
                  if (typeof candidate.dataUri !== 'string' || candidate.dataUri === '') {
                    console.warn(
-                     `Invalid custom stamp "${candidate.commandName}" at index ${index}: "dataUri" must be a non-empty string. Skipping.`
+                     `無効なカスタムスタンプ "${candidate.commandName}" at index ${index}: "dataUri" は空文字列であってはならず、かつ必須です。スキップします。`
                    );
                    return validStamps;
                  }
                  if (!/^data:image\/(png|jpeg|gif);base64,/.test(candidate.dataUri)) {
                    console.warn(
-                     `Invalid custom stamp "${candidate.commandName}" at index ${index}: "dataUri" must be a valid png/jpeg/gif data URI. Skipping.`
+                     `無効なカスタムスタンプ "${candidate.commandName}" at index ${index}: "dataUri" は有効な png/jpeg/gif のデータ URI である必要があります。スキップします。`
                    );
                    return validStamps;
                  }
                  if (typeof candidate.effectType === 'string' && candidate.effectType !== 'default') {
                    console.warn(
-                     `Unsupported effectType "${candidate.effectType}" for custom stamp "${candidate.commandName}". Falling back to "default".`
+                    `無効なカスタムスタンプ "${candidate.commandName}" at index ${index}: "effectType" は現状 "default" のみ対応しています。指定された値 "${candidate.effectType}" はサポートされていないため、"default" として扱います。`
                    );
                  }
                  validStamps.push({
