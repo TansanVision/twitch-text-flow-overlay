@@ -62,7 +62,6 @@ export const extractTokens = (
         index++;
     }
 
-    let removedLength = 0;
     let scanIndex = 0;
 
     for (let i = 0; i < commandCount; i++) {
@@ -82,11 +81,9 @@ export const extractTokens = (
         }
     }
 
-    removedLength = scanIndex;
-
     return {
         tokens,
-        remainingText: text.slice(removedLength),
-        removeLength: removedLength
+        remainingText: text.slice(scanIndex),
+        removeLength: scanIndex,
      };
 }
