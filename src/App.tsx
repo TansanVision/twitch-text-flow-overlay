@@ -13,19 +13,34 @@ const defaultConfig = {
   password: undefined,
 };
 
-function getConfig() {
+ type AppConfig = {
+   host: string;
+   port: number;
+   endpoint: string;
+   password: string | undefined;
+ };
+
+function getConfig(): AppConfig {
   const configElement = document.getElementById('config');
 
   if (configElement) {
     try {
-      const config = JSON.parse(configElement.textContent || '{}');
-      return {
-        host: config?.host || "127.0.0.1",
-        port: config?.port || 8080,
-        endpoint: config?.endpoint || "/",
-        password: config?.password || undefined,
-      };
+       const parsedConfig: unknown = JSON.parse(configElement.textContent || '{}');
+       const config = parsedConfig && typeof parsedConfig === 'object'
+           ? (parsedConfig as Record<string, unknown>)
+           : {};
+       const port = Number(config.port);
+
+       return {
+         host: typeof config.host === 'string' ? config.host : defaultConfig.host,
+         port: Number.isNaN(port) ? defaultConfig.port : port,
+         endpoint: typeof config.endpoint === 'string' ? config.endpoint : defaultConfig.endpoint,
+         password: typeof config.password === 'string' ? config.password : defaultConfig.password,
+       };
     } catch (error) {
+      if (import.meta.env.DEV) {
+        console.error('Failed to parse config JSON:', error);
+      }
       return defaultConfig;
     }
   } else {
