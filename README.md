@@ -17,7 +17,7 @@ Streamer.botを利用したオーバーレイです。
     - Passwordを入力します。これはOBSのサーバーパスワードの部分です。OBSの接続情報を表示するボタンを押すことで確認することができます。
     - 「Auto connect on Startup」と「Reconnect on disconnect」にチェックを入れます。
     - 「OK」で適用します。
-      ![streamerbotとOBS連携](images/streamberbotとobs連携接続設定.png)
+      ![streamer.botとOBS連携](images/streamberbotとobs連携接続設定.png)
   - Streamer.botとtwitch-text-flow-overlayを連携
     - Servers/ClientsタブのWebSocket ServerをOnにしてください。
     - AddressやPort、Endpointを変更している方はtwitch-text-flow-overlay.htmlに変更が必要です。(デフォルト値はhost = 127.0.0.1,port = 8080,endpoint = /)(Streamer.botのWebSocketのpasswordを設定した場合はこちらにも設定してください。passwordは最初は記述されていません。)

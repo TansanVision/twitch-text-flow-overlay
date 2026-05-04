@@ -48,9 +48,7 @@ function getConfig(): AppConfig {
           : defaultConfig.password,
       };
     } catch (error) {
-      if (import.meta.env.DEV) {
-        console.error('Failed to parse config JSON:', error);
-      }
+      console.error('Failed to parse config JSON:', error);
       return defaultConfig;
     }
   } else {
