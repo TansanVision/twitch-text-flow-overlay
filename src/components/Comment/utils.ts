@@ -62,8 +62,6 @@ export const extractTokens = (
         index++;
     }
 
-    const remainingText = parts.slice(commandCount).join(' ');
-
     let removedLength = 0;
     let scanIndex = 0;
 
@@ -88,7 +86,7 @@ export const extractTokens = (
 
     return {
         tokens,
-        remainingText,
+        remainingText: text.slice(removedLength),
         removeLength: removedLength
      };
 }

@@ -173,6 +173,11 @@ const colorStyle = (command: string): React.CSSProperties => {
             return {
                 color: "#333333"
             };
+        case "purple2":
+        case "nobleviolet":
+            return {
+                color: "#6633cc"
+            };
         default:
             return {
                 color: "#ffffff"
