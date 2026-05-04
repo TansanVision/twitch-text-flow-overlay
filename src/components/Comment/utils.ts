@@ -69,10 +69,10 @@ export const extractTokens = (
         if (remainingText.length === 0) {
             removedLength = text.length;
         } else {
-            const consumedLength = parts
-                .slice(0, commandCount)
-                .reduce((sum, part) => sum + part.length, 0);
-            removedLength = consumedLength + commandCount;
+             const remainingStartIndex = text.indexOf(remainingText);
+             removedLength = remainingStartIndex >= 0 
+                ? remainingStartIndex
+                : 0;
         }
     }
 

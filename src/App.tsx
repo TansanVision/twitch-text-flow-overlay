@@ -57,16 +57,16 @@ function App() {
       commands: commands,
     };
 
-    if (comments.findIndex(c => c.state === 'inactive') !== -1) {
-      setComments((prevComments) => {
-        const index = prevComments.findIndex(c => c.state === 'inactive');
-        const updatedComments = [...prevComments];
-        updatedComments[index] = comment;
-        return updatedComments;
-      });
-    } else {
-      setComments((prevComments) => [...prevComments, comment]);
-    }
+    setComments((prevComments) => {
+      if (prevComments.findIndex(c => c.state === 'inactive') === -1) {
+        return [...prevComments, comment];
+      }
+
+      const index = prevComments.findIndex(c => c.state === 'inactive');
+      const updatedComments = [...prevComments];
+      updatedComments[index] = comment;
+      return updatedComments;
+    });
   }, [comments, getNodesAndCommands]);
 
   const clickToAddTestComment = useCallback(() => {
