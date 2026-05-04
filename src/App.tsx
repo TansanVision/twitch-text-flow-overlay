@@ -6,14 +6,30 @@ import { useStreamerBot } from './hooks/useStreamerbot';
 import { useTwitchEmotes } from './hooks/useTwitchEmotes';
 import type { Message } from './hooks/useStreamerbot';
 
-function getConfig() {
-  const params = new URLSearchParams(window.location.search);
+const defaultConfig = {
+  host: "127.0.0.1",
+  port: 8080,
+  endpoint: "/",
+  password: undefined,
+};
 
-  return {
-    host: params.get('host') || '127.0.0.1',
-    port: Number(params.get('port')) || 8080,
-    endpoint: params.get('endpoint') || '/',
-    password: params.get('password') || undefined,
+function getConfig() {
+  const configElement = document.getElementById('config');
+
+  if (configElement) {
+    try {
+      const config = JSON.parse(configElement.textContent || '{}');
+      return {
+        host: config?.host || "127.0.0.1",
+        port: config?.port || 8080,
+        endpoint: config?.endpoint || "/",
+        password: config?.password || undefined,
+      };
+    } catch (error) {
+      return defaultConfig;
+    }
+  } else {
+    return defaultConfig;
   }
 }
 
