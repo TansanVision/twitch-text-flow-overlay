@@ -200,33 +200,33 @@ const aligmentStyle = (command: string): React.CSSProperties => {
                 position: "absolute",
                 width: "100vw",
                 height: "100vh",
-                right: undefined,
+                right: 0,
                 animationName: "nothing",
                 justifyContent: "center",
                 alignItems: "flex-end",
-                top: undefined
+                top: 0
             };
         case "naka":
             return {
                 position: "absolute",
                 width: "100vw",
                 height: "100vh",
-                right: undefined,
+                right: 0,
                 animationName: "nothing",
                 justifyContent: "center",
                 alignItems: "center",
-                top: undefined 
+                top: 0 
             };
         case "ue":
             return {
                 position: "absolute",
                 width: "100vw",
                 height: "100vh",
-                right: undefined,
+                right: 0,
                 animationName: "nothing",
                 justifyContent: "center",
                 alignItems: "flex-start",
-                top: undefined,
+                top: 0,
             };
         default:
             return {

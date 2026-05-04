@@ -61,16 +61,18 @@ export const extractTokens = (
         index++;
     }
 
-    console.log("Extracted tokens:", tokens);
-
     const remainingText = parts.slice(commandCount).join(' ');
 
     let removedLength = 0;
 
     if (commandCount > 0) {
-        const startIndex = text.indexOf(remainingText);
-        if (startIndex !== -1) {
-            removedLength = startIndex;
+        if (remainingText.length === 0) {
+            removedLength = text.length;
+        } else {
+            const consumedLength = parts
+                .slice(0, commandCount)
+                .reduce((sum, part) => sum + part.length, 0);
+            removedLength = consumedLength + commandCount;
         }
     }
 
