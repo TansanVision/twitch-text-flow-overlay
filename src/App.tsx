@@ -49,15 +49,24 @@ function getConfig(): AppConfig {
                    typeof stamp === 'object' &&
                    typeof stamp.commandName === 'string' &&
                    stamp.commandName !== '' &&
+                   !/\s/.test(stamp.commandName) && // コマンド名に空白が含まれないことを確認
                    typeof stamp.dataUri === 'string' &&
-                   stamp.dataUri !== ''
+                   stamp.dataUri !== '' &&
+                   /^data:image\/(png|jpeg|gif);base64,/.test(stamp.dataUri) // data URIの形式を簡易的に検証
                )
-               .map((stamp) => ({
-                 commandName: stamp.commandName,
-                 dataUri: stamp.dataUri,
-                 effectType: 'default', // 現状はeffectTypeを固定値で設定。将来的にconfigで指定できるようにする場合はここを修正。
-               }))
-           : defaultConfig.customStamps,
+                .map((stamp) => {
+                  if (typeof stamp.effectType === 'string' && stamp.effectType !== 'default') {
+                    console.warn(
+                      `Unsupported effectType "${stamp.effectType}" for custom stamp "${stamp.commandName}". Falling back to "default".`
+                    );
+                  }
+                  return {
+                    commandName: stamp.commandName,
+                    dataUri: stamp.dataUri,
+                    effectType: 'default', // 現状はdefaultのみ対応。未対応のeffectType指定時は警告してdefaultにフォールバックする。
+                  };
+                })
+            : defaultConfig.customStamps,
       };
     } catch (error) {
       console.error('Failed to parse config JSON:', error);

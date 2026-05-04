@@ -120,12 +120,12 @@ shita small これはコメントです。
 "customStamps": [
   {
     "commandName": "コマンド名1",
-    "dataUri": "画像のデータURI",
+    "dataUri": "画像のデータURI1",
     "effectType": "default"
   },
   {
     "commandName": "コマンド名2",
-    "dataUri": "画像のデータURI22",
+    "dataUri": "画像のデータURI2",
     "effectType": "default"
   }
 ]
