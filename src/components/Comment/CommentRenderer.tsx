@@ -1,5 +1,6 @@
 import React from 'react';
 import type { CommentRendererProps } from './types';
+import { isSizeCommand, isColorCommand, isAlignmentCommand } from './types';
 
 /**
  * コメントの基本スタイル
@@ -204,105 +205,69 @@ const alignmentStyle = (command: string): React.CSSProperties => {
         }
     }
 
+    const fixedCommonStyle: React.CSSProperties = {
+        position: "absolute",
+        width: "100vw",
+        height: "100vh",
+        right: 0,
+        top: 0,
+        animationName: "nothing",
+    };
+
     switch (command) {
         case "shita":
             return {
-                position: "absolute",
-                width: "100vw",
-                height: "100vh",
-                right: 0,
-                animationName: "nothing",
+                ...fixedCommonStyle,
                 justifyContent: "center",
                 alignItems: "flex-end",
-                top: 0
             };
         case "naka":
             return {
-                position: "absolute",
-                width: "100vw",
-                height: "100vh",
-                right: 0,
-                animationName: "nothing",
+                ...fixedCommonStyle,
                 justifyContent: "center",
                 alignItems: "center",
-                top: 0 
             };
         case "ue":
             return {
-                position: "absolute",
-                width: "100vw",
-                height: "100vh",
-                right: 0,
-                animationName: "nothing",
+                ...fixedCommonStyle,
                 justifyContent: "center",
                 alignItems: "flex-start",
-                top: 0,
             };
         case "migiue":
             return {
-                position: "absolute",
-                width: "100vw",
-                height: "100vh",
-                right: 0,
-                animationName: "nothing",
+                ...fixedCommonStyle,
                 justifyContent: "flex-end",
                 alignItems: "flex-start",
-                top: 0,
             };
         case "hidariue":
             return {
-                position: "absolute",
-                width: "100vw",
-                height: "100vh",
-                right: 0,
-                animationName: "nothing",
+                ...fixedCommonStyle,
                 justifyContent: "flex-start",
                 alignItems: "flex-start",
-                top: 0,
             };
         case "migishita":
             return {
-                position: "absolute",
-                width: "100vw",
-                height: "100vh",
-                right: 0,
-                animationName: "nothing",
+                ...fixedCommonStyle,
                 justifyContent: "flex-end",
                 alignItems: "flex-end",
-                top: 0,
             };
         case "hidarishita":
             return {                
-                position: "absolute",
-                width: "100vw",
-                height: "100vh",
-                right: 0,
-                animationName: "nothing",
+                ...fixedCommonStyle,
                 justifyContent: "flex-start",
                 alignItems: "flex-end",
-                top: 0,
             };
         case "migi":
             return {
-                position: "absolute",
-                width: "100vw",
-                height: "100vh",
-                right: 0,
-                animationName: "nothing",
+                ...fixedCommonStyle,
                 justifyContent: "flex-end",
                 alignItems: "center",
-                top: 0,
             };
         case "hidari":
             return {
-                position: "absolute",
-                width: "100vw",
-                height: "100vh",
-                right: 0,
-                animationName: "nothing",
+                ...fixedCommonStyle,
                 justifyContent: "flex-start",
                 alignItems: "center",
-                top: 0,
             };
         default:
             return {
@@ -328,9 +293,9 @@ export const CommentRenderer : React.FC<CommentRendererProps> = ({
 }) => {
     const combinedStyle = {
         ...baseStyle(animationDuration),
-        ...sizeStyle(commands.find(cmd => cmd === "small" || cmd === "medium" || cmd === "big") || "", lane),
-        ...colorStyle(commands.find(cmd => ["red", "pink", "orange", "yellow", "green", "cyan", "blue", "purple", "black", "white2", "niconicowhite", "red2", "truered", "pink2", "orange2", "passionorange", "yellow2", "madyellow", "cyan2", "blue2", "marineblue", "black2", "elementalgreen", "green2"].includes(cmd) ? cmd : "") || ""),
-        ...alignmentStyle(commands.find(cmd => ["shita", "naka", "ue", "migi", "hidari", "migiue", "migishita", "hidariue", "hidarishita"].includes(cmd) ? cmd : "") || "")
+        ...sizeStyle(commands.find(isSizeCommand) || "", lane),
+        ...colorStyle(commands.find(isColorCommand) || ""),
+        ...alignmentStyle(commands.find(isAlignmentCommand) || "")
     };
 
     return (

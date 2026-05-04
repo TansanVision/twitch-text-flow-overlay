@@ -108,7 +108,9 @@ export const isSpecialColorCommand = (command: Command): command is SpecialColor
     command === 'marineblue' ||
     command === 'purple2' ||
     command === 'nobleviolet' ||
-    command === 'black2';
+    command === 'black2' ||
+    command === 'elementalgreen' ||
+    command === 'green2';
 }
 
 /**
