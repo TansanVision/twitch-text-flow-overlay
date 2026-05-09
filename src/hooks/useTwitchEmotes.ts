@@ -252,7 +252,7 @@ function renderExternalEmotesOnly(
             else {
                 return [React.createElement("div", 
                     { key: `text-${index}` 
-                }, part)];
+                }, part + (index < parts.length - 1 ? ' ' : ''))];
             }
         } else {
             return index < parts.length - 1 
