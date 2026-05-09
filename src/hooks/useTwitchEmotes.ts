@@ -192,20 +192,6 @@ function renderNativeTwitchEmotes(
 }
 
 /**
- * URLが有効かどうかを検証する関数
- * @param url - 検証するURL文字列
- * @returns URLが有効な場合はtrue、そうでない場合はfalse
- */
-function isValidUrl(url: string): boolean {
-    try {
-        new URL(url);
-        return true;
-    } catch {
-        return false;
-    }
-}
-
-/**
  * Twitchのメッセージテキストを外部エモートのみでレンダリングする関数
  * @param text - メッセージテキスト
  * @param externalEmotes - 外部エモートのマップ
@@ -219,9 +205,6 @@ function renderExternalEmotesOnly(
 ): React.ReactNode[] {
     const parts = text.split(/\s+/);
 
-    // ue ☺
-    // endIndex: 4
-    // startIndex: 3
     return parts.map((part, index) => {
         const custom = customStamps.get(part);
         if (custom) {
@@ -272,8 +255,8 @@ function renderExternalEmotesOnly(
                 }, part)];
             }
         } else {
-            if (isValidUrl(emote.url)) {
-                return React.createElement('img', {
+            return index < parts.length - 1 
+                ? [React.createElement('img', {
                     key: `${emote.name}-${index}`,
                     src: emote.url,
                     alt: emote.name,
@@ -282,12 +265,17 @@ function renderExternalEmotesOnly(
                         objectFit: "cover",
                         maxHeight: "52px"
                     }
-                });
-            } else {
-                return [React.createElement("div", 
-                    { key: `text-${index}` 
-                }, part)];
-            }
+                }), ' ']
+                : [React.createElement('img', {
+                    key: `${emote.name}-${index}`,
+                    src: emote.url,
+                    alt: emote.name,
+                    style: {
+                        height: "100%",
+                        objectFit: "cover",
+                        maxHeight: "52px"
+                    }
+                })];
         }
     });
 }

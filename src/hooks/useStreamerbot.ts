@@ -127,6 +127,8 @@ export function useStreamerBot({
                                             name: "Kappa",
                                             startIndex: 0,
                                             endIndex: 4,
+                                            imageUrl: "https://static-cdn.jtvnw.net/emoticons/v2/25/default/dark/3.0",
+                                            type: "Twitch"
                                         }
                                     ]
                                 },
