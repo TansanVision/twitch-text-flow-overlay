@@ -244,7 +244,7 @@ function renderExternalEmotesOnly(
                     subParts.map((subPart, subIndex) => (
                         React.createElement("span",
                             { key: `text-${index}-${subIndex}` },
-                            subPart
+                            subPart + (subIndex < subParts.length - 1 ? ' ' : '')
                         )
                     ))
                 );
