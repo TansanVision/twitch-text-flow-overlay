@@ -22,8 +22,8 @@ const defaultConfig = {
  */
 function getConfig(): AppConfig {
   const configElement = document.getElementById('config');
-
   if (configElement) {
+
     try {
       const rawConfigText = configElement.textContent ?? '';
       const configText = rawConfigText.trim() === '' ? '{}' : rawConfigText;
@@ -85,9 +85,9 @@ function getConfig(): AppConfig {
                   );
                   return validStamps;
                  }
-                 if (!/^data:image\/(png|jpeg|gif);base64,/.test(candidate.dataUri)) {
+                 if (!/^data:image\/(bmp|png|jpeg|gif);base64,/.test(candidate.dataUri)) {
                   console.warn(
-                    `無効なカスタムスタンプ "${candidate.commandName}" at index ${index}: "dataUri" は有効な png/jpeg/gif のデータ URI である必要があります。スキップします。`
+                    `無効なカスタムスタンプ "${candidate.commandName}" at index ${index}: "dataUri" は有効な bmp/png/jpeg/gif のデータ URI である必要があります。スキップします。`
                   );
                   return validStamps;
                  }
@@ -186,35 +186,39 @@ function App() {
         emotes: [] });
 
       addComment({ 
-        text: "yellow naka test🍰", 
+        text: "yellow ue 上🍰", 
         emotes: [] });
 
       addComment({ 
-        text: "small blue shita test🍰", 
+        text: "yellow naka 中🍰", 
         emotes: [] });
 
       addComment({ 
-        text: "small purple migi test🍰", 
+        text: "small blue shita 下🍰", 
         emotes: [] });
 
       addComment({ 
-        text: "purple2 migiue test🍰", 
+        text: "small purple migi 右🍰", 
         emotes: [] });
 
       addComment({ 
-        text: "purple2 migishita test🍰", 
+        text: "purple2 migiue 右上🍰", 
         emotes: [] });
 
       addComment({ 
-        text: "small green2 hidari test🍰", 
+        text: "purple2 migishita 右下🍰", 
         emotes: [] });
 
       addComment({ 
-        text: "green2 hidariue test🍰", 
+        text: "small green2 hidari 左🍰", 
         emotes: [] });
 
       addComment({ 
-        text: "green2 hidarishita test🍰", 
+        text: "green2 hidariue 左上🍰", 
+        emotes: [] });
+
+      addComment({ 
+        text: "green2 hidarishita 左下🍰", 
         emotes: [] });
 
       addComment({ 

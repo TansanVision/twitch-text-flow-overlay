@@ -55,6 +55,7 @@ const sizeStyle = (command: string, lane: number): React.CSSProperties => {
     if (!command) {
         return {
             fontSize: "4vh",
+            height: "4vh",
             top: `calc(${lane} * 4vh)`,
             ...shadowStyle(2)
         }
@@ -64,24 +65,28 @@ const sizeStyle = (command: string, lane: number): React.CSSProperties => {
         case "small":
             return {
                 fontSize: "2.7vh",
+                height: "2.7vh",
                 top: `calc(${lane} * 2.7vh)`,
                 ...shadowStyle(1)
             };
         case "medium":
             return {
                 fontSize: "4vh",
+                height: "4vh",
                 top: `calc(${lane} * 4vh)`,
                 ...shadowStyle(2)
             };
         case "big":
             return {
                 fontSize: "6.7vh",
+                height: "6.7vh",
                 top: `calc(${lane} * 6.7vh)`,
                 ...shadowStyle(2.5)
             };
         default:
             return {
                 fontSize: "4vh",
+                height: "4vh",
                 top: `calc(${lane} * 4vh)`,
                 ...shadowStyle(2)
             };
@@ -201,16 +206,17 @@ const alignmentStyle = (command: string): React.CSSProperties => {
         return {
             right: '-50%',
             justifyContent: "flex-start",
-            alignItems: "flex-start"
+            alignItems: "center"
         }
     }
 
     const fixedCommonStyle: React.CSSProperties = {
         position: "absolute",
-        width: "100vw",
-        height: "100vh",
-        right: 0,
-        top: 0,
+        top: undefined,
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
         animationName: "nothing",
     };
 
@@ -218,63 +224,70 @@ const alignmentStyle = (command: string): React.CSSProperties => {
         case "shita":
             return {
                 ...fixedCommonStyle,
-                justifyContent: "center",
-                alignItems: "flex-end",
+                top: undefined,
+                bottom: 20,
+                left: "50%",
+                transform: "translateX(-50%)",
             };
         case "naka":
             return {
                 ...fixedCommonStyle,
-                justifyContent: "center",
-                alignItems: "center",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
             };
         case "ue":
             return {
                 ...fixedCommonStyle,
-                justifyContent: "center",
-                alignItems: "flex-start",
+                top: 5,
+                left: "50%",
+                transform: "translateX(-50%)",
             };
         case "migiue":
             return {
                 ...fixedCommonStyle,
-                justifyContent: "flex-end",
-                alignItems: "flex-start",
+                top: 5,
+                right: 5,
             };
         case "hidariue":
             return {
                 ...fixedCommonStyle,
-                justifyContent: "flex-start",
-                alignItems: "flex-start",
+                top: 5,
+                left: 5,
+
             };
         case "migishita":
             return {
                 ...fixedCommonStyle,
-                justifyContent: "flex-end",
-                alignItems: "flex-end",
+                bottom: 20,
+                right: 0,
             };
         case "hidarishita":
             return {                
                 ...fixedCommonStyle,
-                justifyContent: "flex-start",
-                alignItems: "flex-end",
+                bottom: 20,
+                left: 0,
             };
         case "migi":
             return {
                 ...fixedCommonStyle,
-                justifyContent: "flex-end",
-                alignItems: "center",
+                right: 0,
+                top: "50%",
+                transform: "translateY(-50%)",
             };
         case "hidari":
             return {
                 ...fixedCommonStyle,
-                justifyContent: "flex-start",
-                alignItems: "center",
+                bottom: "50%",
+                left: 0,
+                transform: "translateY(50%)",
             };
         default:
             return {
                 right: '-50%',
                 animationName: "move-left",
                 justifyContent: "flex-start",
-                alignItems: "flex-start"
+                alignItems: "center"
             };
     }
 }
