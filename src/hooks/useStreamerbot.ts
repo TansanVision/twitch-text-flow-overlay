@@ -7,11 +7,24 @@ import { useState, useEffect, useRef } from 'react';
 type ConnectionStatus = 'connecting' | 'connected' | 'disconnected' | 'error';
 
 /**
+ * エモートの型定義
+ */
+export type Emote = {
+    id?: string;
+    endIndex: number;
+    imageUrl: string;
+    name: string;
+    startIndex: number;
+    zeroWidth?: boolean;
+    type: string;
+}
+
+/**
  * メッセージの型定義
  */
 export type Message = {
     text: string;
-    emotes: any[];
+    emotes: Emote[];
 }
 
 /**
@@ -33,6 +46,10 @@ type UseStreamerBotOptions = {
 function getMessage({ data }: { data: any }): Message {
     const message = data?.message?.message || '';
     const emotes = data?.message?.emotes || [];
+
+    if (import.meta.env.MODE === 'development') {
+        console.log('Received message data:', data);
+    }
 
     return {
         text: message || '',
@@ -86,21 +103,35 @@ export function useStreamerBot({
             if (data.arguments.isTest) {
                 if (data.arguments.triggerName === "Test" &&
                     data.arguments.triggerCategory === "Core") {
-                    handleComment({
-                        data: {
-                            message: { 
-                                message: "Kappa" + "これはU+2003エモートテストです。",
-                                emotes: [
-                                    {
-                                        id: "25",
-                                        name: "Kappa",
-                                        startIndex: 0,
-                                        endIndex: 4,
-                                    }
-                                ]
+                        const regex = /comment/i;
+                        for (let key in data.arguments) {
+                            if (regex.test(key.toString())) {
+                                handleComment({
+                                    data: {
+                                        message: {
+                                            message: data.arguments[key],
+                                            emotes: []
+                                        },
+                                    },
+                                });
+                            }
+                        }
+                    
+                        handleComment({
+                            data: {
+                                message: { 
+                                    message: "Kappa" + "これはU+2003エモートテストです。",
+                                    emotes: [
+                                        {
+                                            id: "25",
+                                            name: "Kappa",
+                                            startIndex: 0,
+                                            endIndex: 4,
+                                        }
+                                    ]
+                                },
                             },
-                        },
-                    });
+                        });
                 }
             }
         });

@@ -172,7 +172,7 @@ function renderNativeTwitchEmotes(
         result.push(
             React.createElement('img', {
                 key: `${emote.id}-${start}`,
-                src: `https://static-cdn.jtvnw.net/emoticons/v2/${emote.id}/default/dark/3.0`,
+                src: emote.imageUrl,
                 style: {
                     height: "100%",
                     objectFit: "cover",
@@ -192,6 +192,20 @@ function renderNativeTwitchEmotes(
 }
 
 /**
+ * URLが有効かどうかを検証する関数
+ * @param url - 検証するURL文字列
+ * @returns URLが有効な場合はtrue、そうでない場合はfalse
+ */
+function isValidUrl(url: string): boolean {
+    try {
+        new URL(url);
+        return true;
+    } catch {
+        return false;
+    }
+}
+
+/**
  * Twitchのメッセージテキストを外部エモートのみでレンダリングする関数
  * @param text - メッセージテキスト
  * @param externalEmotes - 外部エモートのマップ
@@ -205,6 +219,9 @@ function renderExternalEmotesOnly(
 ): React.ReactNode[] {
     const parts = text.split(/\s+/);
 
+    // ue ☺
+    // endIndex: 4
+    // startIndex: 3
     return parts.map((part, index) => {
         const custom = customStamps.get(part);
         if (custom) {
@@ -227,7 +244,7 @@ function renderExternalEmotesOnly(
         const emote = externalEmotes.get(part);
 
         if (!emote) {
-            if (part.includes("U+2003")){
+            if (part.includes("U+2003")) {
                 const subParts = part.split("U+2003");
 
                 return React.createElement("div",
@@ -249,34 +266,29 @@ function renderExternalEmotesOnly(
                     ))
                 );
             }
-            else{
+            else {
+                return [React.createElement("div", 
+                    { key: `text-${index}` 
+                }, part)];
+            }
+        } else {
+            if (isValidUrl(emote.url)) {
+                return React.createElement('img', {
+                    key: `${emote.name}-${index}`,
+                    src: emote.url,
+                    alt: emote.name,
+                    style: {
+                        height: "100%",
+                        objectFit: "cover",
+                        maxHeight: "52px"
+                    }
+                });
+            } else {
                 return [React.createElement("div", 
                     { key: `text-${index}` 
                 }, part)];
             }
         }
-
-        return index < parts.length - 1 
-            ? [React.createElement('img', {
-                key: `${emote.name}-${index}`,
-                src: emote.url,
-                alt: emote.name,
-                style: {
-                    height: "100%",
-                    objectFit: "cover",
-                    maxHeight: "52px"
-                }
-            }), ' ']
-            : [React.createElement('img', {
-                key: `${emote.name}-${index}`,
-                src: emote.url,
-                alt: emote.name,
-                style: {
-                    height: "100%",
-                    objectFit: "cover",
-                    maxHeight: "52px"
-                }
-            })];
     });
 }
 
