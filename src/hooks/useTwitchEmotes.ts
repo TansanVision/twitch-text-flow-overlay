@@ -172,7 +172,7 @@ function renderNativeTwitchEmotes(
         result.push(
             React.createElement('img', {
                 key: `${emote.id}-${start}`,
-                src: `https://static-cdn.jtvnw.net/emoticons/v2/${emote.id}/default/dark/3.0`,
+                src: emote.imageUrl,
                 style: {
                     height: "100%",
                     objectFit: "cover",
@@ -227,7 +227,7 @@ function renderExternalEmotesOnly(
         const emote = externalEmotes.get(part);
 
         if (!emote) {
-            if (part.includes("U+2003")){
+            if (part.includes("U+2003")) {
                 const subParts = part.split("U+2003");
 
                 return React.createElement("div",
@@ -244,39 +244,39 @@ function renderExternalEmotesOnly(
                     subParts.map((subPart, subIndex) => (
                         React.createElement("span",
                             { key: `text-${index}-${subIndex}` },
-                            subPart
+                            subPart + (subIndex < subParts.length - 1 ? ' ' : '')
                         )
                     ))
                 );
             }
-            else{
+            else {
                 return [React.createElement("div", 
                     { key: `text-${index}` 
-                }, part)];
+                }, part + (index < parts.length - 1 ? ' ' : ''))];
             }
+        } else {
+            return index < parts.length - 1 
+                ? [React.createElement('img', {
+                    key: `${emote.name}-${index}`,
+                    src: emote.url,
+                    alt: emote.name,
+                    style: {
+                        height: "100%",
+                        objectFit: "cover",
+                        maxHeight: "52px"
+                    }
+                }), ' ']
+                : [React.createElement('img', {
+                    key: `${emote.name}-${index}`,
+                    src: emote.url,
+                    alt: emote.name,
+                    style: {
+                        height: "100%",
+                        objectFit: "cover",
+                        maxHeight: "52px"
+                    }
+                })];
         }
-
-        return index < parts.length - 1 
-            ? [React.createElement('img', {
-                key: `${emote.name}-${index}`,
-                src: emote.url,
-                alt: emote.name,
-                style: {
-                    height: "100%",
-                    objectFit: "cover",
-                    maxHeight: "52px"
-                }
-            }), ' ']
-            : [React.createElement('img', {
-                key: `${emote.name}-${index}`,
-                src: emote.url,
-                alt: emote.name,
-                style: {
-                    height: "100%",
-                    objectFit: "cover",
-                    maxHeight: "52px"
-                }
-            })];
     });
 }
 
