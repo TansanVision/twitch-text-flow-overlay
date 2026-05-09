@@ -132,16 +132,19 @@ function renderLine(
     const parts = line.split(" ");
     const nodes: React.ReactNode[] = [];
 
-    for (const part of parts) {
+    for (const [index, part] of parts.entries()) {
         // カスタムスタンプ
         const custom = customStamps.get(part);
         if (custom) {
             nodes.push(
                 <img
-                    key={`custom-${custom.commandName}-${part}`}
+                    key={`custom-${custom.commandName}-${part}-${index}`}
                     src={custom.dataUri}
                     data-effect={custom.effectType}
-                    style={{ height: "100%", maxHeight: "52px" }}
+                    style={{
+                        height: "100%",
+                        maxHeight: "1em",
+                    }}
                 />
             );
             continue;
@@ -152,9 +155,12 @@ function renderLine(
         if (external) {
             nodes.push(
                 <img
-                    key={`external-${external.name}-${part}`}
+                    key={`external-${external.name}-${part}-${index}`}
                     src={external.url}
-                    style={{ height: "100%", maxHeight: "52px" }}
+                    style={{ 
+                        height: "100%",
+                        maxHeight: "1em",
+                    }}
                 />
             );
             continue;
@@ -165,16 +171,19 @@ function renderLine(
         if (twitch) {
             nodes.push(
                 <img
-                    key={`twitch-${twitch.id}-${part}`}
+                    key={`twitch-${twitch.id}-${part}-${index}`}
                     src={twitch.imageUrl}
-                    style={{ height: "100%", maxHeight: "52px" }}
+                    style={{ 
+                        height: "100%", 
+                        maxHeight: "1em", 
+                    }}
                 />
             );
             continue;
         }
 
         // 通常テキスト
-        nodes.push(<span key={`text-${part}`}>{part} </span>);
+        nodes.push(<span key={`text-${part}-${index}`}>{part} </span>);
     }
 
     return nodes;
