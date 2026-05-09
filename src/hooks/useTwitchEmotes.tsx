@@ -2,6 +2,7 @@ import React, { useEffect, useCallback, useRef, useMemo } from 'react';
 import { extractTokens } from '../components/Comment/utils';
 import type { Command } from '../components/Comment/types';
 import type { CustomStampConfig, CustomStampMap } from '../types';
+import type { Emote } from './useStreamerbot';
 
 /**
  * 外部エモートの型定義
@@ -14,14 +15,14 @@ export type ExternalEmote = {
 /**
  * エモートマップの型定義
  */
-export type EmoteMap = Map<string, ExternalEmote>;
+export type ExternalEmoteMap = Map<string, ExternalEmote>;
 
 /**
  * TwitchユーザーIDに基づいて外部エモートをロードする関数
  * @returns エモートマップ
  */
-export async function loadExternalEmotes(): Promise<EmoteMap> {
-    const map: EmoteMap = new Map();
+export async function loadExternalEmotes(): Promise<ExternalEmoteMap> {
+    const map: ExternalEmoteMap = new Map();
     const loadTasks: Promise<void>[] = [];
 
     loadTasks.push(loadBttvGlobal(map));
@@ -37,7 +38,7 @@ export async function loadExternalEmotes(): Promise<EmoteMap> {
  * @param map - エモートマップ
  * @return Promise<void>
  */
-async function loadBttvGlobal(map: EmoteMap): Promise<void> {
+async function loadBttvGlobal(map: ExternalEmoteMap): Promise<void> {
     const response = await fetch('https://api.betterttv.net/3/cached/emotes/global');
     const data = await response.json();
 
@@ -54,7 +55,7 @@ async function loadBttvGlobal(map: EmoteMap): Promise<void> {
  * @param map - エモートマップ
  * @returns Promise<void>
  */
-async function loadSevenTvGlobal(map: EmoteMap): Promise<void> {
+async function loadSevenTvGlobal(map: ExternalEmoteMap): Promise<void> {
     const response = await fetch('https://7tv.io/v3/emotes/global');
     const data = await response.json();
 
@@ -116,6 +117,85 @@ const fixTwitchEmotes = (twitchEmotes: any, adjustmentLength: number) => {
 
 /**
  * Twitchのメッセージテキストをエモートでレンダリングする関数
+ * @param line - メッセージテキストの行
+ * @param twitchEmotes - Twitchのエモートデータ
+ * @param externalEmotes - 外部エモートのマップ
+ * @param customStamps - カスタムスタンプのマップ
+ * @returns レンダリングされたReactノードの配列
+ */
+function renderLine(
+    line: string,
+    twitchEmotes: Emote[],
+    externalEmotes: ExternalEmoteMap,
+    customStamps: CustomStampMap
+): React.ReactNode[] {
+    const parts = line.split(" ");
+    const nodes: React.ReactNode[] = [];
+
+    for (const part of parts) {
+        // カスタムスタンプ
+        const custom = customStamps.get(part);
+        if (custom) {
+            nodes.push(
+                <img
+                    key={`custom-${custom.commandName}-${part}`}
+                    src={custom.dataUri}
+                    data-effect={custom.effectType}
+                    style={{ height: "100%", maxHeight: "52px" }}
+                />
+            );
+            continue;
+        }
+
+        // 外部エモート
+        const external = externalEmotes.get(part);
+        if (external) {
+            nodes.push(
+                <img
+                    key={`external-${external.name}-${part}`}
+                    src={external.url}
+                    style={{ height: "100%", maxHeight: "52px" }}
+                />
+            );
+            continue;
+        }
+
+        // Twitch エモート
+        const twitch = twitchEmotes.find(e => line.slice(e.startIndex, e.endIndex + 1) === part);
+        if (twitch) {
+            nodes.push(
+                <img
+                    key={`twitch-${twitch.id}-${part}`}
+                    src={twitch.imageUrl}
+                    style={{ height: "100%", maxHeight: "52px" }}
+                />
+            );
+            continue;
+        }
+
+        // 通常テキスト
+        nodes.push(<span key={`text-${part}`}>{part} </span>);
+    }
+
+    return nodes;
+}
+
+/**
+ * テキストをU+2003で正規化して分割する関数
+ * @param text - 入力テキスト
+ * @returns U+2003で分割されたテキストの配列
+ */
+function splitByU2003(text: string): string[] {
+    return text
+        .replace(/\u2003/g, " U+2003 ")
+        .replace(/\s+/g, " ")
+        .trim()
+        .split("U+2003")
+        .map(line => line.trim());
+}
+
+/**
+ * Twitchのメッセージテキストをエモートでレンダリングする関数
  * @param text - メッセージテキスト
  * @param twitchEmotes - Twitchのエモートデータ
  * @param externalEmotes - 外部エモートのマップ
@@ -124,160 +204,36 @@ const fixTwitchEmotes = (twitchEmotes: any, adjustmentLength: number) => {
  */
 export function renderTwitchMessageEmotes(
     text: string, 
-    twitchEmotes: any, 
-    externalEmotes: EmoteMap,
+    twitchEmotes: Emote[], 
+    externalEmotes: ExternalEmoteMap,
     customStamps: CustomStampMap
 ): React.ReactNode[] {
-    const nativeEmotes = 
-        twitchEmotes?.items ??
-        twitchEmotes ??
-        [];
+    const lines = splitByU2003(text);
 
-    return nativeEmotes.length > 0
-        ? renderNativeTwitchEmotes(text, nativeEmotes, externalEmotes, customStamps)
-        : renderExternalEmotesOnly(text, externalEmotes, customStamps);
-}
-
-/**
- * Twitchのメッセージテキストをネイティブエモートと外部エモートでレンダリングする関数
- * @param text - メッセージテキスト
- * @param nativeEmotes - Twitchのネイティブエモートデータ
- * @param externalEmotes - 外部エモートのマップ
- * @param customStamps - カスタムスタンプのマップ
- * @returns レンダリングされたReactノードの配列
- */
-function renderNativeTwitchEmotes(
-    text: string, 
-    nativeEmotes: any[],
-    externalEmotes: EmoteMap,
-    customStamps: CustomStampMap
-): React.ReactNode[] {
-    const result: React.ReactNode[] = [];
-    let lastIndex = 0;
-
-    const sorted = [...nativeEmotes].sort((a, b) => {
-        const aStart = a.startIndex ?? 0;
-        const bStart = b.startIndex ?? 0;
-        return aStart - bStart;
-    });
-
-    for (const emote of sorted) {
-        const start = emote.startIndex ?? 0;
-        const end = emote.endIndex ?? 0;
-
-        if (lastIndex < start) {
-            result.push(...renderExternalEmotesOnly(text.slice(lastIndex, start), externalEmotes, customStamps));
-        }
-
-        result.push(
-            React.createElement('img', {
-                key: `${emote.id}-${start}`,
-                src: emote.imageUrl,
-                style: {
-                    height: "100%",
-                    objectFit: "cover",
-                    maxHeight: "52px"
-                }
-            })
-        );
-
-        lastIndex = end + 1;
-    }
-
-    if (lastIndex < text.length) {
-        result.push(...renderExternalEmotesOnly(text.slice(lastIndex), externalEmotes, customStamps));
-    }
-
-    return result;
-}
-
-/**
- * Twitchのメッセージテキストを外部エモートのみでレンダリングする関数
- * @param text - メッセージテキスト
- * @param externalEmotes - 外部エモートのマップ
- * @param customStamps - カスタムスタンプのマップ
- * @returns レンダリングされたReactノードの配列
- */
-function renderExternalEmotesOnly(
-    text: string, 
-    externalEmotes: EmoteMap,
-    customStamps: CustomStampMap
-): React.ReactNode[] {
-    const parts = text.split(/\s+/);
-
-    return parts.map((part, index) => {
-        const custom = customStamps.get(part);
-        if (custom) {
-             const customNode = React.createElement("img", {
-                 key: `custom-${custom.commandName}-${index}`,
-                 src: custom.dataUri,
-                 alt: custom.commandName,
-                 "data-effect": custom.effectType,
-                 style: {
-                     height: "100%",
-                     objectFit: "cover",
-                     maxHeight: "52px"
-                 }
-             });
-             return index < parts.length - 1
-                 ? [customNode, ' ']
-                 : [customNode];
-        }
-
-        const emote = externalEmotes.get(part);
-
-        if (!emote) {
-            if (part.includes("U+2003")) {
-                const subParts = part.split("U+2003");
-
-                return React.createElement("div",
-                    { key: `text-${index}`,
-                        style: {
+    return lines.length === 1
+        ? renderLine(lines[0], twitchEmotes, externalEmotes, customStamps)
+        : [<div style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 0,
+                margin: 0,
+            }}>
+                {lines.map((line, index) => (
+                    <div
+                        key={`line-${index}`}
+                        style={{
                             display: "flex",
-                            flexDirection: "column",
+                            flexDirection: "row",
+                            lineHeight: "1em",
                             gap: 0,
                             margin: 0,
                             padding: 0,
-                            lineHeight: "1em",
-                        }
-                    },
-                    subParts.map((subPart, subIndex) => (
-                        React.createElement("span",
-                            { key: `text-${index}-${subIndex}` },
-                            subPart + (subIndex < subParts.length - 1 ? ' ' : '')
-                        )
-                    ))
-                );
-            }
-            else {
-                return [React.createElement("div", 
-                    { key: `text-${index}` 
-                }, part + (index < parts.length - 1 ? ' ' : ''))];
-            }
-        } else {
-            return index < parts.length - 1 
-                ? [React.createElement('img', {
-                    key: `${emote.name}-${index}`,
-                    src: emote.url,
-                    alt: emote.name,
-                    style: {
-                        height: "100%",
-                        objectFit: "cover",
-                        maxHeight: "52px"
-                    }
-                }), ' ']
-                : [React.createElement('img', {
-                    key: `${emote.name}-${index}`,
-                    src: emote.url,
-                    alt: emote.name,
-                    style: {
-                        height: "100%",
-                        objectFit: "cover",
-                        maxHeight: "52px"
-                    }
-                })];
-        }
-    });
+                        }}
+                    >
+                        {renderLine(line, twitchEmotes, externalEmotes, customStamps)}
+                    </div>
+                ))}
+            </div>];
 }
 
 /**
@@ -285,7 +241,7 @@ function renderExternalEmotesOnly(
  * @returns エモートマップとレンダリング関数
  */
 export function useTwitchEmotes(customStamps: CustomStampConfig[] = []) {
-    const emotesCache = useRef<EmoteMap>(new Map());
+    const emotesCache = useRef<ExternalEmoteMap>(new Map());
     const customStampMap = useMemo(() => loadCustomStamps(customStamps), [customStamps]);
 
     const getNodesAndCommands = useCallback((text: string, twitchEmotes: any) => {

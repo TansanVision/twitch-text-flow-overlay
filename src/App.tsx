@@ -216,6 +216,56 @@ function App() {
       addComment({ 
         text: "green2 hidarishita test🍰", 
         emotes: [] });
+
+      addComment({ 
+        text: "hidari imGlitch U+2003 imGlitch", 
+        emotes: [{
+          id: "112290",
+          name: "imGlitch",
+          startIndex: 7,
+          endIndex: 14,
+          imageUrl: "https://static-cdn.jtvnw.net/emoticons/v2/112290/default/dark/3.0",
+          type: "Twitch"
+        }, {
+          id: "112290",
+          name: "imGlitch",
+          startIndex: 23,
+          endIndex: 30,
+          imageUrl: "https://static-cdn.jtvnw.net/emoticons/v2/112290/default/dark/3.0",
+          type: "Twitch"
+        }] });
+
+        addComment({ 
+        text: "hidari imGlitch imGlitch U+2003 imGlitch imGlitch", 
+        emotes: [{
+          id: "112290",
+          name: "imGlitch",
+          startIndex: 7,
+          endIndex: 14,
+          imageUrl: "https://static-cdn.jtvnw.net/emoticons/v2/112290/default/dark/3.0",
+          type: "Twitch"
+        }, {
+          id: "112290",
+          name: "imGlitch",
+          startIndex: 23,
+          endIndex: 30,
+          imageUrl: "https://static-cdn.jtvnw.net/emoticons/v2/112290/default/dark/3.0",
+          type: "Twitch"
+        }, {
+          id: "112290",
+          name: "imGlitch",
+          startIndex: 31,
+          endIndex: 38,
+          imageUrl: "https://static-cdn.jtvnw.net/emoticons/v2/112290/default/dark/3.0",
+          type: "Twitch"
+        }, {
+          id: "112290",
+          name: "imGlitch",
+          startIndex: 39,
+          endIndex: 46,
+          imageUrl: "https://static-cdn.jtvnw.net/emoticons/v2/112290/default/dark/3.0",
+          type: "Twitch"
+        }] });
   }, [addComment]);
 
   const releaseComment = useCallback((id: string) => {
