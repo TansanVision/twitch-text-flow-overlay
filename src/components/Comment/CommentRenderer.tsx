@@ -54,9 +54,9 @@ const shadowStyle = (size: number): React.CSSProperties => {
 const sizeStyle = (command: string, lane: number): React.CSSProperties => {
     if (!command) {
         return {
-            fontSize: "4vh",
-            height: "4vh",
-            top: `calc(${lane} * 4vh)`,
+            fontSize: "6vh",
+            height: "6vh",
+            top: `calc(${lane} * 6vh)`,
             ...shadowStyle(2)
         }
     }
@@ -64,30 +64,30 @@ const sizeStyle = (command: string, lane: number): React.CSSProperties => {
     switch (command) {
         case "small":
             return {
-                fontSize: "2.7vh",
-                height: "2.7vh",
-                top: `calc(${lane} * 2.7vh)`,
+                fontSize: "4vh",
+                height: "4vh",
+                top: `calc(${lane} * 4vh)`,
                 ...shadowStyle(1)
             };
         case "medium":
             return {
-                fontSize: "4vh",
-                height: "4vh",
-                top: `calc(${lane} * 4vh)`,
+                fontSize: "6vh",
+                height: "6vh",
+                top: `calc(${lane} * 6vh)`,
                 ...shadowStyle(2)
             };
         case "big":
             return {
-                fontSize: "6.7vh",
-                height: "6.7vh",
-                top: `calc(${lane} * 6.7vh)`,
+                fontSize: "9vh",
+                height: "9vh",
+                top: `calc(${lane} * 9vh)`,
                 ...shadowStyle(2.5)
             };
         default:
             return {
-                fontSize: "4vh",
-                height: "4vh",
-                top: `calc(${lane} * 4vh)`,
+                fontSize: "6vh",
+                height: "6vh",
+                top: `calc(${lane} * 6vh)`,
                 ...shadowStyle(2)
             };
     }   
@@ -213,6 +213,7 @@ const alignmentStyle = (command: string): React.CSSProperties => {
     const fixedCommonStyle: React.CSSProperties = {
         position: "absolute",
         top: undefined,
+        right: "auto",
         display: "flex",
         flexDirection: "row",
         justifyContent: "center",

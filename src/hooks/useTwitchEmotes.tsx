@@ -143,7 +143,7 @@ function renderLine(
                     data-effect={custom.effectType}
                     style={{
                         height: "100%",
-                        maxHeight: "56px",
+                        maxHeight: "1em",
                     }}
                 />
             );
@@ -159,7 +159,7 @@ function renderLine(
                     src={external.url}
                     style={{ 
                         height: "100%",
-                        maxHeight: "56px",
+                        maxHeight: "1em",
                     }}
                 />
             );
@@ -175,7 +175,7 @@ function renderLine(
                     src={twitch.imageUrl}
                     style={{ 
                         height: "100%", 
-                        maxHeight: "56px" 
+                        maxHeight: "1em", 
                     }}
                 />
             );
