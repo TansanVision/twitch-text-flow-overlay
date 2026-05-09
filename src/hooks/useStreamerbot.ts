@@ -120,7 +120,7 @@ export function useStreamerBot({
                         handleComment({
                             data: {
                                 message: { 
-                                    message: "Kappa" + "これはU+2003エモートテストです。",
+                                    message: "Kappa これはU+2003エモートテストです。",
                                     emotes: [
                                         {
                                             id: "25",
