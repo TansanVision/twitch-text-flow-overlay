@@ -81,6 +81,7 @@ const sizeStyle = (command: string, lane: number): React.CSSProperties => {
                 fontSize: "18vh",
                 height: "18vh",
                 top: `calc(${lane} * 18vh)`,
+                lineHeight: 1,
                 ...shadowStyle(2.5)
             };
         default:
