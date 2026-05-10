@@ -5,7 +5,7 @@ import type { JSX } from 'react';
  * カスタムスタンプの型定義
  */
 type CustomStamp = {
-    name: string;
+    commandName: string;
     dataUri: string;
 };
 
@@ -145,12 +145,12 @@ const CustomStampForm = ({
                 const reader = new FileReader();
                 reader.onload = () => {
                     const dataUri = reader.result as string;
-                    setCustomStamp(previous => previous ? { ...previous, dataUri } : { name: '', dataUri });
+                    setCustomStamp(previous => previous ? { ...previous, dataUri } : { commandName: '', dataUri });
                 };
                 reader.readAsDataURL(selectedFile);
             } else {
                  setCustomStamp(previous =>
-                     previous ? { ...previous, dataUri: '' } : { name: '', dataUri: '' }
+                     previous ? { ...previous, dataUri: '' } : { commandName: '', dataUri: '' }
                  );
              }
         };
@@ -161,12 +161,12 @@ const CustomStampForm = ({
                 return;
             }
 
-            if (!customStamp.name) {
+            if (!customStamp.commandName.trim()) {
                 alert("コマンド名前を入力してください。");
                 return;
             }
 
-            if (!customStamp.name.trim()) {
+            if (!customStamp.commandName.trim()) {
                 alert("コマンド名前を入力してください。");
                 return;
             }
@@ -208,11 +208,11 @@ const CustomStampForm = ({
                             <span>コマンド名前:</span>
                             <input type="text" 
                                 placeholder="コマンド名前" 
-                                value={customStamp?.name || ''} 
+                                value={customStamp?.commandName || ''} 
                                 onChange={(e) => setCustomStamp(previous => {
-                                    const name = e.target.value;
-                                    if (!previous) return { name, dataUri: "" };
-                                    return { ...previous, name };
+                                    const commandName = e.target.value;
+                                    if (!previous) return { commandName, dataUri: "" };
+                                    return { ...previous, commandName };
                                 })} 
                             />
                         </div>
@@ -271,12 +271,13 @@ function App() {
 
         const newConfig: Config = {
             ...config,
+            address: undefined,
             host: address,
             port: Number(port),
             endpoint,
             password: !!password ? password : undefined,
             customStamps: customStamps.map(stamp => ({
-                name: stamp.name,
+                commandName: stamp.commandName,
                 dataUri: stamp.dataUri,
                 effectType: "default",
             })),
@@ -342,7 +343,7 @@ function App() {
             setPassword(configJson['password']);
             setCustomStamps(configJson['customStamps'] ? 
                 configJson['customStamps'].map((stamp: CustomStamp) => ({
-                    name: stamp.name,
+                    commandName: stamp.commandName,
                     dataUri: stamp.dataUri,
                 })) : []);
             setFileUploadError(null);
@@ -411,13 +412,13 @@ function App() {
                     value={undefined}
                     onClose={() => setIsCustomStampFormOpen(false)}
                     onAdd={(stamp: CustomStamp) => {
-                        if (customStamps.some(s => s.name === stamp.name)) {
+                        if (customStamps.some(s => s.commandName === stamp.commandName)) {
                             alert("同じコマンド名前のスタンプが既に存在しています。");
                             return;
                         }
 
                         setCustomStamps(
-                            previous => [...previous, { name: stamp.name, dataUri: stamp.dataUri }])}}
+                            previous => [...previous, { commandName: stamp.commandName, dataUri: stamp.dataUri }])}}
                 />
                 <div id="custom-stamps-area" style={{
                     display: 'flex',
@@ -443,7 +444,7 @@ function App() {
                         }}>
                             <div>
                                 <span>コマンド名前:</span>
-                                <span>{stamp.name}</span>
+                                <span>{stamp.commandName}</span>
                             </div>
                             <div>
                                 <span>画像:</span>
