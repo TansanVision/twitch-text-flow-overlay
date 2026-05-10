@@ -417,7 +417,7 @@ function App() {
                         }
 
                         setCustomStamps(
-                            previous => [...previous, { name: stamp.name, file: null, dataUri: stamp.dataUri }])}}
+                            previous => [...previous, { name: stamp.name, dataUri: stamp.dataUri }])}}
                 />
                 <div id="custom-stamps-area" style={{
                     display: 'flex',

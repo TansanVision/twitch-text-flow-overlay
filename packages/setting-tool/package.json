@@ -9,5 +9,10 @@
         "build:production": "tsc -b && vite build --mode production",
         "lint": "eslint .",
         "preview": "vite preview"
+    },
+    "devDependencies": {
+        "eslint": "*",
+        "typescript": "*",
+        "vite": "*"
     }
 }
