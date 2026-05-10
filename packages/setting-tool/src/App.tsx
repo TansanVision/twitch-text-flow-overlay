@@ -135,7 +135,7 @@ const CustomStampForm = ({
             if (open) {
                 setCustomStamp(value);
             }
-        }, [open]);
+        }, [open, value]);
 
         const [customStamp, setCustomStamp] = useState<CustomStamp | undefined>(value);
 
@@ -158,11 +158,6 @@ const CustomStampForm = ({
         const handleAdd = () => {
             if (!customStamp) {
                 alert("スタンプ情報が不完全です。");
-                return;
-            }
-
-            if (!customStamp.commandName.trim()) {
-                alert("コマンド名前を入力してください。");
                 return;
             }
 
