@@ -5,7 +5,7 @@ import type { CommentContainerProps } from './types';
 // コメントのレーンの最大数を定義
 const MAX_MIDDLE_LANE = 16;
 const MAX_SMALL_LANE = 25;
-const MAX_BIG_LANE = 11;
+const MAX_BIG_LANE = 7;
 
 /**
  * コメントの表示位置を決定する関数
