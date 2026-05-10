@@ -6,14 +6,14 @@ import type { JSX } from 'react';
  */
 type CustomStamp = {
     name: string;
-    previewUrl: string;
+    dataUri: string;
 };
 
 /**
  * 設定の型定義
  */
 type Config = {
-    address: string;
+    host: string;
     port: number;
     endpoint: string;
     password?: string;
@@ -106,6 +106,11 @@ function getConfigJson(html: string): Config | null {
     if (!script) return null;
 
     try {
+        if (!script.textContent) {
+            console.error("設定スクリプトの内容が空です。");
+            return null;
+        }
+
         return JSON.parse(script.textContent.trim());
     } catch (err) {
         console.error("JSONパースエラー:", err);
@@ -139,15 +144,15 @@ const CustomStampForm = ({
             if (selectedFile) {
                 const reader = new FileReader();
                 reader.onload = () => {
-                    const previewUrl = reader.result as string;
-                    setCustomStamp(previous => previous ? { ...previous, previewUrl } : { name: '', previewUrl });
+                    const dataUri = reader.result as string;
+                    setCustomStamp(previous => previous ? { ...previous, dataUri } : { name: '', dataUri });
                 };
                 reader.readAsDataURL(selectedFile);
             } else {
-                setCustomStamp(previous => {
-                    previous && { ...previous, previewUrl: null };
-                });
-            }
+                 setCustomStamp(previous =>
+                     previous ? { ...previous, dataUri: '' } : { name: '', dataUri: '' }
+                 );
+             }
         };
 
         const handleAdd = () => {
@@ -166,7 +171,7 @@ const CustomStampForm = ({
                 return;
             }
 
-            if (!customStamp?.previewUrl) {
+            if (!customStamp?.dataUri) {
                 alert("スタンプ画像を選択してください。");
                 return;
             }
@@ -206,7 +211,7 @@ const CustomStampForm = ({
                                 value={customStamp?.name || ''} 
                                 onChange={(e) => setCustomStamp(previous => {
                                     const name = e.target.value;
-                                    if (!previous) return { name, previewUrl: "" };
+                                    if (!previous) return { name, dataUri: "" };
                                     return { ...previous, name };
                                 })} 
                             />
@@ -219,12 +224,12 @@ const CustomStampForm = ({
                             <span>スタンプ画像:</span>
                             <input type="file" accept='.gif,.jpg,.png,.bmp' onChange={handleFileChange} />
                         </div>
-                        {customStamp?.previewUrl && <img
+                        {customStamp?.dataUri && <img
                             style={{
                                 width: "56px",
                                 height: "56px"
                             }}
-                            src={customStamp.previewUrl || "プレビュー"} alt="プレビュー"  />}
+                            src={customStamp.dataUri || "プレビュー"} alt="プレビュー"  />}
                     </div>
                     <div style={{ display: 'flex', gap: '0.5rem' }}>
                         <button style={{
@@ -266,13 +271,13 @@ function App() {
 
         const newConfig: Config = {
             ...config,
-            address,
+            host: address,
             port: Number(port),
             endpoint,
             password: !!password ? password : undefined,
             customStamps: customStamps.map(stamp => ({
                 name: stamp.name,
-                previewUrl: stamp.previewUrl,
+                dataUri: stamp.dataUri,
                 effectType: "default",
             })),
         };
@@ -331,14 +336,14 @@ function App() {
             }
 
             setConfig(configJson);
-            setAddress(configJson['address'] || '127.0.0.1');
+            setAddress(configJson['host'] || '127.0.0.1');
             setPort(configJson['port'] ? String(configJson['port']) : '8080');
             setEndpoint(configJson['endpoint'] || '/');
             setPassword(configJson['password']);
             setCustomStamps(configJson['customStamps'] ? 
                 configJson['customStamps'].map((stamp: CustomStamp) => ({
                     name: stamp.name,
-                    previewUrl: stamp.previewUrl,
+                    dataUri: stamp.dataUri,
                 })) : []);
             setFileUploadError(null);
         };
@@ -397,7 +402,7 @@ function App() {
                     gap: '4px',
                 }}>
                     <span>Password:</span>
-                    <input type="text" value={password} onChange={(e) => setPassword(e.target.value)} />
+                    <input type="text" value={password || ''} onChange={(e) => setPassword(e.target.value)} />
                 </div>
 
                 <button onClick={() => setIsCustomStampFormOpen(true)}>追加</button>
@@ -412,7 +417,7 @@ function App() {
                         }
 
                         setCustomStamps(
-                            previous => [...previous, { name: stamp.name, file: null, previewUrl: stamp.previewUrl }])}}
+                            previous => [...previous, { name: stamp.name, file: null, dataUri: stamp.dataUri }])}}
                 />
                 <div id="custom-stamps-area" style={{
                     display: 'flex',
@@ -442,7 +447,7 @@ function App() {
                             </div>
                             <div>
                                 <span>画像:</span>
-                                <img src={stamp.previewUrl || "プレビュー"} alt="プレビュー" style={{ width: "56px", height: "56px" }} />
+                                <img src={stamp.dataUri || "プレビュー"} alt="プレビュー" style={{ width: "56px", height: "56px" }} />
                             </div>
                             <div>
                                 <button onClick={() => setCustomStamps(previous => previous.filter((_, i) => i !== index))}>削除</button>
