@@ -7,6 +7,7 @@ import type { JSX } from 'react';
 type CustomStamp = {
     commandName: string;
     dataUri: string;
+    effectType?: string;
 };
 
 /**
@@ -264,11 +265,16 @@ function App() {
             return;
         }
 
+        const parsedPort = Number(port);
+         if (!Number.isInteger(parsedPort) || parsedPort < 1 || parsedPort > 65535) {
+             alert("ポート番号は1〜65535の整数で入力してください。");
+             return;
+         }
+
         const newConfig: Config = {
             ...config,
-            address: undefined,
             host: address,
-            port: Number(port),
+            port: parsedPort,
             endpoint,
             password: !!password ? password : undefined,
             customStamps: customStamps.map(stamp => ({
@@ -290,8 +296,10 @@ function App() {
 
         configScriptElement.textContent = JSON.stringify(newConfig, null, 2);
 
-        const serializer = new XMLSerializer();
-        const updatedHtml = serializer.serializeToString(doc);
+         const doctype = doc.doctype
+             ? `<!DOCTYPE ${doc.doctype.name}${doc.doctype.publicId ? ` PUBLIC "${doc.doctype.publicId}"` : ''}${!doc.doctype.publicId && doc.doctype.systemId ? ' SYSTEM' : ''}${doc.doctype.systemId ? ` "${doc.doctype.systemId}"` : ''}>`
+             : '<!doctype html>';
+         const updatedHtml = `${doctype}\n${doc.documentElement.outerHTML}`;
         setHtml(updatedHtml);
 
         // ダウンロードリンクを作成してクリックすることで、更新されたHTMLをダウンロードさせる
@@ -332,14 +340,15 @@ function App() {
             }
 
             setConfig(configJson);
-            setAddress(configJson['host'] || '127.0.0.1');
-            setPort(configJson['port'] ? String(configJson['port']) : '8080');
-            setEndpoint(configJson['endpoint'] || '/');
-            setPassword(configJson['password']);
-            setCustomStamps(configJson['customStamps'] ? 
-                configJson['customStamps'].map((stamp: CustomStamp) => ({
+            setAddress(configJson?.host || '127.0.0.1');
+            setPort(configJson?.port ? String(configJson.port) : '8080');
+            setEndpoint(configJson?.endpoint || '/');
+            setPassword(configJson?.password);
+            setCustomStamps(configJson?.customStamps ? 
+                configJson.customStamps.map((stamp: CustomStamp) => ({
                     commandName: stamp.commandName,
                     dataUri: stamp.dataUri,
+                    effectType: stamp.effectType,
                 })) : []);
             setFileUploadError(null);
         };
@@ -413,7 +422,10 @@ function App() {
                         }
 
                         setCustomStamps(
-                            previous => [...previous, { commandName: stamp.commandName, dataUri: stamp.dataUri }])}}
+                            previous => [...previous, { 
+                                commandName: stamp.commandName, 
+                                dataUri: stamp.dataUri, 
+                                effectType: stamp.effectType }])}}
                 />
                 <div id="custom-stamps-area" style={{
                     display: 'flex',
