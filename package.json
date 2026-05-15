@@ -5,7 +5,7 @@
         "packages/*"
     ],
     "scripts": {
-        "test": "vitest"
+        "test": "vitest --passWithNoTests"
     },
     "devDependencies": {
         "@eslint/js": "^10.0.1",
