@@ -18,5 +18,8 @@
     "@emotion/react": "^11.13.5",
     "@emotion/css": "^11.13.5",
     "@streamerbot/client": "^1.12.2"
+  },
+  "devDependencies": {
+    "eslint": "^10.3.0"
   }
 }
