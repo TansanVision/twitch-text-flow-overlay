@@ -5,11 +5,6 @@
         "packages/*"
     ],
     "dependencies": {
-        "@emotion/css": "^11.13.5",
-        "@emotion/react": "^11.14.0",
-        "react": "^19.2.6",
-        "react-dom": "^19.2.6",
-        "uuid": "^14.0.0"
     },
     "devDependencies": {
         "globals": "^17.6.0",
