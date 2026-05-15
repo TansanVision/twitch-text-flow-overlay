@@ -9,10 +9,11 @@ export default defineConfig({
     react({
       jsxImportSource: '@emotion/react',
     }), 
-    viteSingleFile()],
-    resolve: {
-      alias: {
-        '@': resolve(__dirname, './src'),
-      },
+    viteSingleFile()
+  ],
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, './src'),
     },
+  },
 })

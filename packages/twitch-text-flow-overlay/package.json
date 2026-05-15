@@ -12,6 +12,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "react": "*",
+    "react-dom": "*",
+    "@emotion/react": "*",
+    "@emotion/css": "*",
+    "uuid": "*",
     "@streamerbot/client": "^1.12.2"
   }
 }

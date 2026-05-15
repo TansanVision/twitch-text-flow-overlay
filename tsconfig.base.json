@@ -1,5 +1,7 @@
 {
-    "jsx": "react-jsx",
-    "jsxImportSource": "@emotion/react",
-    "strict": true
+    "compilerOptions": {
+        "jsx": "react-jsx",
+        "jsxImportSource": "@emotion/react",
+        "strict": true
+    }
 }
