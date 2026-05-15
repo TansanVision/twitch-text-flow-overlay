@@ -5,6 +5,14 @@
         "packages/*"
     ],
     "dependencies": {
+        "@emotion/css": "^11.13.5",
+        "@emotion/react": "^11.14.0",
+        "globals": "^17.6.0",
+        "react": "^19.2.6",
+        "react-dom": "^19.2.6",
+        "uuid": "^14.0.0"
+    },
+    "devDependencies": {
         "@eslint/js": "^10.0.1",
         "@types/node": "^25.6.2",
         "@types/react": "^19.2.14",
@@ -13,9 +21,6 @@
         "eslint": "^10.3.0",
         "eslint-plugin-react-hooks": "^7.1.1",
         "eslint-plugin-react-refresh": "^0.5.2",
-        "globals": "^17.6.0",
-        "react": "^19.2.6",
-        "react-dom": "^19.2.6",
         "typescript": "^6.0.3",
         "typescript-eslint": "^8.59.2",
         "vite": "^8.0.11",
