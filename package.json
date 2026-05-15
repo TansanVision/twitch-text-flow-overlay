@@ -4,8 +4,10 @@
     "workspaces": [
         "packages/*"
     ],
+    "scripts": {
+        "test": "vitest --passWithNoTests"
+    },
     "devDependencies": {
-        "globals": "^17.6.0",
         "@eslint/js": "^10.0.1",
         "@types/node": "^25.6.2",
         "@types/react": "^19.2.14",
@@ -13,9 +15,11 @@
         "@vitejs/plugin-react": "^6.0.1",
         "eslint-plugin-react-hooks": "^7.1.1",
         "eslint-plugin-react-refresh": "^0.5.2",
+        "globals": "^17.6.0",
         "typescript": "^6.0.3",
         "typescript-eslint": "^8.59.2",
         "vite": "^8.0.11",
-        "vite-plugin-singlefile": "^2.3.3"
+        "vite-plugin-singlefile": "^2.3.3",
+        "vitest": "^4.1.6"
     }
 }
