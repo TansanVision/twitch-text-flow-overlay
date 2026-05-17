@@ -3,7 +3,7 @@ import { css, cx } from "@emotion/css";
 /**
  * コメントが右から左へ流れるアニメーションのスタイル定義
  */
-export const moveLeftStyle = 
+const moveLeftStyle = 
     css`
         @keyframes move-left {
             from {
@@ -18,14 +18,12 @@ export const moveLeftStyle =
 /**
  * コメントが動かないスタイル定義
  */
-export const noAnimationStyle = 
+const noAnimationStyle = 
     css`
         @keyframes nothing {
             from {
-                transform: translateX(0);
             }
             to {
-                transform: translateX(0);
             }
         }
     `;
@@ -387,10 +385,13 @@ export const getCommentStyle = (
     const sizeStyle = getCommentSizeStyle(size)(lane);
     const colorStyleValue = colorStyle(color);
     const alignmentStyle = getAlignmentStyle(alignment);
+    const hasAlignment = alignmentStyle !== "";
+    const effectStyle = hasAlignment ? noAnimationStyle : moveLeftStyle;
 
     return cx(
         sizeStyle,
         colorStyleValue,
-        alignmentStyle
+        alignmentStyle,
+        effectStyle
     );
 }
