@@ -16,15 +16,3 @@ body,
   background: transparent;
   font-family: "Yu Gothic Medium", "Yu Gothic Medium", "游ゴシック Medium", "YuGothic Medium", sans-serif;
 }
-
-@keyframes move-left {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-240vw);
-  }
-}
-
-@keyframes nothing {
-}

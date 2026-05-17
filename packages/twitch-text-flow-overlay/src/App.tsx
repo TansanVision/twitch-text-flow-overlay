@@ -168,110 +168,6 @@ function App() {
     });
   }, [getNodesAndCommands]);
 
-  const clickToAddTestComment = useCallback(() => {
-    // obs上ではクリックできない = テスト用のコメントを追加
-    addComment({ 
-      text: "ue shita yellow red big Kappa test🍰", 
-      emotes: [{
-          id: "25",
-          name: "Kappa",
-          startIndex: 24,
-          endIndex: 28,
-          imageUrl: "https://static-cdn.jtvnw.net/emoticons/v2/25/default/dark/3.0",
-          type: "Twitch"
-      }] });
-
-      addComment({ 
-        text: "white2 test🍰", 
-        emotes: [] });
-
-      addComment({ 
-        text: "yellow ue 上🍰", 
-        emotes: [] });
-
-      addComment({ 
-        text: "yellow naka 中🍰", 
-        emotes: [] });
-
-      addComment({ 
-        text: "small blue shita 下🍰", 
-        emotes: [] });
-
-      addComment({ 
-        text: "small purple migi 右🍰", 
-        emotes: [] });
-
-      addComment({ 
-        text: "purple2 migiue 右上🍰", 
-        emotes: [] });
-
-      addComment({ 
-        text: "purple2 migishita 右下🍰", 
-        emotes: [] });
-
-      addComment({ 
-        text: "small green2 hidari 左🍰", 
-        emotes: [] });
-
-      addComment({ 
-        text: "green2 hidariue 左上🍰", 
-        emotes: [] });
-
-      addComment({ 
-        text: "green2 hidarishita 左下🍰", 
-        emotes: [] });
-
-      addComment({ 
-        text: "hidari imGlitch U+2003 imGlitch", 
-        emotes: [{
-          id: "112290",
-          name: "imGlitch",
-          startIndex: 7,
-          endIndex: 14,
-          imageUrl: "https://static-cdn.jtvnw.net/emoticons/v2/112290/default/dark/3.0",
-          type: "Twitch"
-        }, {
-          id: "112290",
-          name: "imGlitch",
-          startIndex: 23,
-          endIndex: 30,
-          imageUrl: "https://static-cdn.jtvnw.net/emoticons/v2/112290/default/dark/3.0",
-          type: "Twitch"
-        }] });
-
-        addComment({ 
-        text: "hidari imGlitch imGlitch U+2003 imGlitch imGlitch", 
-        emotes: [{
-          id: "112290",
-          name: "imGlitch",
-          startIndex: 7,
-          endIndex: 14,
-          imageUrl: "https://static-cdn.jtvnw.net/emoticons/v2/112290/default/dark/3.0",
-          type: "Twitch"
-        }, {
-          id: "112290",
-          name: "imGlitch",
-          startIndex: 23,
-          endIndex: 30,
-          imageUrl: "https://static-cdn.jtvnw.net/emoticons/v2/112290/default/dark/3.0",
-          type: "Twitch"
-        }, {
-          id: "112290",
-          name: "imGlitch",
-          startIndex: 31,
-          endIndex: 38,
-          imageUrl: "https://static-cdn.jtvnw.net/emoticons/v2/112290/default/dark/3.0",
-          type: "Twitch"
-        }, {
-          id: "112290",
-          name: "imGlitch",
-          startIndex: 39,
-          endIndex: 46,
-          imageUrl: "https://static-cdn.jtvnw.net/emoticons/v2/112290/default/dark/3.0",
-          type: "Twitch"
-        }] });
-  }, [addComment]);
-
   const releaseComment = useCallback((id: string) => {
     setComments((prevComments) => {
       const index = prevComments.findIndex(c => c.id === id);
@@ -282,7 +178,7 @@ function App() {
   }, []);
 
   return (
-    <div className='overlay' onClick={clickToAddTestComment}>
+    <div className='overlay'>
       <CommentServiceContainer 
         comments={comments}
         onRelease={releaseComment}

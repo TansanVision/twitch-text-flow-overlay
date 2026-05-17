@@ -137,7 +137,6 @@ export type Comment = {
  */
 export interface CommentContainerProps {
     comment: Comment;
-    animationDuration: number;
     onAnimationEnd?: (id: string) => void;
 }
 
@@ -148,6 +147,5 @@ export interface CommentRendererProps {
     comment: Comment;
     commands?: Command[];
     lane: number;
-    animationDuration: number;
     onAnimationEnd?: () => void;
 }

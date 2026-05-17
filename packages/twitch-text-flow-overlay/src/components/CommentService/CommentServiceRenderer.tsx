@@ -8,7 +8,6 @@ import type { CommentServiceRendererProps } from "./types";
  */
 export const CommentServiceRenderer : React.FC<CommentServiceRendererProps> = ({ 
     comments,
-    duration = 8000,
     onAnimationEnd
 }) => {
     return (
@@ -17,7 +16,6 @@ export const CommentServiceRenderer : React.FC<CommentServiceRendererProps> = ({
                 <CommentContainer 
                     key={`${comment.id}`} 
                     comment={comment} 
-                    animationDuration={duration}
                     onAnimationEnd={onAnimationEnd}
                 />
             ))}
