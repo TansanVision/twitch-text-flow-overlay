@@ -32,7 +32,7 @@ const noAnimationStyle =
 /**
  * コメントの基本スタイル定義
  */
-export const baseCommentStyle = css`
+const baseCommentStyle = css`
     position: absolute;
     font-weight: bold;
     display: flex;
@@ -55,7 +55,7 @@ export const baseCommentStyle = css`
 /**
  * 小サイズの画像スタイル定義
  */
-export const imageSmallStyle = css`
+const imageSmallStyle = css`
     height: 1.1em;
     width: auto;
 `;
@@ -63,7 +63,7 @@ export const imageSmallStyle = css`
 /**
  * 中サイズの画像スタイル定義
  */
-export const imageMediumStyle = css`
+const imageMediumStyle = css`
     height: 1.2em;
     width: auto;
 `;
@@ -71,7 +71,7 @@ export const imageMediumStyle = css`
 /**
  * 大サイズの画像スタイル定義
  */
-export const imageBigStyle = css`
+const imageBigStyle = css`
     height: 1.5em;
     width: auto;
 `;
@@ -79,7 +79,7 @@ export const imageBigStyle = css`
 /**
  * 画像のサイズオブジェクト
  */
-export const imageSizeStyle : { [key: string]: string } = {
+const imageSizeStyle : { [key: string]: string } = {
     small: imageSmallStyle,
     medium: imageMediumStyle,
     big: imageBigStyle,
@@ -100,7 +100,7 @@ export const getImageSizeStyle = (size: string): string => {
  * @param lane - コメントのレーン番号
  * @returns コメントのサイズスタイルオブジェクト
  */
-export const smallCommentStyle = (lane: number) => 
+const smallCommentStyle = (lane: number) => 
     cx(
         baseCommentStyle,
         css`
@@ -120,7 +120,7 @@ export const smallCommentStyle = (lane: number) =>
  * @param lane - コメントのレーン番号
  * @returns コメントのサイズスタイルオブジェクト
  */
-export const mediumCommentStyle = (lane: number) => 
+const mediumCommentStyle = (lane: number) => 
     cx(
         baseCommentStyle,
         css`            
@@ -139,7 +139,7 @@ export const mediumCommentStyle = (lane: number) =>
  * @param lane - コメントのレーン番号
  * @returns コメントのサイズスタイルオブジェクト
  */
-export const bigCommentStyle = (lane: number) => 
+const bigCommentStyle = (lane: number) => 
     cx(
         baseCommentStyle,
         css`
@@ -158,7 +158,7 @@ export const bigCommentStyle = (lane: number) =>
 /**
  * コメントのサイズオブジェクト
  */
-export const commentSizeStyle : { [key: string]: (lane: number) => string } = {
+const commentSizeStyle : { [key: string]: (lane: number) => string } = {
     small: smallCommentStyle,
     medium: mediumCommentStyle,
     big: bigCommentStyle,
@@ -190,7 +190,7 @@ export const textShadowStyle = (size: number) => css`
 /**
  * Twitchのコメントで使用される色の定義
  */
-export const colors  : { [key: string]: string } = {
+const colors : { [key: string]: string } = {
     default: "#ffffff",
     red: "#ff0000",
     pink: "#ff69b4",
@@ -225,14 +225,14 @@ export const colors  : { [key: string]: string } = {
  * @param color - コメントの色を指定する文字列
  * @returns コメントの色スタイルオブジェクト
  */
-export const colorStyle = (color: string) : string => css`
+const colorStyle = (color: string) : string => css`
     color: ${colors[color] || colors.default};
 `;
 
 /**
  * コメントの配置基礎スタイル定義
  */
-export const alignmentBaseCommentStyle = css`
+const alignmentBaseCommentStyle = css`
     position: absolute;
     right: auto;
     display: flex;
@@ -249,7 +249,7 @@ export const alignmentBaseCommentStyle = css`
 /**
  * コメントの下配置スタイル定義
  */
-export const shitaCommentStyle = cx(
+const shitaCommentStyle = cx(
     alignmentBaseCommentStyle,
     css`
         bottom: 20px;
@@ -261,7 +261,7 @@ export const shitaCommentStyle = cx(
 /**
  * コメントの画面中央配置スタイル定義
  */
-export const nakaCommentStyle = cx(
+const nakaCommentStyle = cx(
     alignmentBaseCommentStyle,
     css`
         top: 50%;
@@ -272,7 +272,7 @@ export const nakaCommentStyle = cx(
 /**
  * コメントの上配置スタイル定義
  */
-export const ueCommentStyle = cx(
+const ueCommentStyle = cx(
     alignmentBaseCommentStyle,
     css`
         top: 5px;
@@ -283,7 +283,7 @@ export const ueCommentStyle = cx(
 /**
  * コメントの右上配置スタイル定義
  */
-export const migiueCommentStyle = cx(
+const migiueCommentStyle = cx(
     alignmentBaseCommentStyle,
     css`
         top: 5px;
@@ -293,7 +293,7 @@ export const migiueCommentStyle = cx(
 /**
  * コメントの左上配置スタイル定義
  */
-export const hidariueCommentStyle = cx(
+const hidariueCommentStyle = cx(
     alignmentBaseCommentStyle,
     css`
         top: 5px;
@@ -303,7 +303,7 @@ export const hidariueCommentStyle = cx(
 /**
  * コメントの右下配置スタイル定義
  */
-export const migishitaCommentStyle = cx(
+const migishitaCommentStyle = cx(
     alignmentBaseCommentStyle,
     css`
         bottom: 20px;
@@ -314,7 +314,7 @@ export const migishitaCommentStyle = cx(
 /**
  * コメントの左下配置スタイル定義
  */
-export const hidarishitaCommentStyle = cx(
+const hidarishitaCommentStyle = cx(
     alignmentBaseCommentStyle,
     css`
         bottom: 20px;
@@ -325,7 +325,7 @@ export const hidarishitaCommentStyle = cx(
 /**
  * コメントの右配置スタイル定義
  */
-export const migiCommentStyle = cx(
+const migiCommentStyle = cx(
     alignmentBaseCommentStyle,
     css`
         right: 0;
@@ -336,7 +336,7 @@ export const migiCommentStyle = cx(
 /**
  * コメントの左配置スタイル定義
  */
-export const hidariCommentStyle = cx(
+const hidariCommentStyle = cx(
     alignmentBaseCommentStyle,
     css`
         bottom: 50%;
@@ -348,7 +348,7 @@ export const hidariCommentStyle = cx(
 /** 
  * コメントの配置スタイルオブジェクト
  */
-export const alignmentStyle : { [key: string]: string } = {
+const alignmentStyle : { [key: string]: string } = {
     shita: shitaCommentStyle,
     naka: nakaCommentStyle,
     ue: ueCommentStyle,
@@ -365,7 +365,7 @@ export const alignmentStyle : { [key: string]: string } = {
  * @param alignment - コメントの配置を指定する文字列
  * @returns コメントの配置スタイルオブジェクト
  */
-export const getAlignmentStyle = (alignment: string) => {
+const getAlignmentStyle = (alignment: string) => {
     return alignmentStyle[alignment] || "";
 }
 
