@@ -37,7 +37,7 @@ const baseCommentStyle = css`
     font-weight: bold;
     display: flex;
     flex-direction: row;
-    justify-content: start;
+    justify-content: center;
     align-items: flex-start;
     flex-wrap: nowrap;
     line-height: 1;
@@ -49,6 +49,7 @@ const baseCommentStyle = css`
     animation-duration: 5s;
     animation-timing-function: linear;
     animation-fill-mode: forwards;
+    white-space: nowrap;
     text-wrap: nowrap;
 `;
 
