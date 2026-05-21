@@ -46,7 +46,7 @@ const baseCommentStyle = css`
     color: #fff;
     user-select: none;
     animation-name: move-left;
-    animation-duration: 4s;
+    animation-duration: 5s;
     animation-timing-function: linear;
     animation-fill-mode: forwards;
     text-wrap: nowrap;
@@ -75,25 +75,6 @@ const imageBigStyle = css`
     height: 1.5em;
     width: auto;
 `;
-
-/**
- * 画像のサイズオブジェクト
- */
-const imageSizeStyle : { [key: string]: string } = {
-    small: imageSmallStyle,
-    medium: imageMediumStyle,
-    big: imageBigStyle,
-    default: imageMediumStyle
-}
-
-/**
- * 画像のサイズスタイルを取得する関数
- * @param size - 画像のサイズを指定する文字列
- * @returns 画像のサイズスタイル
- */
-export const getImageSizeStyle = (size: string): string => {
-    return imageSizeStyle[size] || imageSizeStyle.default;
-}
 
 /**
  * コメントのサイズスタイル定義
@@ -241,7 +222,7 @@ const alignmentBaseCommentStyle = css`
     align-items: center;
     flex-wrap: nowrap;
     animation-name: nothing;
-    animation-duration: 6s;
+    animation-duration: 5s;
     animation-timing-function: linear;
     animation-fill-mode: forwards;
 `;

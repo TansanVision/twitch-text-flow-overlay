@@ -1,5 +1,6 @@
 import { CommentContainer } from "./CommnentContainer";
 import type { Comment } from "./types";
+import "../../index.css";
 
 export default () => {
     const comments: Comment[] = [{
