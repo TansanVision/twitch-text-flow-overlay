@@ -161,12 +161,20 @@ function renderLine(
         // Twitch エモート
         const twitch = twitchEmotes.find(e => line.slice(e.startIndex, e.endIndex + 1) === part);
         if (twitch) {
-            nodes.push(
-                <img
-                    key={`twitch-${twitch.id}-${part}-${index}`}
-                    src={twitch.imageUrl}
-                />
-            );
+            if (twitch.imageUrl.includes("twemoji")) {
+                nodes.push(
+                    <span key={`twitch-${twitch.id}-${part}-${index}`}>
+                        {part}
+                    </span>
+                );
+            } else {
+                nodes.push(
+                    <img
+                        key={`twitch-${twitch.id}-${part}-${index}`}
+                        src={twitch.imageUrl}
+                    />
+                );
+            }
             continue;
         }
 
