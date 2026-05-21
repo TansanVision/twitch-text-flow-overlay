@@ -141,10 +141,6 @@ function renderLine(
                     key={`custom-${custom.commandName}-${part}-${index}`}
                     src={custom.dataUri}
                     data-effect={custom.effectType}
-                    style={{
-                        height: "100%",
-                        maxHeight: "1em",
-                    }}
                 />
             );
             continue;
@@ -157,10 +153,6 @@ function renderLine(
                 <img
                     key={`external-${external.name}-${part}-${index}`}
                     src={external.url}
-                    style={{ 
-                        height: "100%",
-                        maxHeight: "1em",
-                    }}
                 />
             );
             continue;
@@ -173,10 +165,6 @@ function renderLine(
                 <img
                     key={`twitch-${twitch.id}-${part}-${index}`}
                     src={twitch.imageUrl}
-                    style={{ 
-                        height: "100%", 
-                        maxHeight: "1em", 
-                    }}
                 />
             );
             continue;

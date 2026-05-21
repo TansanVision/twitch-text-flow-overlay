@@ -13,6 +13,5 @@ export interface CommentServiceContainerProps{
  */
 export interface CommentServiceRendererProps {
     comments: Comment[];
-    duration?: number;
     onAnimationEnd?: (id: string) => void;
 }

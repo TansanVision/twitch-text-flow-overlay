@@ -29,7 +29,6 @@ const getLane = (comment: CommentContainerProps['comment']): number => {
  */
 export const CommentContainer : React.FC<CommentContainerProps> = ({ 
     comment,
-    animationDuration,
     onAnimationEnd
 }) => {
     const [lane, setLane] = useState(getLane(comment));
@@ -46,7 +45,6 @@ export const CommentContainer : React.FC<CommentContainerProps> = ({
 
     return <CommentRenderer
         comment={comment} 
-        animationDuration={animationDuration} 
         lane={lane}
         onAnimationEnd={handleAnimationEnd} 
         commands={comment.commands}
