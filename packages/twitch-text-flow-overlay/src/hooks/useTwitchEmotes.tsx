@@ -133,11 +133,6 @@ function renderLine(
     const nodes: React.ReactNode[] = [];
 
     for (const [index, part] of parts.entries()) {
-        if (part === " ") {
-            nodes.push(<span key={`space-${index}`}> </span>);
-            continue;
-        }
-
         // カスタムスタンプ
         const custom = customStamps.get(part);
         if (custom) {
