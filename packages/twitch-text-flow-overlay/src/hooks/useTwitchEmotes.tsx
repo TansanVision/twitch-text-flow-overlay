@@ -133,6 +133,10 @@ function renderLine(
     const nodes: React.ReactNode[] = [];
 
     for (const [index, part] of parts.entries()) {
+        if (part.trim() === "") {
+            continue;
+        }
+
         // カスタムスタンプ
         const custom = customStamps.get(part);
         if (custom) {
@@ -159,7 +163,7 @@ function renderLine(
         }
 
         // Twitch エモート
-        const twitch = twitchEmotes.find(e => line.slice(e.startIndex, e.endIndex + 1) === part);
+        const twitch = twitchEmotes.find(e => e.name === part);
         if (twitch) {
             if (twitch.imageUrl.includes("twemoji")) {
                 nodes.push(
