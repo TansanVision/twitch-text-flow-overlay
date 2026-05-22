@@ -134,6 +134,7 @@ function renderLine(
 
     for (const [index, part] of parts.entries()) {
         if (part.trim() === "") {
+            nodes.push(<span key={`space-${index}`}> </span>);
             continue;
         }
 
