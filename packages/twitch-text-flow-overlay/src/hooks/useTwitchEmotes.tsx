@@ -133,7 +133,7 @@ function renderLine(
     const nodes: React.ReactNode[] = [];
 
     for (const [index, part] of parts.entries()) {
-        if (part.trim() === "") {
+        if (part === " ") {
             nodes.push(<span key={`space-${index}`}> </span>);
             continue;
         }
