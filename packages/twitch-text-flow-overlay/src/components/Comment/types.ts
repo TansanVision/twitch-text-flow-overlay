@@ -1,10 +1,15 @@
 import type React from "react";
 
 /**
+ * エフェクトコマンドのリスト
+ */
+export const EFFECT_COMMANDS = ["sakura", "snow", "maruta", "kamifubuki", "rain"] as const;
+
+/**
  * エフェクトコマンドの型定義
  * 例: 桜、雪、丸太、紙吹雪、雨など
  */
-export type EffectCommand = "sakura" | "snow" | "maruta" | "kamifubuki" | "rain";
+export type EffectCommand = typeof EFFECT_COMMANDS[number];
 
 /**
  * コメント関連の型定義

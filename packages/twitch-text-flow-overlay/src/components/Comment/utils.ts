@@ -1,10 +1,11 @@
-import type { Command } from './types';
+import type { Command, EffectCommand } from './types';
+import { EFFECT_COMMANDS } from './types';
 
 /**
  * コマンドの種類とルールを定義
  */
 const rules = {
-    effect: ["sakura", "snow", "maruta", "kamifubuki", "rain"] as Command[],
+    effect: EFFECT_COMMANDS,
     color: ["white2", "niconicowhite", "red2", "truered", "pink2", "orange2", "passionorange", 
         "yellow2", "madyellow", "cyan2", "blue2", "marineblue", "purple2", "nobleviolet", 
         "black2", "white", "red", "orange", "blue", "green", "yellow", "pink", "cyan", "purple", "black", "elementalgreen", "green2"] as Command[],
@@ -60,7 +61,7 @@ export const extractTokens = (
                 tokens.alignment = command;
             }
             commandCount++;
-        } else if (rules.effect.includes(command)) {
+        } else if (EFFECT_COMMANDS.includes(command as EffectCommand)) {
             if (!tokens?.effect) {
                 tokens.effect = command;
             }
