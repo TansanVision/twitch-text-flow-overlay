@@ -1,6 +1,17 @@
 import type React from "react";
 
 /**
+ * エフェクトコマンドのリスト
+ */
+export const EFFECT_COMMANDS = ["sakura", "snow", "maruta", "kamifubuki", "rain"] as const;
+
+/**
+ * エフェクトコマンドの型定義
+ * 例: 桜、雪、丸太、紙吹雪、雨など
+ */
+export type EffectCommand = typeof EFFECT_COMMANDS[number];
+
+/**
  * コメント関連の型定義
  */
 export type CommentState = "active" | "inactive";
@@ -8,7 +19,7 @@ export type CommentState = "active" | "inactive";
 /**
  * コメントのコマンドの型定義
  */
-export type Command = SizeCommand | AlignmentCommand | ColorCommand;
+export type Command = SizeCommand | AlignmentCommand | ColorCommand | EffectCommand;
 
 /**
  * コメントのサイズを指定するコマンドの型定義
@@ -21,7 +32,7 @@ export type SizeCommand = "small" | "medium" | "big";
  * @returns 文字列がコメントのコマンドである場合はtrue、それ以外の場合はfalse
  */
 export const isCommand = (value: string): value is Command => {
-    return isSizeCommand(value as Command) || isAlignmentCommand(value as Command) || isColorCommand(value as Command);
+    return isSizeCommand(value as Command) || isAlignmentCommand(value as Command) || isColorCommand(value as Command) || isEffectCommand(value as Command);
 }
 
 /**
@@ -31,6 +42,15 @@ export const isCommand = (value: string): value is Command => {
  */
 export const isSizeCommand = (command: Command): command is SizeCommand => {
     return command === 'small' || command === 'medium' || command === 'big';
+}
+
+/**
+ * コメントのエフェクトコマンドかどうかを判定する関数
+ * @param command - コマンド
+ * @returns コマンドがエフェクトコマンドである場合はtrue、それ以外の場合はfalse
+ */
+export const isEffectCommand = (command: Command): command is EffectCommand => {
+    return EFFECT_COMMANDS.includes(command as EffectCommand);
 }
 
 /**
