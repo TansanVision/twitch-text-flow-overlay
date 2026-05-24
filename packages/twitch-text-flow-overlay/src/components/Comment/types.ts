@@ -50,7 +50,7 @@ export const isSizeCommand = (command: Command): command is SizeCommand => {
  * @returns コマンドがエフェクトコマンドである場合はtrue、それ以外の場合はfalse
  */
 export const isEffectCommand = (command: Command): command is EffectCommand => {
-    return command === 'sakura' || command === 'snow' || command === 'maruta' || command === 'kamifubuki' || command === 'rain';
+    return EFFECT_COMMANDS.includes(command as EffectCommand);
 }
 
 /**

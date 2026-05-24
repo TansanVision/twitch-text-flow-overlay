@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { css } from "@emotion/css";
 
 const container = css`
@@ -67,7 +67,8 @@ export const Sakura: React.FC<{ onAnimationEnd?: () => void }> = ({ onAnimationE
     };
   }, [onAnimationEnd]);
 
-  const petals = Array.from({ length: 50 }).map((_, i) => {
+  const { petals } = useMemo(() => {
+    const petals = Array.from({ length: 50 }).map((_, i) => {
     const left = `${(i / 50) * 100}%`;
 
     // サイズ（3パターン）
@@ -87,19 +88,22 @@ export const Sakura: React.FC<{ onAnimationEnd?: () => void }> = ({ onAnimationE
     const delays = [0, 9, 2, 5, 6, 7, 3, 1, 2, 11, 10];
     const delay = delays[i % 11];
 
-    return (
-      <span
-        key={i}
-        className={`${petalBase} ${i % 2 === 0 ? anim1 : anim2}`}
-        style={{
-          left,
-          animationDuration: `${duration}s`,
-          animationDelay: `${delay}s`,
-          ...size,
-        }}
-      />
-    );
-  });
+      return (
+        <span
+          key={i}
+          className={`${petalBase} ${i % 2 === 0 ? anim1 : anim2}`}
+          style={{
+            left,
+            animationDuration: `${duration}s`,
+            animationDelay: `${delay}s`,
+            ...size,
+          }}
+        />
+      );
+    });
+
+    return { petals };
+  }, []);
 
   return <div className={`${container} ${keyframes}`}>{petals}</div>;
 };
