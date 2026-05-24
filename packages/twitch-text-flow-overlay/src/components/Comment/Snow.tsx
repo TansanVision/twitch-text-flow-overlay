@@ -97,7 +97,6 @@ const keyframes = css`
              animationName: "snow-fall",
              animationDuration: duration,
              animationDelay: delay,
-             animationIterationCount: "-moz-initial",
            }}
          />
        ))}

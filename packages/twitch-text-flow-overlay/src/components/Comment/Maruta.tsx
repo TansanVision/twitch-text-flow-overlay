@@ -89,7 +89,6 @@ const LogSVG = () => (
          animationName: "log-fall",
          animationDuration: duration,
          animationDelay: delay,
-         animationIterationCount: "-moz-initial",
        }}
      >
        <LogSVG />
