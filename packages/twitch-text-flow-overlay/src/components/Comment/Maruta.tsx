@@ -48,12 +48,12 @@ const LogSVG = () => (
  * @returns JSX.Element
  */
  export const Maruta: React.FC<{ onAnimationEnd?: () => void }> = ({ onAnimationEnd }) => {
-   const iterationCount = 5;
    const logConfigs = React.useMemo(
      () =>
        Array.from({ length: 8 }).map(() => {
          const durationSeconds = 2 + Math.random() * 2;
          const delaySeconds = Math.random() * 3;
+         const iterationCount = 5;
 
          return {
            left: `${Math.random() * 100}%`,
@@ -89,6 +89,7 @@ const LogSVG = () => (
          animationName: "log-fall",
          animationDuration: duration,
          animationDelay: delay,
+         animationIterationCount: "-moz-initial",
        }}
      >
        <LogSVG />

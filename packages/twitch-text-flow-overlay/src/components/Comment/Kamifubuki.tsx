@@ -13,6 +13,8 @@ const base = css`
   top: -10%;
   will-change: transform;
   animation-timing-function: linear;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
 `;
 
 const keyframes = css`
@@ -31,8 +33,8 @@ const keyframes = css`
  * @returns JSX.Element
  */
  export const Kamifubuki: React.FC<{ onAnimationEnd?: () => void }> = ({ onAnimationEnd }) => {
-   const colors = ["#ff6b6b", "#feca57", "#48dbfb", "#1dd1a1", "#5f27cd"];
    const { pieces, maxAnimationTimeMs } = React.useMemo(() => {
+     const colors = ["#ff6b6b", "#feca57", "#48dbfb", "#1dd1a1", "#5f27cd"];
      let maxTimeMs = 0;
 
      const generatedPieces = Array.from({ length: 80 }).map((_, i) => {
@@ -58,8 +60,8 @@ const keyframes = css`
              height,
              backgroundColor: color,
              animationName: "confetti-fall",
-             animationDuration: duration,
              animationDelay: delay,
+              animationDuration: duration,
            }}
          />
        );

@@ -37,8 +37,8 @@ const keyframes = css`
 `;
 
  export const Snow: React.FC<{ onAnimationEnd?: () => void }> = ({ onAnimationEnd }) => {
-   const animationIterationCount = 3;
-   const { flakes, maxAnimationTimeMs } = React.useMemo(() => {
+    const { flakes, maxAnimationTimeMs } = React.useMemo(() => {
+    const animationIterationCount = 3;
      let maxTotalTimeMs = 0;
      const generatedFlakes = Array.from({ length: 80 }).map((_, i) => {
        const left = `${Math.random() * 100}%`;
@@ -56,7 +56,6 @@ const keyframes = css`
        const delay = `${delaySeconds}s`;
 
        // 初期の横揺れ方向
-       const rotate = `${Math.random() * 40 - 20}deg`;
        const totalTimeMs = (delaySeconds + durationSeconds * animationIterationCount) * 1000;
        maxTotalTimeMs = Math.max(maxTotalTimeMs, totalTimeMs);
        return {
@@ -66,7 +65,6 @@ const keyframes = css`
          height,
          duration,
          delay,
-         rotate,
        };
      });
      return { flakes: generatedFlakes, maxAnimationTimeMs: maxTotalTimeMs };
@@ -99,6 +97,7 @@ const keyframes = css`
              animationName: "snow-fall",
              animationDuration: duration,
              animationDelay: delay,
+             animationIterationCount: "-moz-initial",
            }}
          />
        ))}
