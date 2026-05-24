@@ -28,12 +28,8 @@ const rain = css`
         top: -50%;
         left: 0;
         background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, #ffffff 80%, #ffffff 100%);
-        animation: drop 2.8s 0s infinite;
-        animation-fill-mode: forwards;
+        animation: drop 10s 0s 3 forwards;
         opacity: .6;
-        animation-duration: 10s;
-        animation-fill-mode: forwards;
-        animation-iteration-count: 3;
     }
 
     & div:nth-child(1) {

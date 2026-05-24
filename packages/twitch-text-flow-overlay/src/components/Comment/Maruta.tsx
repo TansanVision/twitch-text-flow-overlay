@@ -80,7 +80,7 @@ const LogSVG = () => (
        window.clearTimeout(timeoutId);
      };
    }, [maxAnimationDurationMs, onAnimationEnd]);
-   
+
    const logs = logConfigs.map(({ left, duration, delay, rotate }, i) => (
      <div
        key={i}
@@ -90,7 +90,6 @@ const LogSVG = () => (
          animationName: "log-fall",
          animationDuration: duration,
          animationDelay: delay,
-         transform: `rotateZ(${rotate})`,
        }}
      >
        <LogSVG />

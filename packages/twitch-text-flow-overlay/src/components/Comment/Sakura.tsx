@@ -81,7 +81,7 @@ export const Sakura: React.FC<{ onAnimationEnd?: () => void }> = ({ onAnimationE
       <span
         key={i}
         className={`${petalBase} ${i % 2 === 0 ? anim1 : anim2}`}
-        onAnimationEnd={onAnimationEnd}
+        onAnimationEnd={i === 49 ? onAnimationEnd : undefined}
         style={{
           left,
           animationDuration: `${duration}s`,

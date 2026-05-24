@@ -85,7 +85,7 @@ const keyframes = css`
        window.clearTimeout(timeoutId);
      };
    }, [maxAnimationTimeMs, onAnimationEnd]);
-   
+
    return (
      <div className={`${container} ${keyframes}`}>
        {flakes.map(({ key, left, width, height, duration, delay, rotate }) => (
@@ -99,7 +99,6 @@ const keyframes = css`
              animationName: "snow-fall",
              animationDuration: duration,
              animationDelay: delay,
-             transform: `rotateZ(${rotate})`,
            }}
          />
        ))}

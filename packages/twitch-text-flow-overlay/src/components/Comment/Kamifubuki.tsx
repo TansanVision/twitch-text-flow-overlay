@@ -13,9 +13,6 @@ const base = css`
   top: -10%;
   will-change: transform;
   animation-timing-function: linear;
-  animation-duration: 10s;
-  animation-fill-mode: forwards;
-  animation-iteration-count: 3;
 `;
 
 const keyframes = css`
@@ -48,7 +45,6 @@ const keyframes = css`
        const delaySeconds = Math.random() * 5;
        const duration = `${durationSeconds}s`;
        const delay = `${delaySeconds}s`;
-       const rotateZ = `${Math.random() * 360}deg`;
 
        maxTimeMs = Math.max(maxTimeMs, (delaySeconds + durationSeconds * 3) * 1000);
 
@@ -64,7 +60,6 @@ const keyframes = css`
              animationName: "confetti-fall",
              animationDuration: duration,
              animationDelay: delay,
-             transform: `rotateZ(${rotateZ})`,
            }}
          />
        );
