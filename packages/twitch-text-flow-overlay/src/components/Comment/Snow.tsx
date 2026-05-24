@@ -18,7 +18,7 @@ const base = css`
   animation-timing-function: linear;
   animation-duration: 10s;
   animation-fill-mode: forwards;
-  animation-iteration-count: 3;
+  animation-iteration-count: infinite;
   border: 1px solid rgba(255, 255, 255, 0.8);
 `;
 
@@ -88,7 +88,7 @@ const keyframes = css`
 
    return (
      <div className={`${container} ${keyframes}`}>
-       {flakes.map(({ key, left, width, height, duration, delay, rotate }) => (
+       {flakes.map(({ key, left, width, height, duration, delay }) => (
          <span
            key={key}
            className={base}

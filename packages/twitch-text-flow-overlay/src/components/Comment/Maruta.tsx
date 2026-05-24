@@ -17,7 +17,7 @@ const base = css`
   animation-timing-function: ease-in;
   animation-duration: 10s;
   animation-fill-mode: forwards;
-  animation-iteration-count: 5;
+  animation-iteration-count: infinite;
 `;
 
 const keyframes = css`
@@ -59,7 +59,6 @@ const LogSVG = () => (
            left: `${Math.random() * 100}%`,
            duration: `${durationSeconds}s`,
            delay: `${delaySeconds}s`,
-           rotate: `${Math.random() * 40 - 20}deg`,
            totalDurationMs: (delaySeconds + durationSeconds * iterationCount) * 1000,
          };
        }),
@@ -81,7 +80,7 @@ const LogSVG = () => (
      };
    }, [maxAnimationDurationMs, onAnimationEnd]);
 
-   const logs = logConfigs.map(({ left, duration, delay, rotate }, i) => (
+   const logs = logConfigs.map(({ left, duration, delay }, i) => (
      <div
        key={i}
        className={base}

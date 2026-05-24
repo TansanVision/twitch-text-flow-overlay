@@ -1,10 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { css } from "@emotion/css";
 
 const container = css`
-  position: relative;
-  width: 100%;
-  height: 100%;
+  position: absolute;
+  inset: 0;
   overflow: hidden;
   pointer-events: none;
 `;
@@ -15,9 +14,9 @@ const petalBase = css`
   border-radius: 5% 80% 10% 80%;
   background-color: #ffb6c1;
   animation-timing-function: linear;
-  animation-duration: 10s;
   animation-fill-mode: forwards;
-  animation-iteration-count: 3;
+  animation-iteration-count: infinite;
+
 `;
 
 const anim1 = css`
@@ -57,6 +56,17 @@ const keyframes = css`
  * @returns JSX.Element
  */
 export const Sakura: React.FC<{ onAnimationEnd?: () => void }> = ({ onAnimationEnd }) => {
+  useEffect(() => {
+    const maxAnimationDurationMs = 30000;
+    const timeoutId = window.setTimeout(() => {
+      onAnimationEnd?.();
+    }, maxAnimationDurationMs);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
+  }, [onAnimationEnd]);
+
   const petals = Array.from({ length: 50 }).map((_, i) => {
     const left = `${(i / 50) * 100}%`;
 
@@ -81,7 +91,6 @@ export const Sakura: React.FC<{ onAnimationEnd?: () => void }> = ({ onAnimationE
       <span
         key={i}
         className={`${petalBase} ${i % 2 === 0 ? anim1 : anim2}`}
-        onAnimationEnd={i === 49 ? onAnimationEnd : undefined}
         style={{
           left,
           animationDuration: `${duration}s`,

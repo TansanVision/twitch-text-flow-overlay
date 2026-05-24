@@ -9,6 +9,8 @@ const rain = css`
     height: 100%;
     margin: auto;
     width: 100vw;
+    pointer-events: none;
+    overflow: hidden;
 
     & div {
         position: absolute;
@@ -28,7 +30,10 @@ const rain = css`
         top: -50%;
         left: 0;
         background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, #ffffff 80%, #ffffff 100%);
-        animation: drop 10s 0s 3 forwards;
+        animation-duration: 3s;
+        animation-fill-mode: forwards;
+        animation-iteration-count: infinite;
+        animation-name: drop;
         opacity: .6;
     }
 
@@ -104,6 +109,20 @@ const rain = css`
  * @returns JSX.Element
  */
 export const Rain: React.FC<{ onAnimationEnd?: () => void }> = ({ onAnimationEnd }) => {
+        React.useEffect(() => {
+            if (!onAnimationEnd) {
+                return;
+            }
+
+            const timeoutId = window.setTimeout(() => {
+                onAnimationEnd();
+            }, 30000); // アニメーションの最大時間を30秒と仮定
+
+            return () => {
+                window.clearTimeout(timeoutId);
+            };
+        }, [onAnimationEnd]);
+
     return <div className={rain}>
         <div></div>
         <div></div>
@@ -113,6 +132,6 @@ export const Rain: React.FC<{ onAnimationEnd?: () => void }> = ({ onAnimationEnd
         <div></div>
         <div></div>
         <div></div>
-        <div onAnimationEnd={onAnimationEnd}></div>
+        <div></div>
     </div>
 }
