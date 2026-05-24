@@ -46,7 +46,7 @@ const keyframes = css`
        const duration = `${durationSeconds}s`;
        const delay = `${delaySeconds}s`;
 
-       maxTimeMs = Math.max(maxTimeMs, (delaySeconds + durationSeconds * 3) * 1000);
+      maxTimeMs = Math.max(maxTimeMs, (delaySeconds + durationSeconds) * 1000);
 
        return (
          <span
