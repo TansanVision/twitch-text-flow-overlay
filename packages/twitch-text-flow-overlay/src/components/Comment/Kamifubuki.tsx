@@ -33,41 +33,56 @@ const keyframes = css`
  * 紙吹雪が舞うアニメーションコンポーネント
  * @returns JSX.Element
  */
-export const Kamifubuki: React.FC<{ onAnimationEnd?: () => void }> = ({ onAnimationEnd }) => {
-  const colors = ["#ff6b6b", "#feca57", "#48dbfb", "#1dd1a1", "#5f27cd"];
+ export const Kamifubuki: React.FC<{ onAnimationEnd?: () => void }> = ({ onAnimationEnd }) => {
+   const colors = ["#ff6b6b", "#feca57", "#48dbfb", "#1dd1a1", "#5f27cd"];
+   const { pieces, maxAnimationTimeMs } = React.useMemo(() => {
+     let maxTimeMs = 0;
 
-  const pieces = Array.from({ length: 80 }).map((_, i) => {
-    const left = `${Math.random() * 100}%`;
+     const generatedPieces = Array.from({ length: 80 }).map((_, i) => {
+       const left = `${Math.random() * 100}%`;
+       const size = Math.random() * 0.6 + 0.3; // 0.3vw〜0.9vw
+       const width = `${size}vw`;
+       const height = `${size * 2}vw`;
+       const color = colors[i % colors.length];
+       const durationSeconds = 5 + Math.random() * 6; // 5〜11秒
+       const delaySeconds = Math.random() * 5;
+       const duration = `${durationSeconds}s`;
+       const delay = `${delaySeconds}s`;
+       const rotateZ = `${Math.random() * 360}deg`;
 
-    const size = Math.random() * 0.6 + 0.3; // 0.3vw〜0.9vw
-    const width = `${size}vw`;
-    const height = `${size * 2}vw`;
+       maxTimeMs = Math.max(maxTimeMs, (delaySeconds + durationSeconds * 3) * 1000);
 
-    const color = colors[i % colors.length];
+       return (
+         <span
+           key={i}
+           className={base}
+           style={{
+             left,
+             width,
+             height,
+             backgroundColor: color,
+             animationName: "confetti-fall",
+             animationDuration: duration,
+             animationDelay: delay,
+             transform: `rotateZ(${rotateZ})`,
+           }}
+         />
+       );
+     });
+     return { pieces: generatedPieces, maxAnimationTimeMs: maxTimeMs };
+   }, []);
 
-    const duration = `${5 + Math.random() * 6}s`; // 5〜11秒
-    const delay = `${Math.random() * 5}s`;
-
-    const rotateZ = `${Math.random() * 360}deg`;
-
-    return (
-      <span
-        key={i}
-        className={base}
-        onAnimationEnd={onAnimationEnd}
-        style={{
-          left,
-          width,
-          height,
-          backgroundColor: color,
-          animationName: "confetti-fall",
-          animationDuration: duration,
-          animationDelay: delay,
-          transform: `rotateZ(${rotateZ})`,
-        }}
-      />
-    );
-  });
-
-  return <div className={`${container} ${keyframes}`}>{pieces}</div>;
-};
+   React.useEffect(() => {
+     if (!onAnimationEnd) {
+       return;
+     }
+     const timeoutId = window.setTimeout(() => {
+       onAnimationEnd();
+     }, maxAnimationTimeMs);
+     return () => {
+       window.clearTimeout(timeoutId);
+     };
+   }, [maxAnimationTimeMs, onAnimationEnd]);
+   
+   return <div className={`${container} ${keyframes}`}>{pieces}</div>;
+ };

@@ -8,6 +8,7 @@ import { Sakura } from './Sakura';
 import { Snow } from './Snow';
 import { Maruta } from './Maruta';
 import { Kamifubuki } from './Kamifubuki';
+import { Rain } from './Rain';
 
 /**
  * コメントを表示するコンポーネント
@@ -20,7 +21,6 @@ export const CommentRenderer : React.FC<CommentRendererProps> = ({
     lane,
     onAnimationEnd 
 }) => {
-    console.log("Rendering comment:", comment.id, "with commands:", commands);
     if (commands.some(isEffectCommand)) {
          if (commands.includes("sakura")) {
             return <Sakura onAnimationEnd={onAnimationEnd} />
@@ -30,6 +30,8 @@ export const CommentRenderer : React.FC<CommentRendererProps> = ({
             return <Maruta onAnimationEnd={onAnimationEnd} />
         } else if (commands.includes("kamifubuki")) {
             return <Kamifubuki onAnimationEnd={onAnimationEnd} />
+        } else if (commands.includes("rain")) {
+            return <Rain onAnimationEnd={onAnimationEnd} />;
         }
     }
 

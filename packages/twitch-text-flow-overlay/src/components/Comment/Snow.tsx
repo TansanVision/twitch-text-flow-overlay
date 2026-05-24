@@ -36,41 +36,73 @@ const keyframes = css`
   }
 `;
 
-export const Snow: React.FC<{ onAnimationEnd?: () => void }> = ({ onAnimationEnd }) => {
-  const flakes = Array.from({ length: 80 }).map((_, i) => {
-    const left = `${Math.random() * 100}%`;
+ export const Snow: React.FC<{ onAnimationEnd?: () => void }> = ({ onAnimationEnd }) => {
+   const animationIterationCount = 3;
+   const { flakes, maxAnimationTimeMs } = React.useMemo(() => {
+     let maxTotalTimeMs = 0;
+     const generatedFlakes = Array.from({ length: 80 }).map((_, i) => {
+       const left = `${Math.random() * 100}%`;
+       // 雪のサイズ（0.2〜0.8vw）
+       const size = Math.random() * 0.6 + 0.2;
+       const width = `${size}vw`;
+       const height = `${size}vw`;
 
-    // 雪のサイズ（0.2〜0.8vw）
-    const size = Math.random() * 0.6 + 0.2;
-    const width = `${size}vw`;
-    const height = `${size}vw`;
+       // 落下速度（6〜14秒）
+       const durationSeconds = 6 + Math.random() * 8;
+       const duration = `${durationSeconds}s`;
 
-    // 落下速度（6〜14秒）
-    const duration = `${6 + Math.random() * 8}s`;
+       // 遅延（0〜5秒）
+       const delaySeconds = Math.random() * 5;
+       const delay = `${delaySeconds}s`;
 
-    // 遅延（0〜5秒）
-    const delay = `${Math.random() * 5}s`;
+       // 初期の横揺れ方向
+       const rotate = `${Math.random() * 40 - 20}deg`;
+       const totalTimeMs = (delaySeconds + durationSeconds * animationIterationCount) * 1000;
+       maxTotalTimeMs = Math.max(maxTotalTimeMs, totalTimeMs);
+       return {
+         key: i,
+         left,
+         width,
+         height,
+         duration,
+         delay,
+         rotate,
+       };
+     });
+     return { flakes: generatedFlakes, maxAnimationTimeMs: maxTotalTimeMs };
+   }, []);
+  
+   React.useEffect(() => {
+     if (!onAnimationEnd) {
+       return;
+     }
 
-    // 初期の横揺れ方向
-    const rotate = `${Math.random() * 40 - 20}deg`;
+     const timeoutId = window.setTimeout(() => {
+       onAnimationEnd();
+     }, maxAnimationTimeMs);
 
-    return (
-      <span
-        key={i}
-        className={base}
-        onAnimationEnd={onAnimationEnd}
-        style={{
-          left,
-          width,
-          height,
-          animationName: "snow-fall",
-          animationDuration: duration,
-          animationDelay: delay,
-          transform: `rotateZ(${rotate})`,
-        }}
-      />
-    );
-  });
-
-  return <div className={`${container} ${keyframes}`}>{flakes}</div>;
-};
+     return () => {
+       window.clearTimeout(timeoutId);
+     };
+   }, [maxAnimationTimeMs, onAnimationEnd]);
+   
+   return (
+     <div className={`${container} ${keyframes}`}>
+       {flakes.map(({ key, left, width, height, duration, delay, rotate }) => (
+         <span
+           key={key}
+           className={base}
+           style={{
+             left,
+             width,
+             height,
+             animationName: "snow-fall",
+             animationDuration: duration,
+             animationDelay: delay,
+             transform: `rotateZ(${rotate})`,
+           }}
+         />
+       ))}
+     </div>
+   );
+ };

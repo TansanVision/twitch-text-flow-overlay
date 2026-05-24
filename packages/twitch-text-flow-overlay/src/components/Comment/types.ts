@@ -2,9 +2,9 @@ import type React from "react";
 
 /**
  * エフェクトコマンドの型定義
- * 例: 桜、雪、丸太、紙吹雪など
+ * 例: 桜、雪、丸太、紙吹雪、雨など
  */
-export type EffectCommand = "sakura" | "snow" | "maruta" | "kamifubuki";
+export type EffectCommand = "sakura" | "snow" | "maruta" | "kamifubuki" | "rain";
 
 /**
  * コメント関連の型定義
@@ -45,7 +45,7 @@ export const isSizeCommand = (command: Command): command is SizeCommand => {
  * @returns コマンドがエフェクトコマンドである場合はtrue、それ以外の場合はfalse
  */
 export const isEffectCommand = (command: Command): command is EffectCommand => {
-    return command === 'sakura' || command === 'snow' || command === 'maruta' || command === 'kamifubuki';
+    return command === 'sakura' || command === 'snow' || command === 'maruta' || command === 'kamifubuki' || command === 'rain';
 }
 
 /**

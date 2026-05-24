@@ -47,36 +47,54 @@ const LogSVG = () => (
  * 丸太が落ちてくるアニメーションコンポーネント
  * @returns JSX.Element
  */
-export const Maruta: React.FC<{ onAnimationEnd?: () => void }> = ({ onAnimationEnd }) => {
-    const logs = Array.from({ length: 8 }).map((_, i) => {
-    const left = `${Math.random() * 100}%`;
+ export const Maruta: React.FC<{ onAnimationEnd?: () => void }> = ({ onAnimationEnd }) => {
+   const iterationCount = 5;
+   const logConfigs = React.useMemo(
+     () =>
+       Array.from({ length: 8 }).map(() => {
+         const durationSeconds = 2 + Math.random() * 2;
+         const delaySeconds = Math.random() * 3;
 
-    // 落下速度（2〜4秒）
-    const duration = `${2 + Math.random() * 2}s`;
+         return {
+           left: `${Math.random() * 100}%`,
+           duration: `${durationSeconds}s`,
+           delay: `${delaySeconds}s`,
+           rotate: `${Math.random() * 40 - 20}deg`,
+           totalDurationMs: (delaySeconds + durationSeconds * iterationCount) * 1000,
+         };
+       }),
+     []
+   );
 
-    // 遅延（0〜3秒）
-    const delay = `${Math.random() * 3}s`;
+   const maxAnimationDurationMs = Math.max(...logConfigs.map((log) => log.totalDurationMs));
 
-    // 初期回転
-    const rotate = `${Math.random() * 40 - 20}deg`;
+   React.useEffect(() => {
+     if (!onAnimationEnd) {
+       return;
+     }
 
-    return (
-      <div
-        key={i}
-        className={base}
-        onAnimationEnd={onAnimationEnd}
-        style={{
-          left,
-          animationName: "log-fall",
-          animationDuration: duration,
-          animationDelay: delay,
-          transform: `rotateZ(${rotate})`,
-        }}
-      >
-        <LogSVG />
-      </div>
-    );
-  });
-
-  return <div className={`${container} ${keyframes}`}>{logs}</div>;
-};
+     const timeoutId = window.setTimeout(() => {
+       onAnimationEnd();
+     }, maxAnimationDurationMs);
+     return () => {
+       window.clearTimeout(timeoutId);
+     };
+   }, [maxAnimationDurationMs, onAnimationEnd]);
+   
+   const logs = logConfigs.map(({ left, duration, delay, rotate }, i) => (
+     <div
+       key={i}
+       className={base}
+       style={{
+         left,
+         animationName: "log-fall",
+         animationDuration: duration,
+         animationDelay: delay,
+         transform: `rotateZ(${rotate})`,
+       }}
+     >
+       <LogSVG />
+     </div>
+   ));
+   return <div className={`${container} ${keyframes}`}>{logs}</div>;
+ };

@@ -4,7 +4,7 @@ import type { Command } from './types';
  * コマンドの種類とルールを定義
  */
 const rules = {
-    effect: ["sakura", "snow", "maruta", "kamifubuki"] as Command[],
+    effect: ["sakura", "snow", "maruta", "kamifubuki", "rain"] as Command[],
     color: ["white2", "niconicowhite", "red2", "truered", "pink2", "orange2", "passionorange", 
         "yellow2", "madyellow", "cyan2", "blue2", "marineblue", "purple2", "nobleviolet", 
         "black2", "white", "red", "orange", "blue", "green", "yellow", "pink", "cyan", "purple", "black", "elementalgreen", "green2"] as Command[],

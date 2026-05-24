@@ -1,4 +1,5 @@
 import { css } from "@emotion/css";
+import React from "react";
 
 const rain = css`
     position: absolute;
@@ -101,15 +102,21 @@ const rain = css`
     }
   `;
 
+/**
+ * 雨エフェクトを表示するコンポーネント
+ * @param param0 - onAnimationEnd: アニメーション終了時のコールバック関数
+ * @returns JSX.Element
+ */
 export const Rain: React.FC<{ onAnimationEnd?: () => void }> = ({ onAnimationEnd }) => {
     return <div className={rain}>
-        <div onAnimationEnd={onAnimationEnd}></div>
-        <div onAnimationEnd={onAnimationEnd}></div>
-        <div onAnimationEnd={onAnimationEnd}></div>
-        <div onAnimationEnd={onAnimationEnd}></div>
-        <div onAnimationEnd={onAnimationEnd}></div>
-        <div onAnimationEnd={onAnimationEnd}></div>
-        <div onAnimationEnd={onAnimationEnd}></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
         <div onAnimationEnd={onAnimationEnd}></div>
     </div>
 }
