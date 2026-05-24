@@ -4,6 +4,7 @@ import type { Command } from './types';
  * コマンドの種類とルールを定義
  */
 const rules = {
+    effect: ["sakura", "snow", "maruta", "kamifubuki"] as Command[],
     color: ["white2", "niconicowhite", "red2", "truered", "pink2", "orange2", "passionorange", 
         "yellow2", "madyellow", "cyan2", "blue2", "marineblue", "purple2", "nobleviolet", 
         "black2", "white", "red", "orange", "blue", "green", "yellow", "pink", "cyan", "purple", "black", "elementalgreen", "green2"] as Command[],
@@ -29,12 +30,14 @@ export const extractTokens = (
         color: undefined,
         size: undefined,
         alignment: undefined,
+        effect: undefined,
     };
 
     const allCommands = new Set<Command>([
         ...rules.color,
         ...rules.size,
         ...rules.alignment,
+        ...rules.effect,
     ]);
 
     let index = 0;
@@ -55,6 +58,11 @@ export const extractTokens = (
         } else if (rules.alignment.includes(command)) {
             if (!tokens?.alignment) {
                 tokens.alignment = command;
+            }
+            commandCount++;
+        } else if (rules.effect.includes(command)) {
+            if (!tokens?.effect) {
+                tokens.effect = command;
             }
             commandCount++;
         }
