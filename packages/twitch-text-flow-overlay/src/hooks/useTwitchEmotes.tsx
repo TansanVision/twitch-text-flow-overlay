@@ -1,5 +1,5 @@
 import { useEffect, useCallback, useRef, useMemo } from 'react';
-import type { Command, CustomStampConfig, CustomStampMap } from '../domain/types';
+import type { CustomStampConfig, CustomStampMap } from '../domain/types';
 import type { ExternalEmoteMap } from '../domain/types';
 import { getNodes } from '../utils/pipeline';
 
