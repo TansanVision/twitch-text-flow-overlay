@@ -247,6 +247,7 @@ const commentFiltering = (text: string): boolean => {
     if (/now playing/i.test(trimmed)) return true;
 
     // URL（スパム or 自動メッセージ）
+    if (/\burl\b/i.test(trimmed)) return true;
     if (/https?:\/\/\S+/i.test(trimmed)) return true;
     if (/www\.\S+/i.test(trimmed)) return true;
 
