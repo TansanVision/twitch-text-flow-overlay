@@ -12,10 +12,10 @@ export const CommentServiceRenderer : React.FC<CommentServiceRendererProps> = ({
 }) => {
     return (
         <>
-            {comments.map(({ id, node }, i) =>
+            {comments.map(({ id, node }) =>
                 React.isValidElement(node)
                     ? React.cloneElement(node, { 
-                        key: i,
+                        key: id,
                         onAnimationEnd: (e: React.AnimationEvent<HTMLElement>) => onAnimationEnd(id)
                     } as any)
                     : node
