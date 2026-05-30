@@ -46,7 +46,7 @@ const BouRamenSVG = () => <svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000
       <stop offset="100%" stopColor="#b97a3e" />
     </radialGradient>
   </defs>
-  <circle cx="25" cy="25" r="24" fill="url(#bowl-grad)" stroke="#b0b0b0" stroke-width="1.5" />
+  <circle cx="25" cy="25" r="24" fill="url(#bowl-grad)" stroke="#b0b0b0" strokeWidth="1.5" />
   <circle cx="25" cy="25" r="19" fill="url(#soup-grad)" />
   <path d="M15 25
            q10 -10 20 0

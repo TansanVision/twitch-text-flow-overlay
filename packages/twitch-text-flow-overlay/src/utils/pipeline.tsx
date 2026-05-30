@@ -40,7 +40,7 @@ const tokenize = (text: string, keywords: string[]) : Token[] => {
     const escapedKeywords = 
         normalizedKeywords.map((keyword) => keyword.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&'));
 
-    const regex = new RegExp(`(?:^|\\s)(${escapedKeywords.join('|')})(?=\\s|$)`, 'g');
+    const regex = new RegExp(`(?<=^|\\s)(${escapedKeywords.join('|')})(?=\\s|$)`, 'g');
 
     const keywordsSet = new Set(normalizedKeywords);
 
