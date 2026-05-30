@@ -40,7 +40,7 @@ const tokenize = (text: string, keywords: string[]) : Token[] => {
     const escapedKeywords = 
         normalizedKeywords.map((keyword) => keyword.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&'));
 
-    const regex = new RegExp(`\\b(${escapedKeywords.join('|')})\\b`, 'gi');
+    const regex = new RegExp(`\\b(${escapedKeywords.join('|')})\\b`, 'g');
 
     const keywordsSet = new Set(normalizedKeywords);
 
@@ -209,21 +209,21 @@ const phase3 = (text: string,
 const getEffectNode = (effect: string): React.ReactNode => {
     switch (effect) {
         case "sakura":
-            return <Sakura key={`effect-sakura-${uuidv4()}`} />;
+            return <Sakura />;
         case "balloons":
-            return <Balloons key={`effect-balloons-${uuidv4()}`} />;
+            return <Balloons />;
         case "snow":
-            return <Snow key={`effect-snow-${uuidv4()}`} />;
+            return <Snow />;
         case "kamifubuki":
-            return <Kamifubuki key={`effect-kamifubuki-${uuidv4()}`} />;
+            return <Kamifubuki />;
         case "marutai":
-            return <BouRamen key={`effect-marutai-${uuidv4()}`} />;
+            return <BouRamen />;
         case "chikuwa":
-            return <Chikuwa key={`effect-chikuwa-${uuidv4()}`} />;
+            return <Chikuwa />;
         case "maruta":
-            return <Maruta key={`effect-maruta-${uuidv4()}`} />;
+            return <Maruta />;
         case "rain":
-            return <Rain key={`effect-rain-${uuidv4()}`} />;
+            return <Rain />;
         default:
             return null;
     }
@@ -254,7 +254,7 @@ export const getNodes = (text: string,
     if (headTokens.effect) {
         const effectNode = getEffectNode(headTokens.effect);
         if (effectNode) {
-            nodes.push({ id: `effect-${headTokens.effect}-${uuidv4()}`, node: effectNode });
+            nodes.push({ id: `effect-${uuidv4()}`, node: effectNode });
         }
     }
 

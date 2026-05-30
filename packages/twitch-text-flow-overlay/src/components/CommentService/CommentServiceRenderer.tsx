@@ -1,6 +1,11 @@
 import type { CommentServiceRendererProps } from "./types";
 import React from "react";
 
+type CommentNode = {
+    id: string;
+    node: React.ReactNode;
+}
+
 /**
  * コメントサービスのレンダラーコンポーネント
  * @param param0 - レンダラーコンポーネントのプロパティ
@@ -14,10 +19,10 @@ export const CommentServiceRenderer : React.FC<CommentServiceRendererProps> = ({
         <>
             {comments.map(({ id, node }) =>
                 React.isValidElement(node)
-                    ? React.cloneElement(node, { 
+                    ? React.cloneElement(node, {
                         key: id,
-                        onAnimationEnd: (e: React.AnimationEvent<HTMLElement>) => onAnimationEnd(id)
-                    } as any)
+                        onAnimationEnd: onAnimationEnd ? () => onAnimationEnd(id) : undefined,
+                    } as unknown as CommentNode)
                     : node
             )}
         </>
