@@ -230,11 +230,11 @@ const getEffectNode = (effect: string): React.ReactNode => {
 };
 
 /**
- * コメントテキストが不適切な内容であるかどうかを判定します。
+ * コメントテキストがフィルタ対象かどうかを判定します。
  * @param text - コメントのテキスト
- * @returns 不適切な内容であると判断された場合はtrue、そうでない場合はfalse
+ * @returns フィルタ対象の場合はtrue、それ以外はfalse
  */
-const commentFiltering = (text: string): boolean => {
+const shouldFilterComment = (text: string): boolean => {
     const trimmed = text.trim();
 
     // 先頭が ! のコマンド
@@ -271,7 +271,7 @@ export const getNodes = (text: string,
         return [];
     }
 
-    if (commentFiltering(text)) {
+    if (shouldFilterComment(text)) {
         return [];
     }
 
