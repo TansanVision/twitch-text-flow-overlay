@@ -1,4 +1,6 @@
+import React, { useCallback } from 'react';
 import { css, cx } from "@emotion/css";
+import { isSizeCommandString, isColorCommandString, isAlignmentCommandString } from '../../domain/types';
 
 /**
  * コメントが右から左へ流れるアニメーションのスタイル定義
@@ -359,7 +361,7 @@ const getAlignmentStyle = (alignment: string) => {
  * @param lane - コメントのレーン番号を指定する数値
  * @returns コメントのスタイルオブジェクト
  */
-export const getCommentStyle = (
+const getCommentStyle = (
     size: string, 
     color: string, 
     alignment: string, 
@@ -376,4 +378,78 @@ export const getCommentStyle = (
         alignmentStyle,
         effectStyle
     );
+}
+
+/**
+ * コメントの流れるアニメーションコンポーネント
+ * @param element - コメントのテキストや画像などの要素を含むReactノード
+ * @param className - コメントのスタイルを指定するクラス名
+ * @param onAnimationEnd - アニメーション終了時のコールバック関数
+ * @returns JSX.Element
+ */
+type Props = {
+    children: React.ReactNode;
+    className: string;
+    onAnimationEnd?: () => void;
+}
+
+// コメントのレーンの最大数を定義
+const MAX_MIDDLE_LANE = 16;
+const MAX_SMALL_LANE = 25;
+const MAX_BIG_LANE = 7;
+
+/**
+ * コメントの表示位置を決定する関数
+ * @param comment - コメントオブジェクト
+ * @returns コメントの表示位置を示す数値（レーン番号）
+ */
+const getLane = (command : string): number => {
+    let maxLane = MAX_MIDDLE_LANE;
+
+    if (isSizeCommandString(command)) {
+        if (command === "small") {
+            maxLane = MAX_SMALL_LANE;
+        } else if (command === "big") {
+            maxLane = MAX_BIG_LANE;
+        }
+    }
+
+    return Math.floor(Math.random() * (maxLane - 2));
+}
+
+/**
+ * コメントのスタイルを取得する関数
+ * @param commands - コメントに適用されているコマンドの配列
+ * @returns コメントのスタイルを指定するクラス名
+ */
+export const getFlowStyle = (commands: string[]) : string => {
+    const sizeCommand = commands.find(isSizeCommandString) || "default";
+    const colorCommand = commands.find(isColorCommandString) || "default";
+    const alignmentCommand = commands.find(isAlignmentCommandString) || "default";
+    const lane = getLane(sizeCommand);
+    return getCommentStyle(sizeCommand, colorCommand, alignmentCommand, lane);
+}
+
+/**
+ * コメントの流れるアニメーションコンポーネント
+ * @param param0 - コンポーネントのプロパティ
+ * @returns JSX.Element
+ * @description コメントが右から左へ流れるアニメーションを表示するコンポーネント。コメントのテキストと、アニメーション終了時のコールバック関数を受け取る。
+ */
+export const Flow : React.FC<Props> = ({ 
+    children, 
+    className, 
+    onAnimationEnd 
+}) => {
+    const handleAnimationEnd = useCallback(() => {
+        if (onAnimationEnd) {
+            onAnimationEnd();
+        }
+    }, [children, onAnimationEnd]);
+
+    return <div 
+        className={className}
+        onAnimationEnd={handleAnimationEnd}>
+        {children}
+    </div>
 }

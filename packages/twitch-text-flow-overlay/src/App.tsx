@@ -1,12 +1,9 @@
 import { useEffect, useState, useMemo, useCallback} from 'react';
 import { CommentServiceContainer } from './components/CommentService/CommentServiceContainer';
-import type { Comment } from './components/Comment/types';
-import { v4 as uuid } from 'uuid';
 import { useStreamerBot } from './hooks/useStreamerbot';
 import { useTwitchEmotes } from './hooks/useTwitchEmotes';
-import type { Message } from './hooks/useStreamerbot';
-import type { AppConfig } from './types';
-import { isCommand } from './components/Comment/types';
+import type { Comment, Message, AppConfig } from './domain/types';
+import { isCommand } from './domain/types';
 
 const defaultConfig = {
   host: "127.0.0.1",
@@ -124,7 +121,7 @@ function App() {
   const [comments, setComments] = useState<Comment[]>([]);
   const config = useMemo(() => getConfig(), []);
 
-  const { getNodesAndCommands } = useTwitchEmotes(config.customStamps);
+  const { getNodes } = useTwitchEmotes(config.customStamps);
 
   const handleComment = useCallback((message: Message) => {
     addComment(message);
@@ -147,32 +144,21 @@ function App() {
       return;
     }
 
-    const { nodes, commands } = getNodesAndCommands(message.text, message.emotes);
-
-    const comment: Comment = {
-      id: uuid(),
-      node: nodes,
-      state: 'active',
-      commands: commands,
-    };
+    const nodes = getNodes(message.text, message.emotes);
 
     setComments((prevComments) => {
-      if (prevComments.findIndex(c => c.state === 'inactive') === -1) {
-        return [...prevComments, comment];
-      }
-
-      const index = prevComments.findIndex(c => c.state === 'inactive');
-      const updatedComments = [...prevComments];
-      updatedComments[index] = comment;
-      return updatedComments;
+      return [...prevComments, ...nodes];
     });
-  }, [getNodesAndCommands]);
+  }, [getNodes]);
 
   const releaseComment = useCallback((id: string) => {
     setComments((prevComments) => {
       const index = prevComments.findIndex(c => c.id === id);
+      if (index === -1) {
+        return prevComments;
+      }
       const updatedComments = [...prevComments];
-      updatedComments[index].state = 'inactive';
+      updatedComments.splice(index, 1);
       return updatedComments;
     });
   }, []);

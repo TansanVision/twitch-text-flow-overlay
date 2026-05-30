@@ -1,5 +1,5 @@
-import { CommentContainer } from "../Comment/CommnentContainer";
 import type { CommentServiceRendererProps } from "./types";
+import React from "react";
 
 /**
  * コメントサービスのレンダラーコンポーネント
@@ -12,13 +12,14 @@ export const CommentServiceRenderer : React.FC<CommentServiceRendererProps> = ({
 }) => {
     return (
         <>
-            {comments.filter(comment => comment.state === 'active').map((comment) => (
-                <CommentContainer 
-                    key={`${comment.id}`} 
-                    comment={comment} 
-                    onAnimationEnd={onAnimationEnd}
-                />
-            ))}
+            {comments.map(({ id, node }, i) =>
+                React.isValidElement(node)
+                    ? React.cloneElement(node, { 
+                        key: i,
+                        onAnimationEnd: (e: React.AnimationEvent<HTMLElement>) => onAnimationEnd(id)
+                    } as any)
+                    : node
+            )}
         </>
     );
 }

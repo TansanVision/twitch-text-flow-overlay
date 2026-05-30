@@ -1,42 +1,6 @@
 import { StreamerbotClient } from '@streamerbot/client';
 import { useState, useEffect, useRef } from 'react';
-
-/**
- * 接続状態を表す型
- */
-type ConnectionStatus = 'connecting' | 'connected' | 'disconnected' | 'error';
-
-/**
- * エモートの型定義
- */
-export type Emote = {
-    id?: string;
-    endIndex: number;
-    imageUrl: string;
-    name: string;
-    startIndex: number;
-    zeroWidth?: boolean;
-    type: string;
-}
-
-/**
- * メッセージの型定義
- */
-export type Message = {
-    text: string;
-    emotes: Emote[];
-}
-
-/**
- * Streamerbotクライアントを使用するためのカスタムフックのオプション
- */
-type UseStreamerBotOptions = {
-    host?: string;
-    port?: number;
-    endpoint?: string;
-    password?: string;
-    onComment: (message: Message) => void;
-}
+import type { ConnectionStatus, UseStreamerBotOptions, Message } from '../domain/types';
 
 /**
  * メッセージを取得します。

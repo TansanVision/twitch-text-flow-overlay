@@ -1,11 +1,11 @@
-import type { Comment } from '../Comment/types';
+import type { Comment } from "../../domain/types";
 
 /**
  * CommentServiceContainerコンポーネントのプロパティの型定義
  */
 export interface CommentServiceContainerProps{
     comments: Comment[];
-    onRelease?: (id: string) => void;
+    onRelease: (id: string) => void;
 }
 
 /**
@@ -13,5 +13,5 @@ export interface CommentServiceContainerProps{
  */
 export interface CommentServiceRendererProps {
     comments: Comment[];
-    onAnimationEnd?: (id: string) => void;
+    onAnimationEnd: (id: string) => void;
 }
