@@ -230,8 +230,32 @@ const getEffectNode = (effect: string): React.ReactNode => {
 };
 
 /**
+ * コメントテキストが不適切な内容であるかどうかを判定します。
+ * @param text - コメントのテキスト
+ * @returns 不適切な内容であると判断された場合はtrue、そうでない場合はfalse
+ */
+const commentFiltering = (text: string): boolean => {
+    const trimmed = text.trim();
+
+    // 先頭が ! のコマンド
+    if (/^!/.test(trimmed)) return true;
+
+    // Beat Saber リクエスト系（Nightbot / Streamer.bot）
+    if (/\(bsr\s+[0-9a-z]+\)/i.test(trimmed)) return true;
+    if (/requested by @/i.test(trimmed)) return true;
+    if (/added to queue/i.test(trimmed)) return true;
+    if (/now playing/i.test(trimmed)) return true;
+
+    // URL（スパム or 自動メッセージ）
+    if (/https?:\/\/\S+/i.test(trimmed)) return true;
+    if (/www\.\S+/i.test(trimmed)) return true;
+
+    return false;
+}
+
+/**
  * Twitchのメッセージテキストをエモートでレンダリングする関数
- * @param text - メッセージテキスト
+ * @param text - コメントのテキスト
  * @param twitchEmotes - Twitchのエモートデータ
  * @param externalEmotes - 外部エモートのマップ
  * @param customStamps - カスタムスタンプのマップ
@@ -243,6 +267,10 @@ export const getNodes = (text: string,
     customStamps: CustomStampMap) : Comment[] => {
 
     if (!text) {
+        return [];
+    }
+
+    if (commentFiltering(text)) {
         return [];
     }
 
