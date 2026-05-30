@@ -54,13 +54,13 @@ const BouRamenSVG = () => <svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000
            q10 -10 20 0"
         fill="none"
         stroke="#f7e7b5"
-        stroke-width="2"
-        stroke-linecap="round"
+        strokeWidth="2"
+        strokeLinecap="round"
         opacity="0.9" />
   <circle cx="33" cy="30" r="6" fill="#c48a6a" />
   <circle cx="33" cy="30" r="4" fill="#e8c2a0" />
-  <path d="M29 28 q4 -3 8 0" stroke="#8a5a3a" stroke-width="1" opacity="0.5" />
-  <circle cx="18" cy="20" r="4" fill="#ffffff" stroke="#ff7aa2" stroke-width="1.2" />
+  <path d="M29 28 q4 -3 8 0" stroke="#8a5a3a" strokeWidth="1" opacity="0.5" />
+  <circle cx="18" cy="20" r="4" fill="#ffffff" stroke="#ff7aa2" strokeWidth="1.2" />
   <circle cx="18" cy="20" r="2" fill="#ff7aa2" />
   <circle cx="28" cy="17" r="1.5" fill="#9adf7f" />
   <circle cx="30" cy="19" r="1.2" fill="#9adf7f" />
