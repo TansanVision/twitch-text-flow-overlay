@@ -67,7 +67,8 @@ export function writeConfigToHtml(html: string, config: Config): string {
         doc.head.appendChild(configScriptElement);
     }
 
-    configScriptElement.textContent = JSON.stringify(config, null, 2);
+     const json = JSON.stringify(config, null, 2).replace(/</g, '\\u003c');
+     configScriptElement.textContent = json;
 
     const doctype = doc.doctype
         ? `<!DOCTYPE ${doc.doctype.name}${doc.doctype.publicId ? ` PUBLIC "${doc.doctype.publicId}"` : ''}${!doc.doctype.publicId && doc.doctype.systemId ? ' SYSTEM' : ''}${doc.doctype.systemId ? ` "${doc.doctype.systemId}"` : ''}>`

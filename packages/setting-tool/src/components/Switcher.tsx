@@ -13,7 +13,11 @@ const switcherClassName = css`
         align-items: center;
         gap: 0.5rem;
         input[type="radio"] {
-            display: none;
+            position: absolute;
+            opacity: 0;
+            width: 1px;
+            height: 1px;
+            margin: -1px;
         }
         label {
             white-space: nowrap;
@@ -54,7 +58,7 @@ export const Switcher: React.FC<SwitcherProps> = ({ onClick }) => {
         <div>
             <input type="radio" id="new" name="switcher" checked={checked === "new"} onChange={() => handleChange("new")} />
             <label htmlFor="new">新規</label>
-            <span className="explanation">初期設定を行う場合はこちらを選択してください</span>
+            <span className="explanation">初期設定や追加の設定を行う場合はこちらを選択してください</span>
         </div>
         <div>
             <input type="radio" id="migrate" name="switcher" checked={checked === "migrate"} onChange={() => handleChange("migrate")} />

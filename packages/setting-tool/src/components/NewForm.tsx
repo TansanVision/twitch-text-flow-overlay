@@ -1,6 +1,6 @@
 import { css } from '@emotion/css';
 import { getConfigJson, isHtmlFile, writeConfigToHtml, hasConfigScript, download } from '../domain/utils';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Toast } from './Toast';
 import type { Config, CustomStamp } from '../domain/types';
 import type { JSX } from 'react';
@@ -438,9 +438,17 @@ const SettingForm : React.FC<SettingFormProps> = ({ html, config }) => {
 
     const handleAddOrEditCustomStamp = (stamp: CustomStamp) => {
         if (editData) {
+             if (customStamps.some((s, i) => i !== editData.index && s.commandName === stamp.commandName)) {
+                 alert(`同じコマンド名前のスタンプが既に存在しています: ${stamp.commandName}`);
+                 return;
+             }
             setCustomStamps(previous => previous.map((s, i) => i === editData.index ? stamp : s));
             setEditData(null);
         } else {
+             if (customStamps.some((s) => s.commandName === stamp.commandName)) {
+                 alert(`同じコマンド名前のスタンプが既に存在しています: ${stamp.commandName}`);
+                 return;
+             }
             setCustomStamps(previous => [...previous, stamp]);
         }
     }
@@ -509,7 +517,7 @@ const SettingForm : React.FC<SettingFormProps> = ({ html, config }) => {
                 <button className="save" onClick={handleSave}>オーバーレイファイルを保存</button>
             </header>
             <div>
-                {customStamps.map((stamp, index) => (
+                {customStamps.filter(stamp => !!stamp.dataUri).map((stamp, index) => (
                     <div key={index}>
                         <div>
                             <span>コマンド名前:</span>
@@ -517,7 +525,7 @@ const SettingForm : React.FC<SettingFormProps> = ({ html, config }) => {
                         </div>
                         <div>
                             <span>画像:</span>
-                            <img src={stamp.dataUri || "プレビュー"} alt="プレビュー" style={{ width: "56px", height: "56px" }} />
+                            <img src={stamp.dataUri} alt="プレビュー" style={{ width: "56px", height: "56px" }} />
                         </div>
                         <div>
                             <button className="edit" onClick={() => handleEditCustomStamp(stamp, index)}>編集</button>
@@ -548,7 +556,7 @@ const newFormClass = css`
  * @returns JSX.Element
  * @remarks LoadPhaseコンポーネントを表示して設定の読み込みを行い、設定が読み込まれた後にSettingFormコンポーネントを表示します。
  */
-export const NewForm: React.FC<{}> = () => {
+export const NewForm : React.FC<{}> = () => {
     const [config, setConfig] = useState<Config | null>(null);
     const [html, setHtml] = useState<string | null>(null);
 

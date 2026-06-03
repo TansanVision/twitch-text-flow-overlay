@@ -32,9 +32,15 @@ export const Toast: React.FC<ToastProps> = ({ message, onClose, timeout = 3000, 
         return () => clearTimeout(timer);
     }, [onClose, timeout]);
 
-    return <div className={toastClassName} onClick={onClose} style={{
-        backgroundColor: variant === 'success' ? '#4caf50' : variant === 'error' ? '#f44336' : '#333',
-    }}>
+    return <div
+         className={toastClassName}
+         role="status"
+         aria-live="polite"
+         onClick={onClose}
+         style={{
+            backgroundColor: variant === 'success' ? '#4caf50' : variant === 'error' ? '#f44336' : '#333',
+         }}
+     >
         {message}
     </div>
 }

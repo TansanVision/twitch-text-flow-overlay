@@ -59,14 +59,19 @@ export const MigrateForm: React.FC = () => {
             reader.onload = (e) => {
                 const content = e.target?.result as string;
                 if (isHtmlFile(file, content)) {
+                    setError(null);
+                    setSuccess(null);
                     if (id === 'source') {
                         setSourceFile(file);
                     } else {
                         setTargetFile(file);
                     }
                 } else {
-                    setSourceFile(null);
-                    setTargetFile(null);
+                     if (id === 'source') {
+                         setSourceFile(null);
+                     } else {
+                         setTargetFile(null);
+                     }
                     setError("選択されたファイルは有効なHTMLファイルではありません。");
                 }
             };
