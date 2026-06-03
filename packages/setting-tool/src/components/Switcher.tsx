@@ -8,9 +8,11 @@ type SwitcherProps = {
 const switcherClassName = css`
     display: flex;
     gap: 1rem;
+    padding: 8px;
     & > div {
         display: flex;
-        align-items: center;
+        flex-direction: column;
+        align-items: flex-start;
         gap: 0.5rem;
         input[type="radio"] {
             position: absolute;

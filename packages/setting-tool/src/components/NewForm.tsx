@@ -437,6 +437,11 @@ const SettingForm : React.FC<SettingFormProps> = ({ html, config }) => {
     }
 
     const handleAddOrEditCustomStamp = (stamp: CustomStamp) => {
+         if (/\s/.test(stamp.commandName)) {
+             alert(`コマンド名前に空白を含めることはできません: ${stamp.commandName}`);
+             return;
+         }
+
         if (editData) {
              if (customStamps.some((s, i) => i !== editData.index && s.commandName === stamp.commandName)) {
                  alert(`同じコマンド名前のスタンプが既に存在しています: ${stamp.commandName}`);

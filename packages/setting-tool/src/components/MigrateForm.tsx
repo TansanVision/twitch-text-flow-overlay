@@ -74,6 +74,15 @@ export const MigrateForm: React.FC = () => {
                     setError("選択されたファイルは有効なHTMLファイルではありません。");
                 }
             };
+            reader.onerror = () => {
+                if (id === 'source') {
+                    setSourceFile(null);
+                } else {
+                    setTargetFile(null);
+                }
+                setSuccess(null);
+                setError('ファイルの読み込みに失敗しました。');
+            };
             reader.readAsText(file);
         }
     }, []);
@@ -92,10 +101,19 @@ export const MigrateForm: React.FC = () => {
                         download(updatedHtml);
                         setSuccess("移行が完了しました。");
                     };
+                    targetReader.onerror = () => {
+                        setSuccess(null);
+                        setError('移行先HTMLファイルの読み込みに失敗しました。');
+                    };
                     targetReader.readAsText(targetFile);
                 } else {
+                    setSuccess(null);
                     setError("移行元HTMLファイルから設定を取得できませんでした。");
                 }
+            };
+            reader.onerror = () => {
+                setSuccess(null);
+                setError('移行元HTMLファイルの読み込みに失敗しました。');
             };
             reader.readAsText(sourceFile);
         }
