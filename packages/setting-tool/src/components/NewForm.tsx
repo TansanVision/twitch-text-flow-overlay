@@ -75,7 +75,9 @@ const LoadPhase : React.FC<LoadPhaseProps> = ({ onConfigLoaded }) => {
             configJson.port = configJson.port || 8080;
             configJson.endpoint = configJson.endpoint || '/';
             configJson.password = configJson.password || '';
-            configJson.customStamps = configJson.customStamps || [];
+            configJson.customStamps = Array.isArray(configJson.customStamps)
+                ? configJson.customStamps 
+                : [];
 
             onConfigLoaded(content, configJson);
             setError(null);

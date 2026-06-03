@@ -29,6 +29,10 @@ const switcherClassName = css`
             cursor: pointer;
             user-select: none;
         }
+        input[type="radio"]:focus + label {
+            outline: 2px solid #6441a5;
+            outline-offset: 2px;
+        }
         input[type="radio"]:checked + label {
             background-color: #6441a5;
             color: white;
