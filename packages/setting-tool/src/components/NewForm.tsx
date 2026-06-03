@@ -151,7 +151,7 @@ const CustomStampFormStyle = css`
                 border-radius: 4px;
             }
         }
-        & > div {
+        & > .form-buttons {
             display: flex;
             flex-direction: row;
             justify-content: flex-end;
@@ -517,22 +517,24 @@ const SettingForm : React.FC<SettingFormProps> = ({ html, config }) => {
                 <button className="save" onClick={handleSave}>オーバーレイファイルを保存</button>
             </header>
             <div>
-                {customStamps.filter(stamp => !!stamp.dataUri).map((stamp, index) => (
-                    <div key={index}>
-                        <div>
-                            <span>コマンド名前:</span>
-                            <span>{stamp.commandName}</span>
-                        </div>
-                        <div>
-                            <span>画像:</span>
-                            <img src={stamp.dataUri} alt="プレビュー" style={{ width: "56px", height: "56px" }} />
-                        </div>
-                        <div>
-                            <button className="edit" onClick={() => handleEditCustomStamp(stamp, index)}>編集</button>
-                            <button className="delete" onClick={() => handleDeleteCustomStamp(index)}>削除</button>
-                        </div>
-                     </div>
-                ))}
+                 {customStamps.map((stamp, index) => (
+                     !stamp.dataUri ? null : (
+                         <div key={index}>
+                             <div>
+                                 <span>コマンド名前:</span>
+                                 <span>{stamp.commandName}</span>
+                             </div>
+                             <div>
+                                 <span>画像:</span>
+                                 <img src={stamp.dataUri} alt="プレビュー" style={{ width: "56px", height: "56px" }} />
+                             </div>
+                             <div>
+                                 <button className="edit" onClick={() => handleEditCustomStamp(stamp, index)}>編集</button>
+                                 <button className="delete" onClick={() => handleDeleteCustomStamp(index)}>削除</button>
+                             </div>
+                          </div>
+                     )
+                 ))}
             </div>
         </div>
         <CustomStampForm

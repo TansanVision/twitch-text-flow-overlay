@@ -44,7 +44,6 @@ const migrateButtonClassName = css`
 
 /**
  * MigrateFormコンポーネントは、ユーザーが移行元と移行先のHTMLファイルを選択するためのフォームを提供します。
- * @param onFileSelect - ファイルが選択されたときに呼び出されるコールバック関数。選択されたファイルが引数として渡されます。
  * @returns JSX.Element
  */
 export const MigrateForm: React.FC = () => {

@@ -19,6 +19,10 @@ const toastClassName = css`
     border-radius: 4px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     z-index: 1000;
+    &:focus {
+        outline: 2px solid #fff;
+        outline-offset: 2px;
+    }
 `;
 
 /**
@@ -36,7 +40,9 @@ export const Toast: React.FC<ToastProps> = ({ message, onClose, timeout = 3000, 
          className={toastClassName}
          role="status"
          aria-live="polite"
+         tabIndex={0}
          onClick={onClose}
+         onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ' || e.key === 'Escape') { e.preventDefault(); onClose(); } }}
          style={{
             backgroundColor: variant === 'success' ? '#4caf50' : variant === 'error' ? '#f44336' : '#333',
          }}
