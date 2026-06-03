@@ -9,7 +9,7 @@ function App() {
 
     return (
         <MainFrame>
-            <Switcher onClick={(id) => setMode(id)} />
+            <Switcher onChange={(id) => setMode(id)} />
             {mode === 'new' && <NewForm />}
             {mode === 'migrate' && <MigrateForm />}
         </MainFrame>

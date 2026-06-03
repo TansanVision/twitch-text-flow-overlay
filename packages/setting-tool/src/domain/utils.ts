@@ -8,7 +8,7 @@ import type { Config } from "./types";
  * @remarks ファイルの拡張子だけでなく、内容も確認することで、より正確にHTMLファイルを判定します。
  */
 export function isHtmlFile(file: File, content: string): boolean {
-    const nameCheck = /\.(html?|HTML?)$/.test(file.name);
+    const nameCheck = /\.(html?)$/i.test(file.name);
     const contentCheck = /<!DOCTYPE html>|<html[\s>]/i.test(content);
     return nameCheck && contentCheck;
 }
@@ -42,7 +42,14 @@ export function getConfigJson(html: string): Config | null {
             return null;
         }
 
-        return JSON.parse(script.textContent.trim());
+         const parsed: unknown = JSON.parse(script.textContent.trim());
+         
+         if (!parsed || typeof parsed !== 'object') {
+             console.error("設定スクリプトのJSONがオブジェクトではありません。");
+             return null;
+         }
+
+         return parsed as Config;
     } catch (err) {
         console.error("JSONパースエラー:", err);
         return null;

@@ -524,7 +524,7 @@ const SettingForm : React.FC<SettingFormProps> = ({ html, config }) => {
             <div>
                  {customStamps.map((stamp, index) => (
                      !stamp.dataUri ? null : (
-                         <div key={index}>
+                         <div key={stamp.commandName}>
                              <div>
                                  <span>コマンド名前:</span>
                                  <span>{stamp.commandName}</span>

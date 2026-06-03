@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { css } from '@emotion/css';
 
 type SwitcherProps = {
-    onClick: (id: 'new' | 'migrate') => void;
+    onChange: (id: 'new' | 'migrate') => void;
 }
 
 const switcherClassName = css`
@@ -48,12 +48,12 @@ const switcherClassName = css`
  * @param param0 - SwitcherPropsオブジェクト
  * @returns JSX.Element
  */
-export const Switcher: React.FC<SwitcherProps> = ({ onClick }) => {
+export const Switcher: React.FC<SwitcherProps> = ({ onChange }) => {
     const [checked, setChecked] = useState<'new' | 'migrate'>('new');
 
     const handleChange = (id: 'new' | 'migrate') => {
         setChecked(id);
-        onClick(id);
+        onChange(id);
     };
 
     return <div className={switcherClassName}>

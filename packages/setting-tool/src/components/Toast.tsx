@@ -36,17 +36,18 @@ export const Toast: React.FC<ToastProps> = ({ message, onClose, timeout = 3000, 
         return () => clearTimeout(timer);
     }, [onClose, timeout]);
 
-    return <div
+    return <button
+         type="button"
          className={toastClassName}
          role="status"
          aria-live="polite"
-         tabIndex={0}
          onClick={onClose}
          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ' || e.key === 'Escape') { e.preventDefault(); onClose(); } }}
          style={{
+            border: 'none',
             backgroundColor: variant === 'success' ? '#4caf50' : variant === 'error' ? '#f44336' : '#333',
          }}
      >
         {message}
-    </div>
+    </button>
 }
