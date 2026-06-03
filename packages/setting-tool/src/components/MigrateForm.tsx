@@ -71,6 +71,7 @@ export const MigrateForm: React.FC = () => {
                      } else {
                          setTargetFile(null);
                      }
+                    setSuccess(null);
                     setError("選択されたファイルは有効なHTMLファイルではありません。");
                 }
             };
@@ -99,6 +100,7 @@ export const MigrateForm: React.FC = () => {
                         const targetContent = e.target?.result as string;
                         const updatedHtml = writeConfigToHtml(targetContent, configJson);
                         download(updatedHtml);
+                        setError(null);
                         setSuccess("移行が完了しました。");
                     };
                     targetReader.onerror = () => {
