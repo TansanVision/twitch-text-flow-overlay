@@ -67,7 +67,7 @@ export function useStreamerBot({
             handleComment({ data });
         });
 
-        client.on("Twitch.Raid", ({ data }) => {
+        client.on("Twitch.Raid", () => {
             // raid
         });
 
@@ -92,8 +92,10 @@ export function useStreamerBot({
             const recipients = data.recipients;
             
             handleComment({ 
-                text: `${user.name} has sent ${recipients.length} gift subs!`,
-             } as any);
+                data: { 
+                    text: `${user.name} has sent ${recipients.length} gift subs!` },
+                } as any
+            );
         });
 
         // テスト用のコメントイベント
