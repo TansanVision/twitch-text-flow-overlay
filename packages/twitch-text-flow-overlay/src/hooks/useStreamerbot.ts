@@ -8,8 +8,8 @@ import type { ConnectionStatus, UseStreamerBotOptions, Message } from '../domain
  * @returns メッセージ
  */
 function getMessage({ data }: { data: any }): Message {
-    const message = data?.message?.message || '';
-    const emotes = data?.message?.emotes || [];
+    const message = data?.text ?? data?.message?.message ?? '';
+    const emotes = [...(data?.message?.emotes || []), ...(data?.cheerEmotes || [])];
 
     if (import.meta.env.MODE === 'development') {
         console.log('Received message data:', data);
@@ -61,6 +61,42 @@ export function useStreamerBot({
         };
 
         client.on("Twitch.ChatMessage", handleComment);
+
+        client.on("Twitch.Cheer", ({ data }) => {
+            // bit or cheer
+            handleComment({ data });
+        });
+
+        client.on("Twitch.Raid", () => {
+            // raid
+        });
+
+        client.on("Twitch.Sub", ({ data }) => {
+            // 新規サブスク
+            handleComment({ data });
+        });
+
+        client.on("Twitch.ReSub", ({ data }) => {
+            // 継続サブスク
+            handleComment({ data });
+        });
+
+        client.on("Twitch.GiftSub", ({ data }) => {
+            // ギフトサブスク
+            handleComment({ data });
+        });
+
+        client.on("Twitch.GiftBomb", ({ data } : { data: any }) => {
+            // ギフト爆弾
+            const user = data.user;
+            const recipients = data.recipients;
+            
+            handleComment({ 
+                data: { 
+                    text: `${user.name} has sent ${recipients.length} gift subs!` },
+                } as any
+            );
+        });
 
         // テスト用のコメントイベント
         client.on("Raw.Action", ({ data }) => {
