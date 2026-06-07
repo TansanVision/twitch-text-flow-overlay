@@ -147,7 +147,7 @@ export function useStreamerBot({
             
             handleComment({ 
                 data: { 
-                    text: `${name} has sent ${recipients.length} gift subs!` },
+                    text: `${name ?? "Unknown User"} has sent ${recipients.length} gift subs!` },
                 } as any
             );
         });
