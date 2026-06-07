@@ -49,6 +49,16 @@ export const useMonitorInteraction = () => {
     });
 
     useEffect(() => {
+        // クリーンアップ関数で視聴者データをリセットする
+        return () => {
+            audienceRef.current = {
+                subscribe: [],
+                comment: [],
+                cheer: [],
+                raid: [],
+                gift: []
+            };
+        };
     }, []);
 
     const addAudience = useCallback((type: keyof AudienceMap, name: string) => {
@@ -67,11 +77,14 @@ export const useMonitorInteraction = () => {
         const formattedData = formatAudienceData(audienceRef.current);
         const blob = new Blob([formattedData], { type: 'text/plain' });
         const url = URL.createObjectURL(blob);
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
         const downloadAnchorNode = document.createElement('a');
-        downloadAnchorNode.download = `twitch-text-flow-overlay_result_${new Date().toISOString()}.txt`;
+        downloadAnchorNode.download = `twitch-text-flow-overlay_result_${timestamp}.txt`;
         downloadAnchorNode.href = url;
+        document.body.appendChild(downloadAnchorNode);
         downloadAnchorNode.click();
         downloadAnchorNode.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 0);
     }, []);
 
     return {
