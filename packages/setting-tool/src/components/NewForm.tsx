@@ -78,9 +78,8 @@ const LoadPhase : React.FC<LoadPhaseProps> = ({ onConfigLoaded }) => {
             configJson.customStamps = Array.isArray(configJson.customStamps)
                 ? configJson.customStamps 
                 : [];
-                configJson.monitorInteractions = configJson?.monitorInteractions === undefined 
-                    ? false
-                    : Boolean(configJson.monitorInteractions);
+             configJson.monitorInteractions =
+                 typeof configJson.monitorInteractions === 'boolean' ? configJson.monitorInteractions : false;;
 
             onConfigLoaded(content, configJson);
             setError(null);
