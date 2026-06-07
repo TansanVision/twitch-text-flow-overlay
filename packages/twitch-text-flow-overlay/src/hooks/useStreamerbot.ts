@@ -1,6 +1,7 @@
 import { StreamerbotClient } from '@streamerbot/client';
 import { useState, useEffect, useRef } from 'react';
 import type { ConnectionStatus, UseStreamerBotOptions, Message } from '../domain/types';
+import { useMonitorInteraction } from './useMonitorInteraction';
 
 /**
  * メッセージを取得します。
@@ -31,8 +32,10 @@ export function useStreamerBot({
     port = 8080, 
     endpoint = "/", 
     password, 
-    onComment 
+    onComment,
+    monitorInteractions = false,
 }: UseStreamerBotOptions) {
+    const { addAudience,  downloadAudienceData } = useMonitorInteraction();
     const [status, setStatus] = useState<ConnectionStatus>('disconnected');
     const clientRef = useRef<StreamerbotClient | null>(null);
 
@@ -60,29 +63,51 @@ export function useStreamerBot({
             }
         };
 
-        client.on("Twitch.ChatMessage", handleComment);
+        client.on("Twitch.ChatMessage", ({ data } : { data: any }) => {
+            // コメントイベント
+            addAudience("comment", data.user.name);
+            handleComment({ data });
+        });
 
-        client.on("Twitch.Cheer", ({ data }) => {
+        client.on("Twitch.Cheer", ({ data } : { data: any }) => {
             // bit or cheer
+            const user = data.user;
+            addAudience("cheer", user.name);
             handleComment({ data });
         });
 
-        client.on("Twitch.Raid", () => {
+        client.on("Twitch.Raid", ({ data } : { data: any }) => {
             // raid
+            const user = data.user;
+            addAudience("raid", user.name);
         });
 
-        client.on("Twitch.Sub", ({ data }) => {
+        client.on("Twitch.RaidSend", () => {
+            if (monitorInteractions) {
+                // ダウンロード処理
+                downloadAudienceData();
+            }
+        });
+
+        client.on("Twitch.Sub", ({ data } : { data: any }) => {
             // 新規サブスク
+            const user = data.user;
+            addAudience("subscribe", user.name);
             handleComment({ data });
         });
 
-        client.on("Twitch.ReSub", ({ data }) => {
+        client.on("Twitch.ReSub", ({ data } : { data: any }) => {
             // 継続サブスク
+            const user = data.user;
+            addAudience("subscribe", user.name);
             handleComment({ data });
         });
 
-        client.on("Twitch.GiftSub", ({ data }) => {
+        client.on("Twitch.GiftSub", ({ data } : { data: any }) => {
             // ギフトサブスク
+            const user = data.user;
+
+            addAudience("gift", user.name);
             handleComment({ data });
         });
 
@@ -90,6 +115,8 @@ export function useStreamerBot({
             // ギフト爆弾
             const user = data.user;
             const recipients = data.recipients;
+
+            addAudience("gift", user.name);
             
             handleComment({ 
                 data: { 
@@ -101,7 +128,11 @@ export function useStreamerBot({
         // テスト用のコメントイベント
         client.on("Raw.Action", ({ data }) => {
             if (data.arguments.isTest) {
-                if (data.arguments.triggerName === "Test" &&
+                if (data.arguments.triggerCategory === "Custom" && data.arguments["customEvent.event"] === "download") {
+                    if (monitorInteractions) {
+                        downloadAudienceData();
+                    }
+                } else if (data.arguments.triggerName === "Test" &&
                     data.arguments.triggerCategory === "Core") {
                         const regex = /comment/i;
                         for (let key in data.arguments) {

@@ -16,4 +16,5 @@ export type Config = {
     endpoint: string;
     password?: string;
     customStamps: CustomStamp[];
+    monitorInteractions: boolean;
 };

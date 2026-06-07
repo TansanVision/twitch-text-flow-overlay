@@ -61,6 +61,7 @@ export type UseStreamerBotOptions = {
     endpoint?: string;
     password?: string;
     onComment: (message: Message) => void;
+    monitorInteractions?: boolean;
 }
 
 /**
@@ -82,6 +83,7 @@ export type CustomStampConfig = {
  * endpoint: Streamer Botのエンドポイント
  * password: Streamer Botのパスワード（省略可能）
  * customStamps: カスタムスタンプの設定の配列
+ * monitorInteractions: 視聴者のインタラクションを監視するかどうか
  */
 export type AppConfig = {
   host: string;
@@ -89,6 +91,7 @@ export type AppConfig = {
   endpoint: string;
   password: string | undefined;
   customStamps: CustomStampConfig[];
+  monitorInteractions: boolean;
 };
 
 /**
@@ -317,3 +320,12 @@ export type Token = {
     dataUri?: string;
     imageUrl?: string;
 };
+
+
+export type AudienceMap = {
+    subscribe: string[];
+    comment: string[];
+    cheer: string[];
+    raid: string[];
+    gift: string[];
+}

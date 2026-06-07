@@ -78,6 +78,9 @@ const LoadPhase : React.FC<LoadPhaseProps> = ({ onConfigLoaded }) => {
             configJson.customStamps = Array.isArray(configJson.customStamps)
                 ? configJson.customStamps 
                 : [];
+                configJson.monitorInteractions = configJson?.monitorInteractions === undefined 
+                    ? false
+                    : Boolean(configJson.monitorInteractions);
 
             onConfigLoaded(content, configJson);
             setError(null);
@@ -303,13 +306,13 @@ const customStampArea = css`
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    padding-top: 1rem;
     header {
         display: flex;
         flex-direction: row;
         align-items: center;
         gap: 0.5rem;
         font-size: 1.25rem;
-        font-weight: bold;
         .add {
             padding: 0.25rem 0.5rem;
             background-color: #6441a5;
@@ -358,7 +361,7 @@ const customStampArea = css`
                 align-items: center;
                 gap: 0.5rem;
                 & > span {
-                    width: 80px;
+                    width: 200px;
                 }
                 & > input[type="text"] {
                     flex: 1;
@@ -423,6 +426,7 @@ const SettingForm : React.FC<SettingFormProps> = ({ html, config }) => {
         setEndpoint(config.endpoint);
         setPassword(config.password);
         setCustomStamps(config.customStamps || []);
+        setMonitorInteractions(config.monitorInteractions === undefined ? false : config.monitorInteractions);
     }, [html, config]);
 
     const [address, setAddress] = useState<string>('');
@@ -430,6 +434,7 @@ const SettingForm : React.FC<SettingFormProps> = ({ html, config }) => {
     const [endpoint, setEndpoint] = useState<string>('');
     const [password, setPassword] = useState<string | undefined>(undefined);
     const [customStamps, setCustomStamps] = useState<CustomStamp[]>([]);
+    const [monitorInteractions, setMonitorInteractions] = useState<boolean>(false);
     const [isCustomStampFormOpen, setIsCustomStampFormOpen] = useState<boolean>(false);
     const [editData, setEditData] = useState<{ stamp: CustomStamp; index: number } | null>(null);
 
@@ -490,8 +495,9 @@ const SettingForm : React.FC<SettingFormProps> = ({ html, config }) => {
             customStamps: customStamps.map(stamp => ({
                 commandName: stamp.commandName,
                 dataUri: stamp.dataUri,
-                effectType: "default",
+                effectType: monitorInteractions ? "default" : undefined,
             })),
+            monitorInteractions: monitorInteractions,
         };
 
         const updatedHtml = writeConfigToHtml(html, newConfig);
@@ -515,6 +521,16 @@ const SettingForm : React.FC<SettingFormProps> = ({ html, config }) => {
             <div>
                 <span>Password:</span>
                 <input type="text" value={password || ''} onChange={(e) => setPassword(e.target.value)} />
+            </div>
+            <div>
+                <div>
+                    <span>インタラクション監視</span>
+                    <span>(レイド完了時またはStreamerbotのカスタムイベント発生時にインタラクション結果を取得するかどうか)</span>
+                </div>
+                <input type="checkbox" checked={monitorInteractions} onChange={(e) => {
+                    const monitorInteractions = e.target.checked;
+                    setMonitorInteractions(monitorInteractions);
+                }} />
             </div>
         </div>
         <div className={customStampArea}>
