@@ -495,7 +495,7 @@ const SettingForm : React.FC<SettingFormProps> = ({ html, config }) => {
             customStamps: customStamps.map(stamp => ({
                 commandName: stamp.commandName,
                 dataUri: stamp.dataUri,
-                effectType: monitorInteractions ? "default" : undefined,
+                effectType: "default",
             })),
             monitorInteractions: monitorInteractions,
         };
