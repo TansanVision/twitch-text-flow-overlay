@@ -65,21 +65,34 @@ export function useStreamerBot({
 
         client.on("Twitch.ChatMessage", ({ data } : { data: any }) => {
             // コメントイベント
-            addAudience("comment", data.user.name);
+            if (monitorInteractions) {
+                const name = data?.user?.name;
+                if (typeof name === 'string' && name !== '') {
+                    addAudience("comment", name);
+                }
+            }
             handleComment({ data });
         });
 
         client.on("Twitch.Cheer", ({ data } : { data: any }) => {
             // bit or cheer
-            const user = data.user;
-            addAudience("cheer", user.name);
+            if (monitorInteractions) {
+                const name = data?.user?.name;
+                if (typeof name === 'string' && name !== '') {
+                    addAudience("cheer", name);
+                }
+            }
             handleComment({ data });
         });
 
         client.on("Twitch.Raid", ({ data } : { data: any }) => {
             // raid
-            const user = data.user;
-            addAudience("raid", user.name);
+            if (monitorInteractions) {
+                const name = data?.user?.name;
+                if (typeof name === 'string' && name !== '') {
+                    addAudience("raid", name);
+                }
+            }
         });
 
         client.on("Twitch.RaidSend", () => {
@@ -91,36 +104,50 @@ export function useStreamerBot({
 
         client.on("Twitch.Sub", ({ data } : { data: any }) => {
             // 新規サブスク
-            const user = data.user;
-            addAudience("subscribe", user.name);
+            if (monitorInteractions) {
+                const name = data?.user?.name;
+                if (typeof name === 'string' && name !== '') {
+                    addAudience("subscribe", name);
+                }
+            }
             handleComment({ data });
         });
 
         client.on("Twitch.ReSub", ({ data } : { data: any }) => {
             // 継続サブスク
-            const user = data.user;
-            addAudience("subscribe", user.name);
+            if (monitorInteractions) {
+                const name = data?.user?.name;
+                if (typeof name === 'string' && name !== '') {
+                    addAudience("subscribe", name);
+                }
+            }
             handleComment({ data });
         });
 
         client.on("Twitch.GiftSub", ({ data } : { data: any }) => {
             // ギフトサブスク
-            const user = data.user;
-
-            addAudience("gift", user.name);
+            if (monitorInteractions) {
+                const name = data?.user?.name;
+                if (typeof name === 'string' && name !== '') {
+                    addAudience("gift", name);
+                }
+            }
             handleComment({ data });
         });
 
         client.on("Twitch.GiftBomb", ({ data } : { data: any }) => {
             // ギフト爆弾
-            const user = data.user;
+            const name = data?.user?.name;
+            if (monitorInteractions) {
+                if (typeof name === 'string' && name !== '') {
+                    addAudience("gift", name);
+                }
+            }
             const recipients = data.recipients;
-
-            addAudience("gift", user.name);
             
             handleComment({ 
                 data: { 
-                    text: `${user.name} has sent ${recipients.length} gift subs!` },
+                    text: `${name} has sent ${recipients.length} gift subs!` },
                 } as any
             );
         });

@@ -104,7 +104,7 @@ function getConfig(): AppConfig {
                []
              )
            : defaultConfig.customStamps,
-        monitorInteractions: config?.monitorInteractions === undefined ? defaultConfig.monitorInteractions : Boolean(config.monitorInteractions),
+         monitorInteractions: typeof config.monitorInteractions === 'boolean' ? config.monitorInteractions : defaultConfig.monitorInteractions,
       };
     } catch (error) {
       console.error('Failed to parse config JSON:', error);
