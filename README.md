@@ -29,6 +29,24 @@ Streamer.botを利用したオーバーレイです。
     - twitch-text-flow-overlay.html
       ![config値の変更箇所](images/config値の変更箇所.png)
 
+## インタラクティブ監視
+
+インタラクティブ監視はコメント・レイド・ビッツ・ギフトしてくれた方の名前を監視し保持します。
+Streamer.botからカスタムイベントを発生させるかレイド完了させるかで結果を取得することができます。
+最初はオフになっています。
+
+### 設定方法
+
+1. Triggers > Add > Custom > Customをクリックしてください。
+  - ![インタラクティブ監視1](images/インタラクティブ監視1.png)
+2. Event Nameに「download」と入力してください。
+  - ![インタラクティブ監視2](images/インタラクティブ監視2.png)
+3. Setting ToolでチェックボックスをONにしてください。
+  - ![インタラクティブ監視3](images/インタラクティブ監視4.png)
+4. 追加したイベントを右クリックを押し、「Test Trigger」を押すと結果を取得できます。
+  - ![インタラクティブ監視4](images/インタラクション監視3.png)
+
+
 ## リンク
 - [Streamer.bot](https://streamer.bot/)
 

@@ -173,7 +173,7 @@ export function useStreamerBot({
             client.disconnect?.();
             clientRef.current = null;
         };
-    }, [host, port, endpoint, password, onComment]);
+    }, [host, port, endpoint, password, onComment, monitorInteractions, addAudience, downloadAudienceData]);
 
     return status;
 }

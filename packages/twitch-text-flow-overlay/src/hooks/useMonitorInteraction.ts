@@ -8,7 +8,7 @@ import type { AudienceMap } from '../domain/types';
  */
 function formatAudienceData(data: AudienceMap): string {
   return Object.entries(data)
-    .filter(([_, names]) => names.length > 0)
+    .filter(([, names]) => names.length > 0)
     .map(([type, names]) => {
         let title = type;
         switch (type) {
