@@ -11,6 +11,7 @@ const defaultConfig = {
   endpoint: "/",
   password: undefined,
   customStamps: [],
+  monitorInteractions: false,
 };
 
 /**
@@ -103,6 +104,7 @@ function getConfig(): AppConfig {
                []
              )
            : defaultConfig.customStamps,
+         monitorInteractions: typeof config.monitorInteractions === 'boolean' ? config.monitorInteractions : defaultConfig.monitorInteractions,
       };
     } catch (error) {
       console.error('Failed to parse config JSON:', error);
@@ -133,6 +135,7 @@ function App() {
     endpoint: config.endpoint,
     password: config.password,
     onComment: handleComment,
+    monitorInteractions: config.monitorInteractions,
   });
 
   useEffect(() => {
