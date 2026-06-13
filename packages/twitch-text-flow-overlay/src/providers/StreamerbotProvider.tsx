@@ -1,5 +1,5 @@
 import React, { createContext, useContext } from 'react';
-import type { AppConfig, Message } from '../domain/types';
+import type { AppConfig, Message, StreamerBotContextType } from '../domain/types';
 import { useStreamerBot } from '../hooks/useStreamerbot';
 
 type StreamerBotProviderProps = {
@@ -8,7 +8,7 @@ type StreamerBotProviderProps = {
     handleComment: (message: Message) => void;
 }
 
-const StreamerBotContext = createContext<{ sendShoutoutCommand: (userName: string) => Promise<void> } | null>(null);
+const StreamerBotContext = createContext<StreamerBotContextType | null>(null);
 
 export const StreamerBotProvider: React.FC<StreamerBotProviderProps> = ({ children, config, handleComment }) => {
     const { sendShoutoutCommand } = useStreamerBot({

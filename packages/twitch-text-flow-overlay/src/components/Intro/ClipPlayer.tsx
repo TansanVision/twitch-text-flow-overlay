@@ -59,14 +59,16 @@ export const ClipPlayer: React.FC<ClipPlayerProps> = ({ clips, onFinished, paren
         return null;
     }
 
+    const safeClipIndex = currentClipIndex < clips.length ? currentClipIndex : 0;
+
     return <div className={clipPlayerStyle}>
         <div className="clip-header">
-            <h3>{clips[currentClipIndex].title} - Featured Clip {currentClipIndex + 1} / {clips.length}</h3>
+            <h3>{clips[safeClipIndex].title} - Featured Clip {safeClipIndex + 1} / {clips.length}</h3>
         </div>
         <TwitchClipPlayer
-            videoUrl={clips[currentClipIndex].videoUrl}
+            videoUrl={clips[safeClipIndex].videoUrl}
             parent={parent}
-            duration={clips[currentClipIndex].duration}
+            duration={clips[safeClipIndex].duration}
             onClipEnd={() => {
                 if (currentClipIndex < clips.length - 1) {
                     setCurrentClipIndex(currentClipIndex + 1);

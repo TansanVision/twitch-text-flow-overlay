@@ -79,7 +79,7 @@ const LoadPhase : React.FC<LoadPhaseProps> = ({ onConfigLoaded }) => {
                 ? configJson.customStamps 
                 : [];
              configJson.monitorInteractions =
-                 typeof configJson.monitorInteractions === 'boolean' ? configJson.monitorInteractions : false;;
+                 typeof configJson.monitorInteractions === 'boolean' ? configJson.monitorInteractions : false;
             configJson.autoRaiderIntro = typeof configJson.autoRaiderIntro === 'boolean' ? configJson.autoRaiderIntro : false;
             configJson.introCountDisplayLimit = typeof configJson.introCountDisplayLimit === 'number' && Number.isFinite(configJson.introCountDisplayLimit) && configJson.introCountDisplayLimit > 0
                 ? configJson.introCountDisplayLimit

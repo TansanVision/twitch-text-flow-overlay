@@ -26,7 +26,7 @@ function getMessage({ data }: { data: any }): Message {
 /**
  * Streamerbotクライアントを使用するためのカスタムフック
  * @param param0 - オプションオブジェクト
- * @returns 接続状態
+ * @returns シャウトアウトコマンドを送信する関数と接続状態
  */
 export function useStreamerBot({ 
     host = "127.0.0.1", 
