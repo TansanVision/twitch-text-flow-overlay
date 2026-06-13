@@ -155,7 +155,7 @@ export function useStreamerBot({
         });
 
         client.on("Custom.*", ({ data }) => {
-            if (data.eventType === "Raid.IntroRequested") {
+            if (data?.eventType === "Raid.IntroRequested") {
                 addIntro({
                     raiderName: data?.raider?.name ?? "Unknown Raider",
                     displayName: data?.raider?.displayName ?? "Unknown Raider",

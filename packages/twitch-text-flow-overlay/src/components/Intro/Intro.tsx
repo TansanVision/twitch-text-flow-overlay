@@ -37,12 +37,12 @@ export const Intro: React.FC<IntroProps> = ({
         setShowClips(false);
     }, [raiderName, iconUrl, viewerCount, countdownTime, clips]);
 
-    const handleCountdownFinished = () => {
+    const handleCountdownFinished = async () => {
         setShowCountdown(false);
 
         if (clips.length === 0) {
             if (raiderName) {
-                sendShoutoutCommand?.(raiderName);
+                await sendShoutoutCommand?.(raiderName);
             }
 
             onFinished?.();
@@ -52,10 +52,10 @@ export const Intro: React.FC<IntroProps> = ({
         setShowClips(true);
     }
 
-    const handleClipsFinished = () => {
+    const handleClipsFinished = async () => {
         setShowClips(false);
         if (!!raiderName) {
-            sendShoutoutCommand?.(raiderName);
+            await sendShoutoutCommand?.(raiderName);
         } 
         
         if (onFinished) {

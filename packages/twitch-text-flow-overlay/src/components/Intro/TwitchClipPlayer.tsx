@@ -28,8 +28,13 @@ export const TwitchClipPlayer: React.FC<TwitchClipPlayerProps> = ({
         }
 
         let timer: number | undefined;
-
-        const handleEnded = () => {
+        let finished = false;
+        const finish = () => {
+            if (finished) {
+                return;
+            }
+            finished = true;
+            
             if (timer !== undefined) {
                 clearTimeout(timer);
                 timer = undefined;
@@ -37,10 +42,10 @@ export const TwitchClipPlayer: React.FC<TwitchClipPlayerProps> = ({
             onClipEnd?.();
         };
 
-        video.addEventListener('ended', handleEnded);
+        video.addEventListener('ended', finish);
 
         timer = window.setTimeout(() => {
-            onClipEnd?.();
+            finish();
         }, (duration + 3) * 1000);
 
         void video.play().catch(() => {
@@ -48,7 +53,7 @@ export const TwitchClipPlayer: React.FC<TwitchClipPlayerProps> = ({
         });
 
         return () => {
-            video.removeEventListener('ended', handleEnded);
+            video.removeEventListener('ended', finish);
             clearTimeout(timer);
         };
 

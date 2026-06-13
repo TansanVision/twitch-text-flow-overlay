@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useCallback, useContext, useState } from "react";
 
 type Intro = {
     raiderName: string,
@@ -36,14 +36,15 @@ const IntroContext = createContext<{
 export const IntroProvider: React.FC<IntroProviderProps> = ({ children, enabled = false}) => {
     const [intros, setIntros] = useState<Intro[]>([]);
 
-    const addIntro = (intro: Intro) => {
+    const addIntro = useCallback((intro: Intro) => {
         if (!enabled) {
             return;
         }
         setIntros(prev => [...prev, intro]);
-    }
+    }, [enabled]);
 
-    const removeIntro = (raiderName: string) => {
+
+    const removeIntro = useCallback((raiderName: string) => {
         if (!enabled) {
             return;
         }
@@ -55,7 +56,7 @@ export const IntroProvider: React.FC<IntroProviderProps> = ({ children, enabled 
 
             return [...prev.slice(0, index), ...prev.slice(index + 1)];
         });
-    }
+    }, [enabled]);
 
     return <IntroContext.Provider value={{ intros, addIntro, removeIntro }}>
         {children}
