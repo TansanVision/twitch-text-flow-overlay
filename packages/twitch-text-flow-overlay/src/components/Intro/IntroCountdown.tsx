@@ -91,7 +91,7 @@ export const IntroCountdown: React.FC<IntroCountdownProps> = ({
         }, 1000);
 
         return () => window.clearInterval(timer);
-    }, [countdownTime, onFinished]);
+    }, [countdownTime]);
 
     const minutes = Math.floor(remainingTime / 60);
     const seconds = remainingTime % 60;

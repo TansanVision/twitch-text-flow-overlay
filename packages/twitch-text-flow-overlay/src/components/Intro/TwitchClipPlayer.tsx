@@ -22,6 +22,10 @@ export const TwitchClipPlayer: React.FC<TwitchClipPlayerProps> = ({
     const videoRef = useRef<HTMLVideoElement>(null);
     const onClipEndRef = useRef(onClipEnd);
 
+     useEffect(() => {
+         onClipEndRef.current = onClipEnd;
+     }, [onClipEnd]);
+
     useEffect(() => {
         const video = videoRef.current;
         if (!video) {
@@ -47,7 +51,7 @@ export const TwitchClipPlayer: React.FC<TwitchClipPlayerProps> = ({
 
         timer = window.setTimeout(() => {
             finish();
-        }, (duration + 3) * 1000);
+        }, (duration + 5) * 1000);
 
         void video.play().catch(() => {
              // autoplay がブロックされる可能性があるため、onEnded / timer にフォールバックする
@@ -55,7 +59,7 @@ export const TwitchClipPlayer: React.FC<TwitchClipPlayerProps> = ({
 
         return () => {
             video.removeEventListener('ended', finish);
-            clearTimeout(timer);
+            window.clearTimeout(timer);
         };
 
     }, [videoUrl, parent, duration]);

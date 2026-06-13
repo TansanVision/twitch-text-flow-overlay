@@ -31,7 +31,7 @@ export const Intro: React.FC<IntroProps> = ({
     const [showCountdown, setShowCountdown] = useState<boolean>(true);
     const [showClips, setShowClips] = useState<boolean>(false);
     const { sendShoutoutCommand } = useStreamerBotContext() ?? {};
-    const limitedClips = React.useMemo(() => clips.slice(0, 5), [clips]);
+    const limitedClips = React.useMemo(() => clips.slice(0, 3), [clips]);
 
     useEffect(() => {
         setShowCountdown(true);
