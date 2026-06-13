@@ -37,14 +37,22 @@ export const Intro: React.FC<IntroProps> = ({
         setShowClips(false);
     }, [raiderName, iconUrl, viewerCount, countdownTime, clips]);
 
+     const tryShoutout = async () => {
+         if (!raiderName) {
+             return;
+         }
+         try {
+             await sendShoutoutCommand?.(raiderName);
+         } catch (error) {
+             console.error('Failed to send shoutout command:', error);
+         }
+     };
+
     const handleCountdownFinished = async () => {
         setShowCountdown(false);
 
         if (clips.length === 0) {
-            if (raiderName) {
-                await sendShoutoutCommand?.(raiderName);
-            }
-
+            await tryShoutout();
             onFinished?.();
             return;
         }
@@ -54,13 +62,9 @@ export const Intro: React.FC<IntroProps> = ({
 
     const handleClipsFinished = async () => {
         setShowClips(false);
-        if (!!raiderName) {
-            await sendShoutoutCommand?.(raiderName);
-        } 
-        
-        if (onFinished) {
-            onFinished();
-        }
+
+        await tryShoutout();
+        onFinished?.();
     }
 
     return (

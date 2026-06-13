@@ -191,13 +191,20 @@ export function useStreamerBot({
      * @param userName シャウトアウトするユーザーの名前
      */
     const sendShoutoutCommand = async (userName: string) => {
-        if (clientRef.current) {
-            await clientRef.current.doAction({
+        const client = clientRef.current;
+        if (!client) {
+            return;
+         }
+
+         try {
+            await client.doAction({
                 name: "RaidShoutout",
             }, {
-                "raiderUserName": userName,
+                raiderUserName: userName,
             });
-        }
+         } catch (error) {
+            console.error('Failed to send shoutout command:', error);
+         }
     };
 
     return { sendShoutoutCommand, status };

@@ -1,15 +1,12 @@
 import React, { createContext, useCallback, useContext, useState } from "react";
+import type { Clip } from '../domain/types';
 
 type Intro = {
     raiderName: string,
     displayName: string,
     iconUrl: string,
     viewerCount: number,
-    clips: {
-        videoUrl: string;
-        title: string;
-        duration: number;
-    }[]
+    clips: Clip[]
 }
 
 type IntroProviderProps = {

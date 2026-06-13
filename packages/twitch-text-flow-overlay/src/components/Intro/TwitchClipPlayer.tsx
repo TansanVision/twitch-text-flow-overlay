@@ -16,7 +16,7 @@ type TwitchClipPlayerProps = {
 export const TwitchClipPlayer: React.FC<TwitchClipPlayerProps> = ({ 
     videoUrl, 
     parent = window.location.hostname || 'localhost',
-    duration = 1,
+    duration,
     onClipEnd,
 }) => {
     const videoRef = useRef<HTMLVideoElement>(null);
