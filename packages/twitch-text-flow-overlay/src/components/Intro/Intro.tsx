@@ -73,7 +73,7 @@ export const Intro: React.FC<IntroProps> = ({
                 onFinished={handleCountdownFinished} 
             />}
             {showClips && <ClipPlayer
-                clips={clips} 
+                clips={clips.slice(0, 5)} 
                 onFinished={handleClipsFinished} 
                 />}
         </>

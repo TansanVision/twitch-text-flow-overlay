@@ -84,8 +84,7 @@ export type CustomStampConfig = {
  * password: Streamer Botのパスワード（省略可能）
  * customStamps: カスタムスタンプの設定の配列
  * monitorInteractions: 視聴者のインタラクションを監視するかどうか
- * autoRaiderIntro: 自動でRaiderイントロを表示するかどうか
- * introCountDisplayLimit: イントロの表示時間の上限（秒）
+ * introCountDisplayLimit: ご紹介の表示時間の上限（秒）
  */
 export type AppConfig = {
   host: string;
