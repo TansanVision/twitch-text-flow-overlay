@@ -85,7 +85,7 @@ export type CustomStampConfig = {
  * customStamps: カスタムスタンプの設定の配列
  * monitorInteractions: 視聴者のインタラクションを監視するかどうか
  * autoRaiderIntro: レイダー自動紹介機能を有効にするかどうか
- * introCountDisplayLimit: ご紹介の表示時間の上限（秒）
+ * introCountDisplayLimit: ご紹介までのカウントダウン秒数
  */
 export type AppConfig = {
   host: string;

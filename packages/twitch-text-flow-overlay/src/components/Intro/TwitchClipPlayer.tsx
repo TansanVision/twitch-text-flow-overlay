@@ -53,6 +53,8 @@ export const TwitchClipPlayer: React.FC<TwitchClipPlayerProps> = ({
             finish();
         }, (duration + 5) * 1000);
 
+        video.volume = 0.8;
+        video.muted = false;
         void video.play().catch(() => {
              // autoplay がブロックされる可能性があるため、onEnded / timer にフォールバックする
         });
