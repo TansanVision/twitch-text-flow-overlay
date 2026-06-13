@@ -20,6 +20,7 @@ export const TwitchClipPlayer: React.FC<TwitchClipPlayerProps> = ({
     onClipEnd,
 }) => {
     const videoRef = useRef<HTMLVideoElement>(null);
+    const onClipEndRef = useRef(onClipEnd);
 
     useEffect(() => {
         const video = videoRef.current;
@@ -39,7 +40,7 @@ export const TwitchClipPlayer: React.FC<TwitchClipPlayerProps> = ({
                 clearTimeout(timer);
                 timer = undefined;
             }
-            onClipEnd?.();
+            onClipEndRef.current?.();
         };
 
         video.addEventListener('ended', finish);
@@ -57,7 +58,7 @@ export const TwitchClipPlayer: React.FC<TwitchClipPlayerProps> = ({
             clearTimeout(timer);
         };
 
-    }, [videoUrl, parent, duration, onClipEnd]);
+    }, [videoUrl, parent, duration]);
 
     return <video
         ref={videoRef}

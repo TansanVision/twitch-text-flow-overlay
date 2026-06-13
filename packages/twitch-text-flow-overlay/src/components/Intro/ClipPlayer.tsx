@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import type { Clip } from '../../domain/types';
 import { css } from '@emotion/css';
 import { TwitchClipPlayer } from './TwitchClipPlayer';
@@ -40,15 +40,20 @@ const clipPlayerStyle = css`
  */
 export const ClipPlayer: React.FC<ClipPlayerProps> = ({ clips, onFinished, parent = 'localhost' }) => {
     const [currentClipIndex, setCurrentClipIndex] = useState<number>(0);
+    const onFinishedRef = useRef(onFinished);
+
+     useEffect(() => {
+         onFinishedRef.current = onFinished;
+     }, [onFinished]);
 
     useEffect(() => {
         if (clips.length === 0) {
-            onFinished();
+            onFinishedRef.current();
             return;
         }
          // clips が切り替わったときは先頭から再生
          setCurrentClipIndex(0);
-     }, [clips, onFinished]);
+     }, [clips]);
 
      if (clips.length === 0) {
         return null;
@@ -66,7 +71,7 @@ export const ClipPlayer: React.FC<ClipPlayerProps> = ({ clips, onFinished, paren
                 if (currentClipIndex < clips.length - 1) {
                     setCurrentClipIndex(currentClipIndex + 1);
                 } else {
-                    onFinished();
+                    onFinishedRef.current();
                 }
             }}
         />

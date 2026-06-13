@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { css } from '@emotion/css';
 
 /**
@@ -70,22 +70,27 @@ export const IntroCountdown: React.FC<IntroCountdownProps> = ({
     onFinished,
 }) => {
     const [remainingTime, setRemainingTime] = useState<number>(countdownTime);
+    const onFinishedRef = useRef(onFinished);
+
+     useEffect(() => {
+         onFinishedRef.current = onFinished;
+     }, [onFinished]);
 
     useEffect(() => {
         setRemainingTime(countdownTime);
 
-        const timer = setInterval(() => {
+        const timer = window.setInterval(() => {
             setRemainingTime((prev) => {
                 if (prev <= 1) {
-                    clearInterval(timer);
-                    onFinished();
+                    window.clearInterval(timer);
+                    onFinishedRef.current();
                     return 0;
                 }
                 return prev - 1;
             });
         }, 1000);
 
-        return () => clearInterval(timer);
+        return () => window.clearInterval(timer);
     }, [countdownTime, onFinished]);
 
     const minutes = Math.floor(remainingTime / 60);
