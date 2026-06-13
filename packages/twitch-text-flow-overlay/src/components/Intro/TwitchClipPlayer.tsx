@@ -22,30 +22,34 @@ export const TwitchClipPlayer: React.FC<TwitchClipPlayerProps> = ({
     const videoRef = useRef<HTMLVideoElement>(null);
 
     useEffect(() => {
-        if (!videoRef.current) {
+        const video = videoRef.current;
+        if (!video) {
             return;
         }
 
-        // videoRef.current.muted = false;
-        // videoRef.current.volume = 0.8;
-        videoRef.current.addEventListener('ended', () => {
-            if (onClipEnd) {
-                onClipEnd();
-            }
-        });
-        videoRef.current.play();
+        const handleEnded = () => {
+            onClipEnd?.();
+        };
 
-        const timer = setTimeout(() => {
-            if (onClipEnd) {
-                onClipEnd();
-            }
+        video.addEventListener('ended', handleEnded);
 
-            return () => clearTimeout(timer);
+        const timer = window.setTimeout(() => {
+            onClipEnd?.();
         }, (duration + 3) * 1000);
+
+        void video.play().catch(() => {
+             // autoplay がブロックされる可能性があるため、onEnded / timer にフォールバックする
+        });
+
+        return () => {
+            video.removeEventListener('ended', handleEnded);
+            clearTimeout(timer);
+        };
 
     }, [videoUrl, parent, duration, onClipEnd]);
 
     return <video
+        ref={videoRef}
         className={css`
             width: 100%;
             height: 100%;

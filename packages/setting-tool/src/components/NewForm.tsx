@@ -81,7 +81,9 @@ const LoadPhase : React.FC<LoadPhaseProps> = ({ onConfigLoaded }) => {
              configJson.monitorInteractions =
                  typeof configJson.monitorInteractions === 'boolean' ? configJson.monitorInteractions : false;;
             configJson.autoRaiderIntro = typeof configJson.autoRaiderIntro === 'boolean' ? configJson.autoRaiderIntro : false;
-            configJson.introCountDisplayLimit = typeof configJson.introCountDisplayLimit === 'number' ? configJson.introCountDisplayLimit : 60;
+            configJson.introCountDisplayLimit = typeof configJson.introCountDisplayLimit === 'number' && Number.isFinite(configJson.introCountDisplayLimit) && configJson.introCountDisplayLimit > 0
+                ? configJson.introCountDisplayLimit
+                : 60;
 
             onConfigLoaded(content, configJson);
             setError(null);
@@ -546,10 +548,15 @@ const SettingForm : React.FC<SettingFormProps> = ({ html, config }) => {
                     setAutoRaiderIntro(autoRaiderIntro);
                 }} />
                 <span>(ONの場合のカウントダウン(秒))</span>
-                <input type="number" value={introCountDisplayLimit} onChange={(e) => {
-                    const introCountDisplayLimit = Number(e.target.value);
-                    setIntroCountDisplayLimit(introCountDisplayLimit);
-                }} />
+                 <input
+                     type="number"
+                     min={1}
+                     value={introCountDisplayLimit}
+                     onChange={(e) => {
+                         const value = Number(e.target.value);
+                         setIntroCountDisplayLimit(Number.isFinite(value) && value > 0 ? value : 60);
+                     }}
+                 />
             </div>
         </div>
         <div className={customStampArea}>

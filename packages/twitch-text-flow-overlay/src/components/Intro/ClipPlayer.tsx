@@ -46,17 +46,9 @@ export const ClipPlayer: React.FC<ClipPlayerProps> = ({ clips, onFinished, paren
             onFinished();
             return;
         }
-
-        const timer = setTimeout(() => {
-            if (currentClipIndex < clips.length - 1) {
-                setCurrentClipIndex(currentClipIndex + 1);
-            } else {
-                onFinished();
-            }
-        }, clips[currentClipIndex].duration * 1000);
-
-        return () => clearTimeout(timer);
-    }, [clips, currentClipIndex, onFinished]);
+         // clips が切り替わったときは先頭から再生
+         setCurrentClipIndex(0);
+     }, [clips, onFinished]);
 
     return <div className={clipPlayerStyle}>
         <div className="clip-header">

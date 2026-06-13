@@ -1,9 +1,8 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ClipPlayer } from './ClipPlayer';
 import { IntroCountdown } from './IntroCountdown';
 import type { Clip } from '../../domain/types';
-import { StreamerBotContext } from '../../App';
-import type { StreamerBotContextType } from '../../domain/types';
+import { useStreamerBotContext } from '../../providers/StreamerbotProvider';
 
 type IntroProps = {
     raiderName: string;
@@ -31,7 +30,7 @@ export const Intro: React.FC<IntroProps> = ({
 }) => {
     const [showCountdown, setShowCountdown] = useState<boolean>(true);
     const [showClips, setShowClips] = useState<boolean>(false);
-    const { sendShoutoutCommand } = useContext<StreamerBotContextType | null>(StreamerBotContext) ?? {};
+    const { sendShoutoutCommand } = useStreamerBotContext() ?? {};
 
     useEffect(() => {
         setShowCountdown(true);
@@ -42,10 +41,11 @@ export const Intro: React.FC<IntroProps> = ({
         setShowCountdown(false);
 
         if (clips.length === 0) {
-            if (!!raiderName) {
+            if (raiderName) {
                 sendShoutoutCommand?.(raiderName);
             }
 
+            onFinished?.();
             return;
         }
 

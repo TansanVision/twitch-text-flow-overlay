@@ -1,13 +1,11 @@
-import { useEffect, useState, useMemo, useCallback, createContext } from 'react';
+import { useEffect, useState, useMemo, useCallback } from 'react';
 import { CommentServiceContainer } from './components/CommentService/CommentServiceContainer';
-import { useStreamerBot } from './hooks/useStreamerbot';
 import { useTwitchEmotes } from './hooks/useTwitchEmotes';
 import type { Comment, Message, AppConfig } from './domain/types';
 import { isCommand } from './domain/types';
 import { IntroProvider } from './providers/IntroProviders';
 import { RaiderIntro } from './components/Intro/RaiderIntro';
-
-export const StreamerBotContext = createContext<{ sendShoutoutCommand: (userName: string) => Promise<void> } | null>(null);
+import { StreamerBotProvider } from './providers/StreamerbotProvider';
 
 const defaultConfig = {
   host: "127.0.0.1",
@@ -112,7 +110,9 @@ function getConfig(): AppConfig {
            : defaultConfig.customStamps,
          monitorInteractions: typeof config.monitorInteractions === 'boolean' ? config.monitorInteractions : defaultConfig.monitorInteractions,
          autoRaiderIntro: typeof config.autoRaiderIntro === 'boolean' ? config.autoRaiderIntro : defaultConfig.autoRaiderIntro,
-         introCountDisplayLimit: typeof config.introCountDisplayLimit === 'number' ? config.introCountDisplayLimit : defaultConfig.introCountDisplayLimit,
+         introCountDisplayLimit: typeof config.introCountDisplayLimit === 'number' && Number.isFinite(config.introCountDisplayLimit) && config.introCountDisplayLimit > 0
+           ? config.introCountDisplayLimit
+           : defaultConfig.introCountDisplayLimit,
       };
     } catch (error) {
       console.error('Failed to parse config JSON:', error);
@@ -136,15 +136,6 @@ function App() {
   const handleComment = useCallback((message: Message) => {
     addComment(message);
   }, []);
-
-  const { sendShoutoutCommand } = useStreamerBot({
-    host: config.host,
-    port: config.port,
-    endpoint: config.endpoint,
-    password: config.password,
-    onComment: handleComment,
-    monitorInteractions: config.monitorInteractions,
-  });
 
   useEffect(() => {
     setComments([]);
@@ -175,7 +166,7 @@ function App() {
   }, []);
 
   return (
-    <StreamerBotContext.Provider value={{ sendShoutoutCommand: sendShoutoutCommand }}>
+    <StreamerBotProvider config={config} handleComment={handleComment}>
       <IntroProvider enabled={config.autoRaiderIntro}>
         <div className='overlay'>
             <CommentServiceContainer 
@@ -185,7 +176,7 @@ function App() {
           {config.autoRaiderIntro && <RaiderIntro introCountDisplayLimit={config.introCountDisplayLimit} />}
         </div>
     </IntroProvider>
-  </StreamerBotContext.Provider>
+  </StreamerBotProvider>
   )
 }
 

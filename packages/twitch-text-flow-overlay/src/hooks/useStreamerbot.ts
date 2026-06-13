@@ -184,7 +184,7 @@ export function useStreamerBot({
             client.disconnect?.();
             clientRef.current = null;
         };
-    }, [host, port, endpoint, password, onComment, monitorInteractions, addAudience, downloadAudienceData]);
+    }, [host, port, endpoint, password, onComment, monitorInteractions, addAudience, downloadAudienceData, addIntro]);
 
     /**
      * シャウトアウトコマンドをStreamerBotに送信します。
