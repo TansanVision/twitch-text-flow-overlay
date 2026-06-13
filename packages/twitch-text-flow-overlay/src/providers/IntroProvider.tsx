@@ -23,8 +23,8 @@ const IntroContext = createContext<{
     removeIntro: (raiderName: string) => void;
 }>({
     intros: [],
-    addIntro: () => {},
-    removeIntro: () => {},
+    addIntro: () => undefined,
+    removeIntro: () => undefined,
 });
 
 /**
@@ -47,10 +47,15 @@ export const IntroProvider: React.FC<IntroProviderProps> = ({ children, enabled 
         if (!enabled) {
             return;
         }
-        setIntros(prev => prev.filter(intro => intro.raiderName !== raiderName));
+        setIntros(prev => {
+            const index = prev.findIndex(intro => intro.raiderName === raiderName);
+            if (index === -1) {
+                return prev;
+            }
+
+            return [...prev.slice(0, index), ...prev.slice(index + 1)];
+        });
     }
-
-
 
     return <IntroContext.Provider value={{ intros, addIntro, removeIntro }}>
         {children}

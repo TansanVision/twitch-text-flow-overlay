@@ -1,7 +1,7 @@
 
 import React, { useMemo } from 'react';
 import { Intro } from './Intro';
-import { useIntro } from "../../providers/IntroProviders";
+import { useIntro } from "../../providers/IntroProvider";
 
 type RaiderIntroProps = {
     introCountDisplayLimit?: number;

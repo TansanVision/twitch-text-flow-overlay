@@ -3,7 +3,7 @@ import { CommentServiceContainer } from './components/CommentService/CommentServ
 import { useTwitchEmotes } from './hooks/useTwitchEmotes';
 import type { Comment, Message, AppConfig } from './domain/types';
 import { isCommand } from './domain/types';
-import { IntroProvider } from './providers/IntroProviders';
+import { IntroProvider } from './providers/IntroProvider';
 import { RaiderIntro } from './components/Intro/RaiderIntro';
 import { StreamerBotProvider } from './providers/StreamerbotProvider';
 
@@ -166,17 +166,17 @@ function App() {
   }, []);
 
   return (
-    <StreamerBotProvider config={config} handleComment={handleComment}>
       <IntroProvider enabled={config.autoRaiderIntro}>
-        <div className='overlay'>
-            <CommentServiceContainer 
-              comments={comments}
-              onRelease={releaseComment}
-          />
-          {config.autoRaiderIntro && <RaiderIntro introCountDisplayLimit={config.introCountDisplayLimit} />}
-        </div>
+        <StreamerBotProvider config={config} handleComment={handleComment}>
+          <div className='overlay'>
+              <CommentServiceContainer 
+                comments={comments}
+                onRelease={releaseComment}
+            />
+            {config.autoRaiderIntro && <RaiderIntro introCountDisplayLimit={config.introCountDisplayLimit} />}
+          </div>
+        </StreamerBotProvider>
     </IntroProvider>
-  </StreamerBotProvider>
   )
 }
 

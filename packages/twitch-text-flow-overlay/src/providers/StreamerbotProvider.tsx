@@ -1,11 +1,11 @@
 import React, { createContext, useContext } from 'react';
-import type { AppConfig } from '../domain/types';
+import type { AppConfig, Message } from '../domain/types';
 import { useStreamerBot } from '../hooks/useStreamerbot';
 
 type StreamerBotProviderProps = {
     children: React.ReactNode;
     config: AppConfig;
-    handleComment: (message: { text: string; emotes: any[] }) => void;
+    handleComment: (message: Message) => void;
 }
 
 const StreamerBotContext = createContext<{ sendShoutoutCommand: (userName: string) => Promise<void> } | null>(null);

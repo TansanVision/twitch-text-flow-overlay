@@ -50,6 +50,10 @@ export const ClipPlayer: React.FC<ClipPlayerProps> = ({ clips, onFinished, paren
          setCurrentClipIndex(0);
      }, [clips, onFinished]);
 
+     if (clips.length === 0) {
+        return null;
+    }
+
     return <div className={clipPlayerStyle}>
         <div className="clip-header">
             <h3>{clips[currentClipIndex].title} - Featured Clip {currentClipIndex + 1} / {clips.length}</h3>

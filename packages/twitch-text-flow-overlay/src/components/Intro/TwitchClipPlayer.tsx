@@ -27,13 +27,19 @@ export const TwitchClipPlayer: React.FC<TwitchClipPlayerProps> = ({
             return;
         }
 
+        let timer: number | undefined;
+
         const handleEnded = () => {
+            if (timer !== undefined) {
+                clearTimeout(timer);
+                timer = undefined;
+            }
             onClipEnd?.();
         };
 
         video.addEventListener('ended', handleEnded);
 
-        const timer = window.setTimeout(() => {
+        timer = window.setTimeout(() => {
             onClipEnd?.();
         }, (duration + 3) * 1000);
 

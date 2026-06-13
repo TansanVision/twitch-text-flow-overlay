@@ -2,7 +2,7 @@ import { StreamerbotClient } from '@streamerbot/client';
 import { useState, useEffect, useRef } from 'react';
 import type { ConnectionStatus, UseStreamerBotOptions, Message } from '../domain/types';
 import { useMonitorInteraction } from './useMonitorInteraction';
-import { useIntro } from '../providers/IntroProviders';
+import { useIntro } from '../providers/IntroProvider';
 
 /**
  * メッセージを取得します。

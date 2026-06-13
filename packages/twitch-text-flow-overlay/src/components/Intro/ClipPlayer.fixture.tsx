@@ -16,5 +16,5 @@ export default () => {
         duration: 60,
     }];
         
-    return <div style={{ width: '100%', height: '100%' }}><ClipPlayer clips={clips} onFinished={() => {}} /></div>;
+    return <div style={{ width: '100%', height: '100%' }}><ClipPlayer clips={clips} onFinished={() => undefined} /></div>;
 }
