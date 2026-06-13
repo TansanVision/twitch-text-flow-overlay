@@ -84,6 +84,8 @@ export type CustomStampConfig = {
  * password: Streamer Botのパスワード（省略可能）
  * customStamps: カスタムスタンプの設定の配列
  * monitorInteractions: 視聴者のインタラクションを監視するかどうか
+ * autoRaiderIntro: 自動でRaiderイントロを表示するかどうか
+ * introCountDisplayLimit: イントロの表示時間の上限（秒）
  */
 export type AppConfig = {
   host: string;
@@ -92,6 +94,8 @@ export type AppConfig = {
   password: string | undefined;
   customStamps: CustomStampConfig[];
   monitorInteractions: boolean;
+  autoRaiderIntro: boolean;
+  introCountDisplayLimit: number;
 };
 
 /**
@@ -328,4 +332,14 @@ export type AudienceMap = {
     cheer: string[];
     raid: string[];
     gift: string[];
+}
+
+export type Clip = {
+    videoUrl: string;
+    title: string;
+    duration: number;
+}
+
+export type StreamerBotContextType = {
+    sendShoutoutCommand: (userName: string) => Promise<void>;
 }

@@ -2,6 +2,7 @@ import { StreamerbotClient } from '@streamerbot/client';
 import { useState, useEffect, useRef } from 'react';
 import type { ConnectionStatus, UseStreamerBotOptions, Message } from '../domain/types';
 import { useMonitorInteraction } from './useMonitorInteraction';
+import { useIntro } from '../providers/IntroProviders';
 
 /**
  * メッセージを取得します。
@@ -36,6 +37,7 @@ export function useStreamerBot({
     monitorInteractions = false,
 }: UseStreamerBotOptions) {
     const { addAudience,  downloadAudienceData } = useMonitorInteraction();
+    const { addIntro } = useIntro();
     const [status, setStatus] = useState<ConnectionStatus>('disconnected');
     const clientRef = useRef<StreamerbotClient | null>(null);
 
@@ -152,46 +154,28 @@ export function useStreamerBot({
             );
         });
 
-        // テスト用のコメントイベント
+        client.on("Custom.*", ({ data }) => {
+            if (data.eventType === "Raid.IntroRequested") {
+                addIntro({
+                    raiderName: data?.raider?.name ?? "Unknown Raider",
+                    displayName: data?.raider?.displayName ?? "Unknown Raider",
+                    iconUrl: data?.raider?.iconUrl ?? "",
+                    viewerCount: data?.raider?.viewerCount ?? 0,
+                    clips: Array.isArray(data?.raider?.clips) ? data.raider.clips.map((clip: any) => ({
+                        videoUrl: clip?.url ?? "",
+                        title: clip?.title ?? "",
+                        duration: typeof clip?.duration === 'number' ? clip.duration : 0,
+                    })) : [],
+                });
+            }
+        });
+
         client.on("Raw.Action", ({ data }) => {
             if (data.arguments.isTest) {
                 if (data.arguments.triggerCategory === "Custom" && data.arguments["customEvent.event"] === "download") {
                     if (monitorInteractions) {
                         downloadAudienceData();
                     }
-                } else if (data.arguments.triggerName === "Test" &&
-                    data.arguments.triggerCategory === "Core") {
-                        const regex = /comment/i;
-                        for (let key in data.arguments) {
-                            if (regex.test(key.toString())) {
-                                handleComment({
-                                    data: {
-                                        message: {
-                                            message: data.arguments[key],
-                                            emotes: []
-                                        },
-                                    },
-                                });
-                            }
-                        }
-                    
-                        handleComment({
-                            data: {
-                                message: { 
-                                    message: "Kappa これはU+2003エモートテストです。",
-                                    emotes: [
-                                        {
-                                            id: "25",
-                                            name: "Kappa",
-                                            startIndex: 0,
-                                            endIndex: 4,
-                                            imageUrl: "https://static-cdn.jtvnw.net/emoticons/v2/25/default/dark/3.0",
-                                            type: "Twitch"
-                                        }
-                                    ]
-                                },
-                            },
-                        });
                 }
             }
         });
@@ -202,5 +186,19 @@ export function useStreamerBot({
         };
     }, [host, port, endpoint, password, onComment, monitorInteractions, addAudience, downloadAudienceData]);
 
-    return status;
+    /**
+     * シャウトアウトコマンドをStreamerBotに送信します。
+     * @param userName シャウトアウトするユーザーの名前
+     */
+    const sendShoutoutCommand = async (userName: string) => {
+        if (clientRef.current) {
+            await clientRef.current.doAction({
+                name: "RaidShoutout",
+            }, {
+                "raiderUserName": userName,
+            });
+        }
+    };
+
+    return { sendShoutoutCommand, status };
 }

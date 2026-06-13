@@ -1,9 +1,13 @@
-import { useEffect, useState, useMemo, useCallback} from 'react';
+import { useEffect, useState, useMemo, useCallback, createContext } from 'react';
 import { CommentServiceContainer } from './components/CommentService/CommentServiceContainer';
 import { useStreamerBot } from './hooks/useStreamerbot';
 import { useTwitchEmotes } from './hooks/useTwitchEmotes';
 import type { Comment, Message, AppConfig } from './domain/types';
 import { isCommand } from './domain/types';
+import { IntroProvider } from './providers/IntroProviders';
+import { RaiderIntro } from './components/Intro/RaiderIntro';
+
+export const StreamerBotContext = createContext<{ sendShoutoutCommand: (userName: string) => Promise<void> } | null>(null);
 
 const defaultConfig = {
   host: "127.0.0.1",
@@ -12,6 +16,8 @@ const defaultConfig = {
   password: undefined,
   customStamps: [],
   monitorInteractions: false,
+  autoRaiderIntro: false,
+  introCountDisplayLimit: 60,
 };
 
 /**
@@ -105,6 +111,8 @@ function getConfig(): AppConfig {
              )
            : defaultConfig.customStamps,
          monitorInteractions: typeof config.monitorInteractions === 'boolean' ? config.monitorInteractions : defaultConfig.monitorInteractions,
+         autoRaiderIntro: typeof config.autoRaiderIntro === 'boolean' ? config.autoRaiderIntro : defaultConfig.autoRaiderIntro,
+         introCountDisplayLimit: typeof config.introCountDisplayLimit === 'number' ? config.introCountDisplayLimit : defaultConfig.introCountDisplayLimit,
       };
     } catch (error) {
       console.error('Failed to parse config JSON:', error);
@@ -129,7 +137,7 @@ function App() {
     addComment(message);
   }, []);
 
-  useStreamerBot({
+  const { sendShoutoutCommand } = useStreamerBot({
     host: config.host,
     port: config.port,
     endpoint: config.endpoint,
@@ -167,12 +175,17 @@ function App() {
   }, []);
 
   return (
-    <div className='overlay'>
-      <CommentServiceContainer 
-        comments={comments}
-        onRelease={releaseComment}
-      />
-    </div>
+    <StreamerBotContext.Provider value={{ sendShoutoutCommand: sendShoutoutCommand }}>
+      <IntroProvider enabled={config.autoRaiderIntro}>
+        <div className='overlay'>
+            <CommentServiceContainer 
+              comments={comments}
+              onRelease={releaseComment}
+          />
+          {config.autoRaiderIntro && <RaiderIntro introCountDisplayLimit={config.introCountDisplayLimit} />}
+        </div>
+    </IntroProvider>
+  </StreamerBotContext.Provider>
   )
 }
 

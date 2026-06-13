@@ -80,6 +80,8 @@ const LoadPhase : React.FC<LoadPhaseProps> = ({ onConfigLoaded }) => {
                 : [];
              configJson.monitorInteractions =
                  typeof configJson.monitorInteractions === 'boolean' ? configJson.monitorInteractions : false;;
+            configJson.autoRaiderIntro = typeof configJson.autoRaiderIntro === 'boolean' ? configJson.autoRaiderIntro : false;
+            configJson.introCountDisplayLimit = typeof configJson.introCountDisplayLimit === 'number' ? configJson.introCountDisplayLimit : 60;
 
             onConfigLoaded(content, configJson);
             setError(null);
@@ -426,6 +428,8 @@ const SettingForm : React.FC<SettingFormProps> = ({ html, config }) => {
         setPassword(config.password);
         setCustomStamps(config.customStamps || []);
         setMonitorInteractions(config.monitorInteractions === undefined ? false : config.monitorInteractions);
+        setAutoRaiderIntro(config.autoRaiderIntro === undefined ? false : config.autoRaiderIntro);
+        setIntroCountDisplayLimit(config.introCountDisplayLimit === undefined ? 60 : config.introCountDisplayLimit);
     }, [html, config]);
 
     const [address, setAddress] = useState<string>('');
@@ -436,6 +440,8 @@ const SettingForm : React.FC<SettingFormProps> = ({ html, config }) => {
     const [monitorInteractions, setMonitorInteractions] = useState<boolean>(false);
     const [isCustomStampFormOpen, setIsCustomStampFormOpen] = useState<boolean>(false);
     const [editData, setEditData] = useState<{ stamp: CustomStamp; index: number } | null>(null);
+    const [autoRaiderIntro, setAutoRaiderIntro] = useState<boolean>(false);
+    const [introCountDisplayLimit, setIntroCountDisplayLimit] = useState<number>(60);
 
     const handleCloseCustomStampForm = () => {
         setIsCustomStampFormOpen(false);
@@ -497,6 +503,8 @@ const SettingForm : React.FC<SettingFormProps> = ({ html, config }) => {
                 effectType: "default",
             })),
             monitorInteractions: monitorInteractions,
+            autoRaiderIntro: autoRaiderIntro,
+            introCountDisplayLimit: introCountDisplayLimit,
         };
 
         const updatedHtml = writeConfigToHtml(html, newConfig);
@@ -529,6 +537,18 @@ const SettingForm : React.FC<SettingFormProps> = ({ html, config }) => {
                 <input type="checkbox" checked={monitorInteractions} onChange={(e) => {
                     const monitorInteractions = e.target.checked;
                     setMonitorInteractions(monitorInteractions);
+                }} />
+            </div>
+            <div>
+                <span>レイダー自動紹介</span>
+                <input type="checkbox" checked={autoRaiderIntro} onChange={(e) => {
+                    const autoRaiderIntro = e.target.checked;
+                    setAutoRaiderIntro(autoRaiderIntro);
+                }} />
+                <span>(ONの場合のカウントダウン(秒))</span>
+                <input type="number" value={introCountDisplayLimit} onChange={(e) => {
+                    const introCountDisplayLimit = Number(e.target.value);
+                    setIntroCountDisplayLimit(introCountDisplayLimit);
                 }} />
             </div>
         </div>
