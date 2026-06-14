@@ -81,7 +81,7 @@ const LogSVG = () => (
      return () => {
        window.clearTimeout(timeoutId);
      };
-   }, []);
+   }, [maxAnimationDurationMs]);
 
    const logs = logConfigs.map(({ left, duration, delay }, i) => (
      <div

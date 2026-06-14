@@ -65,7 +65,7 @@ export const Sakura: React.FC<{ onAnimationEnd?: () => void }> = ({ onAnimationE
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
       onAnimationEndRef.current?.();
-    }, 1000 * 5);
+    }, 1000 * 30);
 
     return () => {
       window.clearTimeout(timeoutId);

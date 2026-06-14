@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { css } from '@emotion/css';
 
 const container = css`
@@ -73,6 +73,12 @@ const BouRamenSVG = () => <svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000
  * @returns JSX.Element
  */
  export const BouRamen: React.FC<{ onAnimationEnd?: () => void }> = ({ onAnimationEnd }) => {
+   const onAnimationEndRef = useRef(onAnimationEnd);
+
+   useEffect(() => {
+     onAnimationEndRef.current = onAnimationEnd;
+   }, [onAnimationEnd]);
+
    const bouRamenConfigs = React.useMemo(
      () =>
        Array.from({ length: 8 }).map(() => {
@@ -93,17 +99,14 @@ const BouRamenSVG = () => <svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000
    const maxAnimationDurationMs = Math.max(...bouRamenConfigs.map((config) => config.totalDurationMs));
 
    React.useEffect(() => {
-     if (!onAnimationEnd) {
-       return;
-     }
-
      const timeoutId = window.setTimeout(() => {
-       onAnimationEnd();
+       onAnimationEndRef.current?.();
      }, maxAnimationDurationMs);
+
      return () => {
        window.clearTimeout(timeoutId);
      };
-   }, [maxAnimationDurationMs, onAnimationEnd]);
+   }, [maxAnimationDurationMs]);
 
    const bouRamens = bouRamenConfigs.map(({ left, duration, delay }, i) => (
      <div

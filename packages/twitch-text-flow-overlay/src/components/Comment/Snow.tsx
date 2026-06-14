@@ -84,7 +84,7 @@ const keyframes = css`
      return () => {
        window.clearTimeout(timeoutId);
      };
-   }, []);
+   }, [maxAnimationTimeMs]);
 
    return (
      <div className={`${container} ${keyframes}`}>
