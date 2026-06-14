@@ -14,8 +14,9 @@ export const CommentServiceRenderer : React.FC<CommentServiceRendererProps> = ({
         <>
             {comments.map(({ id, node }) =>
                 React.isValidElement(node)
-                    ? React.cloneElement(node as React.ReactElement<{ onAnimationEnd: (event: React.AnimationEvent<HTMLDivElement>) => void }>  , {
+                    ? React.cloneElement(node as React.ReactElement<{ id: string; onAnimationEnd: (event: React.AnimationEvent<HTMLDivElement>) => void }>  , {
                         key: id,
+                        id: id,
                         onAnimationEnd: () => onAnimationEnd(id),
                     })
                     : node
