@@ -36,7 +36,7 @@ const keyframes = css`
   }
 `;
 
- export const Snow: React.FC<{ onAnimationEnd?: () => void }> = ({ onAnimationEnd }) => {
+ export const Snow: React.FC<{ id?: string, onAnimationEnd?: (id?: string) => void }> = ({ id, onAnimationEnd }) => {
     const onAnimationEndRef = useRef(onAnimationEnd);
 
     React.useEffect(() => {
@@ -78,16 +78,16 @@ const keyframes = css`
   
    React.useEffect(() => {
      const timeoutId = window.setTimeout(() => {
-       onAnimationEndRef.current?.();
+       onAnimationEndRef.current?.(id);
      }, maxAnimationTimeMs);
 
      return () => {
        window.clearTimeout(timeoutId);
      };
-   }, [maxAnimationTimeMs]);
+   }, [maxAnimationTimeMs, id]);
 
    return (
-     <div className={`${container} ${keyframes}`}>
+     <div id={id} className={`${container} ${keyframes}`}>
        {flakes.map(({ key, left, width, height, duration, delay }) => (
          <span
            key={key}

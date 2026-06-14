@@ -108,7 +108,7 @@ const rain = css`
  * @param param0 - onAnimationEnd: アニメーション終了時のコールバック関数
  * @returns JSX.Element
  */
-export const Rain: React.FC<{ onAnimationEnd?: () => void }> = ({ onAnimationEnd }) => {
+export const Rain: React.FC<{ id?: string, onAnimationEnd?: (id?: string) => void }> = ({ id, onAnimationEnd }) => {
     const onAnimationEndRef = useRef(onAnimationEnd);
 
     useEffect(() => {
@@ -117,15 +117,15 @@ export const Rain: React.FC<{ onAnimationEnd?: () => void }> = ({ onAnimationEnd
 
     React.useEffect(() => {
         const timeoutId = window.setTimeout(() => {
-            onAnimationEndRef.current?.();
+            onAnimationEndRef.current?.(id);
         }, 30000); // アニメーションの最大時間を30秒と仮定
 
         return () => {
             window.clearTimeout(timeoutId);
         };
-    }, []);
+    }, [id]);
 
-    return <div className={rain}>
+    return <div id={id} className={rain}>
         <div></div>
         <div></div>
         <div></div>

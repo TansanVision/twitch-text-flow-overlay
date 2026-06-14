@@ -385,12 +385,14 @@ const getCommentStyle = (
  * @param element - コメントのテキストや画像などの要素を含むReactノード
  * @param className - コメントのスタイルを指定するクラス名
  * @param onAnimationEnd - アニメーション終了時のコールバック関数
+ * @param id - コメントの識別子
  * @returns JSX.Element
  */
 type Props = {
     children: React.ReactNode;
     className: string;
-    onAnimationEnd?: () => void;
+    onAnimationEnd?: (id?: string) => void;
+    id?: string;
 }
 
 // コメントのレーンの最大数を定義
@@ -439,15 +441,17 @@ export const getFlowStyle = (commands: string[]) : string => {
 export const Flow : React.FC<Props> = ({ 
     children, 
     className, 
-    onAnimationEnd 
+    onAnimationEnd,
+    id
 }) => {
     const handleAnimationEnd = useCallback(() => {
         if (onAnimationEnd) {
-            onAnimationEnd();
+            onAnimationEnd(id);
         }
-    }, [children, onAnimationEnd]);
+    }, [children, onAnimationEnd, id]);
 
     return <div 
+        id={id}
         className={className}
         onAnimationEnd={handleAnimationEnd}>
         {children}

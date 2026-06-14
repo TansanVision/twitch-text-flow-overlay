@@ -10,11 +10,10 @@ export const CommentServiceRenderer : React.FC<CommentServiceRendererProps> = ({
     comments,
     onAnimationEnd
 }) => {
-    const handleAnimationEnd = useCallback((id: string) => () => {
-        if (onAnimationEnd) {
-            onAnimationEnd(id);
-        }
-    }, [onAnimationEnd]);
+     const handleAnimationEnd = useCallback(
+         (id: string) => () => onAnimationEnd(id),
+         [onAnimationEnd]
+     );
 
     return (
         <>

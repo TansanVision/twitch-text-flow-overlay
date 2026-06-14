@@ -72,7 +72,7 @@ const BouRamenSVG = () => <svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000
  * 棒ラーメンが落ちてくるアニメーションコンポーネント
  * @returns JSX.Element
  */
- export const BouRamen: React.FC<{ onAnimationEnd?: () => void }> = ({ onAnimationEnd }) => {
+ export const BouRamen: React.FC<{ id?: string, onAnimationEnd?: (id?: string) => void }> = ({ id, onAnimationEnd }) => {
    const onAnimationEndRef = useRef(onAnimationEnd);
 
    useEffect(() => {
@@ -100,13 +100,13 @@ const BouRamenSVG = () => <svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000
 
    React.useEffect(() => {
      const timeoutId = window.setTimeout(() => {
-       onAnimationEndRef.current?.();
+       onAnimationEndRef.current?.(id);
      }, maxAnimationDurationMs);
 
      return () => {
        window.clearTimeout(timeoutId);
      };
-   }, [maxAnimationDurationMs]);
+   }, [maxAnimationDurationMs, id]);
 
    const bouRamens = bouRamenConfigs.map(({ left, duration, delay }, i) => (
      <div
@@ -122,5 +122,5 @@ const BouRamenSVG = () => <svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000
        <BouRamenSVG />
      </div>
    ));
-   return <div className={`${container} ${keyframes}`}>{bouRamens}</div>;
+   return <div id={id} className={`${container} ${keyframes}`}>{bouRamens}</div>;
  };

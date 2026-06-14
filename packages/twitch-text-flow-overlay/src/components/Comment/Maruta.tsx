@@ -47,7 +47,7 @@ const LogSVG = () => (
  * 丸太が落ちてくるアニメーションコンポーネント
  * @returns JSX.Element
  */
- export const Maruta: React.FC<{ onAnimationEnd?: () => void }> = ({ onAnimationEnd }) => {
+ export const Maruta: React.FC<{ id?: string, onAnimationEnd?: (id?: string) => void }> = ({ id, onAnimationEnd }) => {
    const onAnimationEndRef = useRef(onAnimationEnd);
 
    useEffect(() => {
@@ -75,13 +75,13 @@ const LogSVG = () => (
 
    React.useEffect(() => {
      const timeoutId = window.setTimeout(() => {
-       onAnimationEndRef.current?.();
+       onAnimationEndRef.current?.(id);
      }, maxAnimationDurationMs);
 
      return () => {
        window.clearTimeout(timeoutId);
      };
-   }, [maxAnimationDurationMs]);
+   }, [maxAnimationDurationMs, id]);
 
    const logs = logConfigs.map(({ left, duration, delay }, i) => (
      <div
@@ -97,5 +97,5 @@ const LogSVG = () => (
        <LogSVG />
      </div>
    ));
-   return <div className={`${container} ${keyframes}`}>{logs}</div>;
+   return <div id={id} className={`${container} ${keyframes}`}>{logs}</div>;
  };

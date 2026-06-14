@@ -61,7 +61,7 @@ const ChikuwaSVG = () => <svg viewBox="0 0 260 80" xmlns="http://www.w3.org/2000
  * ちくわが落ちてくるアニメーションコンポーネント
  * @returns JSX.Element
  */
- export const Chikuwa: React.FC<{ onAnimationEnd?: () => void }> = ({ onAnimationEnd }) => {
+ export const Chikuwa: React.FC<{ id?: string, onAnimationEnd?: (id?: string) => void }> = ({ id, onAnimationEnd }) => {
     const onAnimationEndRef = useRef(onAnimationEnd);
 
     useEffect(() => {
@@ -89,13 +89,13 @@ const ChikuwaSVG = () => <svg viewBox="0 0 260 80" xmlns="http://www.w3.org/2000
 
    React.useEffect(() => {
      const timeoutId = window.setTimeout(() => {
-       onAnimationEndRef.current?.();
+       onAnimationEndRef.current?.(id);
      }, maxAnimationDurationMs);
 
      return () => {
        window.clearTimeout(timeoutId);
      };
-   }, [maxAnimationDurationMs]);
+   }, [maxAnimationDurationMs, id]);
 
    const chikuwaElements = chikuwaConfigs.map(({ left, duration, delay }, i) => (
      <div
@@ -112,5 +112,5 @@ const ChikuwaSVG = () => <svg viewBox="0 0 260 80" xmlns="http://www.w3.org/2000
      </div>
    ));
 
-   return <div className={`${container} ${keyframes}`}>{chikuwaElements}</div>;
+   return <div id={id} className={`${container} ${keyframes}`}>{chikuwaElements}</div>;
  };

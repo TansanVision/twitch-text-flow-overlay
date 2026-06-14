@@ -55,7 +55,7 @@ const keyframes = css`
  * 桜の花びらが舞うアニメーションコンポーネント
  * @returns JSX.Element
  */
-export const Sakura: React.FC<{ onAnimationEnd?: () => void }> = ({ onAnimationEnd }) => {
+export const Sakura: React.FC<{ id?: string, onAnimationEnd?: (id?: string) => void }> = ({ id, onAnimationEnd }) => {
   const onAnimationEndRef = useRef(onAnimationEnd);
 
   useEffect(() => {
@@ -64,13 +64,13 @@ export const Sakura: React.FC<{ onAnimationEnd?: () => void }> = ({ onAnimationE
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
-      onAnimationEndRef.current?.();
+      onAnimationEndRef.current?.(id);
     }, 1000 * 30);
 
     return () => {
       window.clearTimeout(timeoutId);
     };
-  }, []);
+  }, [id]);
 
   const { petals } = useMemo(() => {
     const petals = Array.from({ length: 50 }).map((_, i) => {
@@ -108,7 +108,7 @@ export const Sakura: React.FC<{ onAnimationEnd?: () => void }> = ({ onAnimationE
     });
 
     return { petals };
-  }, []);
+  }, [id]);
 
-  return <div className={`${container} ${keyframes}`}>{petals}</div>;
+  return <div id={id} className={`${container} ${keyframes}`}>{petals}</div>;
 };

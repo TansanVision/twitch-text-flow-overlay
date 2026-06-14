@@ -32,7 +32,7 @@ const keyframes = css`
  * 紙吹雪が舞うアニメーションコンポーネント
  * @returns JSX.Element
  */
- export const Kamifubuki: React.FC<{ onAnimationEnd?: () => void }> = ({ onAnimationEnd }) => {
+ export const Kamifubuki: React.FC<{ id?: string, onAnimationEnd?: (id?: string) => void }> = ({ id, onAnimationEnd }) => {
    const onAnimationEndRef = useRef(onAnimationEnd);
 
    useEffect(() => {
@@ -77,13 +77,13 @@ const keyframes = css`
 
    React.useEffect(() => {
      const timeoutId = window.setTimeout(() => {
-       onAnimationEndRef.current?.();
+       onAnimationEndRef.current?.(id);
      }, maxAnimationTimeMs);
 
      return () => {
        window.clearTimeout(timeoutId);
      };
-   }, [maxAnimationTimeMs]);
+   }, [maxAnimationTimeMs, id]);
    
-   return <div className={`${container} ${keyframes}`}>{pieces}</div>;
+   return <div id={id} className={`${container} ${keyframes}`}>{pieces}</div>;
  };

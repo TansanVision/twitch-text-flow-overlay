@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { css } from "@emotion/css";
 
 const container = css`
@@ -56,21 +56,23 @@ const keyframes = css`
  * 風船が上昇するアニメーションを表示するコンポーネント
  * @returns JSX.Element - 風船アニメーションの要素
  */
-export const Balloons: React.FC<{ onAnimationEnd?: () => void }> = ({ onAnimationEnd }) => {
+export const Balloons: React.FC<{ id?: string; onAnimationEnd?: (id?: string) => void }> = ({ id, onAnimationEnd }) => {
   const colors = ["#ff6b6b", "#feca57", "#48dbfb", "#1dd1a1", "#5f27cd"];
 
-   React.useEffect(() => {
-     if (!onAnimationEnd) {
-       return;
-     }
+    const onAnimationEndRef = useRef(onAnimationEnd);
+    useEffect(() => {
+      onAnimationEndRef.current = onAnimationEnd;
+    }, [onAnimationEnd]);
 
+   React.useEffect(() => {
      const timeoutId = window.setTimeout(() => {
-       onAnimationEnd();
+       onAnimationEndRef.current?.(id);
      }, 10000);
+
      return () => {
        window.clearTimeout(timeoutId);
      };
-   }, [onAnimationEnd]);
+   }, [id]);
 
   const balloons = Array.from({ length: 35 }).map((_, i) => {
     const left = `${Math.random() * 100}%`;
@@ -115,5 +117,5 @@ export const Balloons: React.FC<{ onAnimationEnd?: () => void }> = ({ onAnimatio
     );
   });
 
-  return <div className={`${container} ${keyframes}`}>{balloons}</div>;
+  return <div id={id} className={`${container} ${keyframes}`}>{balloons}</div>;
 };
