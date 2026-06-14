@@ -108,7 +108,7 @@ export const Sakura: React.FC<{ id?: string, onAnimationEnd?: (id?: string) => v
     });
 
     return { petals };
-  }, [id]);
+  }, []);
 
   return <div id={id} className={`${container} ${keyframes}`}>{petals}</div>;
 };

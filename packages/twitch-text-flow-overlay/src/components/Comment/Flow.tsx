@@ -448,7 +448,7 @@ export const Flow : React.FC<Props> = ({
         if (onAnimationEnd) {
             onAnimationEnd(id);
         }
-    }, [children, onAnimationEnd, id]);
+    }, [onAnimationEnd, id]);
 
     return <div 
         id={id}
