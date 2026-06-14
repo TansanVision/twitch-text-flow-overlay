@@ -1,5 +1,5 @@
 import { css } from "@emotion/css";
-import React from "react";
+import React, { useRef, useEffect } from "react";
 
 const rain = css`
     position: absolute;
@@ -109,19 +109,21 @@ const rain = css`
  * @returns JSX.Element
  */
 export const Rain: React.FC<{ onAnimationEnd?: () => void }> = ({ onAnimationEnd }) => {
-        React.useEffect(() => {
-            if (!onAnimationEnd) {
-                return;
-            }
+    const onAnimationEndRef = useRef(onAnimationEnd);
 
-            const timeoutId = window.setTimeout(() => {
-                onAnimationEnd();
-            }, 30000); // アニメーションの最大時間を30秒と仮定
+    useEffect(() => {
+        onAnimationEndRef.current = onAnimationEnd;
+     }, [onAnimationEnd]);
 
-            return () => {
-                window.clearTimeout(timeoutId);
-            };
-        }, [onAnimationEnd]);
+    React.useEffect(() => {
+        const timeoutId = window.setTimeout(() => {
+            onAnimationEndRef.current?.();
+        }, 30000); // アニメーションの最大時間を30秒と仮定
+
+        return () => {
+            window.clearTimeout(timeoutId);
+        };
+    }, []);
 
     return <div className={rain}>
         <div></div>

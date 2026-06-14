@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import { css } from "@emotion/css";
 
 const container = css`
@@ -56,16 +56,21 @@ const keyframes = css`
  * @returns JSX.Element
  */
 export const Sakura: React.FC<{ onAnimationEnd?: () => void }> = ({ onAnimationEnd }) => {
+  const onAnimationEndRef = useRef(onAnimationEnd);
+
   useEffect(() => {
-    const maxAnimationDurationMs = 30000;
+    onAnimationEndRef.current = onAnimationEnd;
+  }, [onAnimationEnd]);
+
+  useEffect(() => {
     const timeoutId = window.setTimeout(() => {
-      onAnimationEnd?.();
-    }, maxAnimationDurationMs);
+      onAnimationEndRef.current?.();
+    }, 1000 * 5);
 
     return () => {
       window.clearTimeout(timeoutId);
     };
-  }, [onAnimationEnd]);
+  }, []);
 
   const { petals } = useMemo(() => {
     const petals = Array.from({ length: 50 }).map((_, i) => {

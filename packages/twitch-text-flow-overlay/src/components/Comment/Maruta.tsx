@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { css } from "@emotion/css";
 
 const container = css`
@@ -48,6 +48,12 @@ const LogSVG = () => (
  * @returns JSX.Element
  */
  export const Maruta: React.FC<{ onAnimationEnd?: () => void }> = ({ onAnimationEnd }) => {
+   const onAnimationEndRef = useRef(onAnimationEnd);
+
+   useEffect(() => {
+     onAnimationEndRef.current = onAnimationEnd;
+   }, [onAnimationEnd]);
+
    const logConfigs = React.useMemo(
      () =>
        Array.from({ length: 8 }).map(() => {
@@ -68,17 +74,14 @@ const LogSVG = () => (
    const maxAnimationDurationMs = Math.max(...logConfigs.map((log) => log.totalDurationMs));
 
    React.useEffect(() => {
-     if (!onAnimationEnd) {
-       return;
-     }
-
      const timeoutId = window.setTimeout(() => {
-       onAnimationEnd();
+       onAnimationEndRef.current?.();
      }, maxAnimationDurationMs);
+
      return () => {
        window.clearTimeout(timeoutId);
      };
-   }, [maxAnimationDurationMs, onAnimationEnd]);
+   }, []);
 
    const logs = logConfigs.map(({ left, duration, delay }, i) => (
      <div

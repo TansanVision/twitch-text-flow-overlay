@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { css } from "@emotion/css";
 
 const container = css`
@@ -37,6 +37,12 @@ const keyframes = css`
 `;
 
  export const Snow: React.FC<{ onAnimationEnd?: () => void }> = ({ onAnimationEnd }) => {
+    const onAnimationEndRef = useRef(onAnimationEnd);
+
+    React.useEffect(() => {
+      onAnimationEndRef.current = onAnimationEnd;
+    }, [onAnimationEnd]);
+
     const { flakes, maxAnimationTimeMs } = React.useMemo(() => {
     const animationIterationCount = 3;
      let maxTotalTimeMs = 0;
@@ -71,18 +77,14 @@ const keyframes = css`
    }, []);
   
    React.useEffect(() => {
-     if (!onAnimationEnd) {
-       return;
-     }
-
      const timeoutId = window.setTimeout(() => {
-       onAnimationEnd();
+       onAnimationEndRef.current?.();
      }, maxAnimationTimeMs);
 
      return () => {
        window.clearTimeout(timeoutId);
      };
-   }, [maxAnimationTimeMs, onAnimationEnd]);
+   }, []);
 
    return (
      <div className={`${container} ${keyframes}`}>
