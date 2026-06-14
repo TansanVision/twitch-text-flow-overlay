@@ -1,5 +1,5 @@
 import type { CommentServiceRendererProps } from "./types";
-import React from "react";
+import React, { useCallback } from "react";
 
 /**
  * コメントサービスのレンダラーコンポーネント
@@ -10,6 +10,12 @@ export const CommentServiceRenderer : React.FC<CommentServiceRendererProps> = ({
     comments,
     onAnimationEnd
 }) => {
+    const handleAnimationEnd = useCallback((id: string) => () => {
+        if (onAnimationEnd) {
+            onAnimationEnd(id);
+        }
+    }, [onAnimationEnd]);
+
     return (
         <>
             {comments.map(({ id, node }) =>
@@ -20,7 +26,7 @@ export const CommentServiceRenderer : React.FC<CommentServiceRendererProps> = ({
                     }>, {
                         key: id,
                         id: id,
-                        onAnimationEnd: onAnimationEnd ? () => onAnimationEnd(id) : undefined
+                        onAnimationEnd: handleAnimationEnd(id)
                     })
                     : node
             )}
