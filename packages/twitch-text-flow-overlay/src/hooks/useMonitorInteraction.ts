@@ -61,6 +61,8 @@ export const useMonitorInteraction = () => {
         };
     }, []);
 
+    const audienceData = formatAudienceData(audienceRef.current);
+
     const addAudience = useCallback((type: keyof AudienceMap, name: string) => {
         const currentList = audienceRef.current[type];
         if (!currentList.includes(name)) {
@@ -72,24 +74,9 @@ export const useMonitorInteraction = () => {
         return audienceRef.current;
     }, []);
 
-    const downloadAudienceData = useCallback(() => {
-        // データをフォーマットしてテキストファイルとしてダウンロードする
-        const formattedData = formatAudienceData(audienceRef.current);
-        const blob = new Blob([formattedData], { type: 'text/plain' });
-        const url = URL.createObjectURL(blob);
-        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-        const downloadAnchorNode = document.createElement('a');
-        downloadAnchorNode.download = `twitch-text-flow-overlay_result_${timestamp}.txt`;
-        downloadAnchorNode.href = url;
-        document.body.appendChild(downloadAnchorNode);
-        downloadAnchorNode.click();
-        downloadAnchorNode.remove();
-        setTimeout(() => URL.revokeObjectURL(url), 0);
-    }, []);
-
     return {
         addAudience,
         getAudience,
-        downloadAudienceData
+        audienceData,
     };
 }

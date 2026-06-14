@@ -36,7 +36,7 @@ export function useStreamerBot({
     onComment,
     monitorInteractions = false,
 }: UseStreamerBotOptions) {
-    const { addAudience,  downloadAudienceData } = useMonitorInteraction();
+    const { addAudience,  audienceData } = useMonitorInteraction();
     const { addIntro } = useIntro();
     const [status, setStatus] = useState<ConnectionStatus>('disconnected');
     const clientRef = useRef<StreamerbotClient | null>(null);
@@ -97,10 +97,10 @@ export function useStreamerBot({
             }
         });
 
-        client.on("Twitch.RaidSend", () => {
+        client.on("Twitch.RaidSend", async () => {
             if (monitorInteractions) {
                 // ダウンロード処理
-                downloadAudienceData();
+                await downloadAudienceData(audienceData);
             }
         });
 
@@ -154,14 +154,14 @@ export function useStreamerBot({
             );
         });
 
-        client.on("Custom.*", ({ data }) => {
-            if (data?.eventType === "Raid.IntroRequested") {
+        client.on("General.Custom", (payload) => {
+            if (payload.data?.eventType === "Raid.IntroRequested") {
                 addIntro({
-                    raiderName: data?.raider?.name ?? "Unknown Raider",
-                    displayName: data?.raider?.displayName ?? "Unknown Raider",
-                    iconUrl: data?.raider?.iconUrl ?? "",
-                    viewerCount: data?.raider?.viewerCount ?? 0,
-                    clips: Array.isArray(data?.raider?.clips) ? data.raider.clips.map((clip: any) => ({
+                    raiderName: payload.data?.raider?.name ?? "Unknown Raider",
+                    displayName: payload.data?.raider?.displayName ?? "Unknown Raider",
+                    iconUrl: payload.data?.raider?.iconUrl ?? "",
+                    viewerCount: payload.data?.raider?.viewerCount ?? 0,
+                    clips: Array.isArray(payload.data?.raider?.clips) ? payload.data.raider.clips.map((clip: any) => ({
                         videoUrl: clip?.url ?? "",
                         title: clip?.title ?? "",
                         duration: typeof clip?.duration === 'number' ? clip.duration : 0,
@@ -170,11 +170,11 @@ export function useStreamerBot({
             }
         });
 
-        client.on("Raw.Action", ({ data }) => {
+        client.on("Raw.Action", async ({ data }) => {
             if (data.arguments.isTest) {
                 if (data.arguments.triggerCategory === "Custom" && data.arguments["customEvent.event"] === "download") {
                     if (monitorInteractions) {
-                        downloadAudienceData();
+                        await downloadAudienceData(audienceData);
                     }
                 }
             }
@@ -184,7 +184,7 @@ export function useStreamerBot({
             client.disconnect?.();
             clientRef.current = null;
         };
-    }, [host, port, endpoint, password, onComment, monitorInteractions, addAudience, downloadAudienceData, addIntro]);
+    }, [host, port, endpoint, password, onComment, monitorInteractions, addAudience, audienceData, addIntro]);
 
     /**
      * シャウトアウトコマンドをStreamerBotに送信します。
@@ -206,6 +206,23 @@ export function useStreamerBot({
             console.error('Failed to send shoutout command:', error);
          }
     };
+
+    const downloadAudienceData = async (data: string) => {
+        const client = clientRef.current;
+        if (!client) {
+            return;
+         }
+
+         try {
+            await client.doAction({
+                name: "twitch-text-flow-overlay_audience_download",
+            }, {
+                data,
+            });
+         } catch (error) {
+            console.error('Failed to download audience data:', error);
+         }
+    }
 
     return { sendShoutoutCommand, status };
 }
