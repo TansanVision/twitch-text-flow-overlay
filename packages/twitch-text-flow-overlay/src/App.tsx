@@ -3,7 +3,7 @@ import { CommentServiceContainer } from './components/CommentService/CommentServ
 import { useStreamerBot } from './hooks/useStreamerbot';
 import { useTwitchEmotes } from './hooks/useTwitchEmotes';
 import type { Comment, Message, AppConfig, BuiltInEffects, EffectType } from './domain/types';
-import { isCommand, IsEffectType } from './domain/types';
+import { isCommand, isEffectType } from './domain/types';
 import { builtInEffectsDefault } from './domain/constant';
 
 const defaultConfig: AppConfig = {
@@ -114,7 +114,7 @@ function getConfig(): AppConfig {
                  validStamps.push({
                    commandName: candidate.commandName,
                    dataUri: candidate.dataUri,
-                   effectType: IsEffectType(candidate.effectType as string) ? candidate.effectType as EffectType : 'default',
+                   effectType: isEffectType(candidate.effectType as string) ? candidate.effectType as EffectType : 'default',
                  });
                  return validStamps;
                },

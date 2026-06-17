@@ -20,7 +20,7 @@ type Item = {
 
 
 const container = css`
-    position: fixed;
+    position: absolute;
     inset: 0;
     overflow: hidden;
     pointer-events: none;

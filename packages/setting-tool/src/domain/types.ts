@@ -49,6 +49,6 @@ export type EffectType = typeof EFFECT_TYPES[number];
  * @param value - 判定する文字列
  * @returns 文字列がEffectTypeである場合はtrue、それ以外の場合はfalse
  */
-export const IsEffectType = (value: string): value is EffectType => {
+export const isEffectType = (value: string): value is EffectType => {
     return EFFECT_TYPES.includes(value as EffectType);
 }

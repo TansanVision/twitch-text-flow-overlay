@@ -3,7 +3,7 @@ import { getConfigJson, isHtmlFile, writeConfigToHtml, hasConfigScript, download
 import React, { useState, useEffect } from 'react';
 import { Toast } from './Toast';
 import type { Config, CustomStamp, BuiltInEffects, EffectType } from '../domain/types';
-import { IsEffectType } from '../domain/types';
+import { isEffectType } from '../domain/types';
 import type { JSX } from 'react';
 import { Tabs } from './Tabs';
 import { ToggleButton } from './ToggleButton';
@@ -279,9 +279,9 @@ const CustomStampForm = ({
                         <div>
                             <span>エフェクト種類:</span>
                             <select
-                                value={IsEffectType(customStamp?.effectType || "default") ? customStamp?.effectType : "default"}
+                                value={isEffectType(customStamp?.effectType || "default") ? customStamp?.effectType : "default"}
                                 onChange={(e) => setCustomStamp(previous => {
-                                    const effectType = e.target.value;
+                                    const effectType = isEffectType(e.target.value) ? e.target.value : "default";
                                     if (!previous) return { commandName: "", dataUri: "", effectType };
                                     return { ...previous, effectType };
                                 })}
@@ -729,7 +729,7 @@ const SettingForm : React.FC<SettingFormProps> = ({ html, config }) => {
             customStamps: customStamps.map(stamp => ({
                 commandName: stamp.commandName,
                 dataUri: stamp.dataUri,
-                effectType: IsEffectType(stamp.effectType || "default") ? stamp.effectType as EffectType : "default",
+                effectType: isEffectType(stamp.effectType || "default") ? stamp.effectType as EffectType : "default",
             })),
             monitorInteractions: monitorInteractions,
             builtInEffects: builtInEffects,

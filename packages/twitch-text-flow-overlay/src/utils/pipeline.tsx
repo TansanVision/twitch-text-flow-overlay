@@ -371,6 +371,10 @@ export const getNodes = (text: string,
         nodes.push(...fallingEffectNodes.map(node => ({ id: `effect-${uuidv4()}`, node })));
     }
 
+    if (lineNodes.length === 0) {
+        return nodes;
+    }
+
     // 改行のためのdivでまとめる
     const flowNode = <div
         style={{
