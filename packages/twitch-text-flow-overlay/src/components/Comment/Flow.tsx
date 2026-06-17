@@ -382,9 +382,9 @@ const getCommentStyle = (
 
 /**
  * コメントの流れるアニメーションコンポーネント
- * @param element - コメントのテキストや画像などの要素を含むReactノード
+ * @param children - コメントのテキストや画像などの要素を含むReactノード
  * @param className - コメントのスタイルを指定するクラス名
- * @param onAnimationEnd - アニメーション終了時のコールバック関数
+ * @param onAnimationEnd - アニメーション終了時のコールバック関数（comment id が渡される）
  * @param id - コメントの識別子
  * @returns JSX.Element
  */
