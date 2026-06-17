@@ -47,6 +47,7 @@ export const Tabs = ({ tabs, activeTab, onTabChange }: TabsProps) => {
         <div className={tabsContainerStyle}>
             {memoizedTabs.map((tab) => (
                 <button
+                    type="button"
                     key={tab.id}
                     className={`${tabButtonStyle} ${activeTab === tab.id ? activeTabButtonStyle : ''}`}
                     onClick={() => handleTabChange(tab.id)}

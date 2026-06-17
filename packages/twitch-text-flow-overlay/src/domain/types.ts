@@ -84,7 +84,7 @@ export type CustomStampConfig = {
  * password: Streamer Botのパスワード（省略可能）
  * customStamps: カスタムスタンプの設定の配列
  * monitorInteractions: 視聴者のインタラクションを監視するかどうか
- * builtInEffects: 組み込みエフェクトの有効/無効設定（省略可能）
+ * builtInEffects: 組み込みエフェクトの有効/無効設定
  */
 export type AppConfig = {
   host: string;

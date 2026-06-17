@@ -25,8 +25,7 @@ const optionClassName = css`
     cursor: pointer;
     user-select: none;
 
-    // チェックを持ったinputを持っている場合背景を変える
-    &:has(input[type="radio"]:checked) {
+    &[data-checked="true"] {
         background-color: #6441a5;
         border-color: black;
         color: white;
@@ -65,13 +64,11 @@ export const Switcher: React.FC<SwitcherProps> = ({ onChange }) => {
     };
 
     return <div className={switcherClassName}>
-        <div className={optionClassName} onClick={() => handleChange("new")}>
-            <input type="radio" id="new" name="switcher" checked={checked === "new"} onChange={() => handleChange("new")} />
+        <div className={optionClassName} data-checked={checked === "new"} onClick={() => handleChange("new")}>
             <label htmlFor="new">新規</label>
             <span className="explanation">初期設定や追加の設定を行う場合はこちらを選択してください</span>
         </div>
-        <div className={optionClassName} onClick={() => handleChange("migrate")}>
-            <input type="radio" id="migrate" name="switcher" checked={checked === "migrate"} onChange={() => handleChange("migrate")} />
+        <div className={optionClassName} data-checked={checked === "migrate"} onClick={() => handleChange("migrate")}>
             <label htmlFor="migrate">移行</label>
             <span className="explanation">既存の設定を引き継ぐ場合はこちらを選択してください</span>
         </div>

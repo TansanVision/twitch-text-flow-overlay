@@ -13,14 +13,14 @@ const defaultConfig: AppConfig = {
   customStamps: [],
   monitorInteractions: false,
   builtInEffects: {
-    sakura: false,
-    snow: false,
-    balloons: false,
-    marutai: false,
-    maruta: false,
-    chikuwa: false,
-    kamifubuki: false,
-    rain: false,
+    sakura: true,
+    snow: true,
+    balloons: true,
+    marutai: true,
+    maruta: true,
+    chikuwa: true,
+    kamifubuki: true,
+    rain: true,
   }
 };
 
@@ -40,9 +40,20 @@ function getConfig(): AppConfig {
         ? (parsedConfig as Record<string, unknown>)
         : {};
       const port = Number(config.port);
-      const builtInEffects : BuiltInEffects = config.builtInEffects && typeof config.builtInEffects === 'object' 
-        ? { ...defaultConfig.builtInEffects, ...config.builtInEffects }
-        : defaultConfig.builtInEffects;
+      const rawBuiltInEffects =
+        config.builtInEffects && typeof config.builtInEffects === 'object'
+          ? (config.builtInEffects as Record<string, unknown>)
+          : {};
+       const builtInEffects: BuiltInEffects = {
+         sakura: typeof rawBuiltInEffects.sakura === 'boolean' ? rawBuiltInEffects.sakura : defaultConfig.builtInEffects.sakura,
+         snow: typeof rawBuiltInEffects.snow === 'boolean' ? rawBuiltInEffects.snow : defaultConfig.builtInEffects.snow,
+         balloons: typeof rawBuiltInEffects.balloons === 'boolean' ? rawBuiltInEffects.balloons : defaultConfig.builtInEffects.balloons,
+         marutai: typeof rawBuiltInEffects.marutai === 'boolean' ? rawBuiltInEffects.marutai : defaultConfig.builtInEffects.marutai,
+         maruta: typeof rawBuiltInEffects.maruta === 'boolean' ? rawBuiltInEffects.maruta : defaultConfig.builtInEffects.maruta,
+         chikuwa: typeof rawBuiltInEffects.chikuwa === 'boolean' ? rawBuiltInEffects.chikuwa : defaultConfig.builtInEffects.chikuwa,
+         kamifubuki: typeof rawBuiltInEffects.kamifubuki === 'boolean' ? rawBuiltInEffects.kamifubuki : defaultConfig.builtInEffects.kamifubuki,
+         rain: typeof rawBuiltInEffects.rain === 'boolean' ? rawBuiltInEffects.rain : defaultConfig.builtInEffects.rain,
+       };
 
       return {
         host: typeof config.host === 'string' && config.host !== '' 

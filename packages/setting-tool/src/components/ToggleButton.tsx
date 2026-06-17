@@ -41,12 +41,8 @@ export const ToggleButton: React.FC<ToggleButtonProps> = ({
   checked = false,
   onChange,
 }) => {
-  const [on, setOn] = useState(checked);
-
   const handleClick = () => {
-    const next = !on;
-    setOn(next);
-    onChange?.(next);
+    onChange?.(!checked);
   };
 
   return (
@@ -54,10 +50,10 @@ export const ToggleButton: React.FC<ToggleButtonProps> = ({
       type="button"
       className={toggleRoot}
       onClick={handleClick}
-      aria-pressed={on}
+      aria-pressed={checked}
     >
-      <span className={toggleTrack(on)}>
-        <span className={toggleThumb(on)} />
+      <span className={toggleTrack(checked)}>
+        <span className={toggleThumb(checked)} />
       </span>
     </button>
   );
