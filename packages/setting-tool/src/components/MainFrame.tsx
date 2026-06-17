@@ -24,8 +24,12 @@ const mainClassName = css`
     & > header {
         background-color: #6441a5;
         color: white;
-        padding: 0.5rem;
         text-align: center;
+    }
+    & > div {
+        flex: 1;
+        padding: 8px;
+        overflow: hidden;
     }
 `;
 
@@ -39,6 +43,8 @@ export const MainFrame: React.FC<MainFrameProps> = ({ children }) => {
         <header>
             <h1>Twitch Text Flow Overlay - Setting Tool</h1>
         </header>
-        {children}
+        <div>
+            {children}
+        </div>
     </div>
 }

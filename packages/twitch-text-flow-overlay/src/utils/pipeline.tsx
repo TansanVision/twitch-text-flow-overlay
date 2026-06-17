@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import type { Emote, ExternalEmoteMap, CustomStampMap, Token, Comment } from '../domain/types';
+import type { Emote, ExternalEmoteMap, CustomStampMap, Token, Comment, BuiltInEffects } from '../domain/types';
 import { isCommandString, isSizeCommandString, isAlignmentCommandString, isColorCommandString, isEffectCommandString } from "../domain/types";
 import { getFlowStyle } from '../components/Comment/Flow';
 import { Sakura } from '../components/Comment/Sakura';
@@ -204,29 +204,57 @@ const phase3 = (text: string,
 /**
  * トークンからエフェクトReactノードに変換する
  * @param effect コマンドで指定されたエフェクトの種類
+ * @param builtInEffects ビルトインエフェクトの設定
  * @returns エフェクトに対応するReactノード
  */
-const getEffectNode = (effect: string): React.ReactNode => {
+const getEffectNode = (effect: string, 
+    builtInEffects: BuiltInEffects): React.ReactNode => {
     switch (effect) {
         case "sakura":
-            return <Sakura />;
+            if (builtInEffects.sakura) {
+                return <Sakura />;
+            }
+            break;
         case "balloons":
-            return <Balloons />;
+            if (builtInEffects.balloons) {
+                return <Balloons />;
+            }
+            break;
         case "snow":
-            return <Snow />;
+            if (builtInEffects.snow) {
+                return <Snow />;
+            }
+            break;
         case "kamifubuki":
-            return <Kamifubuki />;
+            if (builtInEffects.kamifubuki) {
+                return <Kamifubuki />;
+            }
+            break;
         case "marutai":
-            return <BouRamen />;
+            if (builtInEffects.marutai) {
+                return <BouRamen />;
+            }
+            break;
         case "chikuwa":
-            return <Chikuwa />;
+            if (builtInEffects.chikuwa) {
+                return <Chikuwa />;
+            }
+            break;
         case "maruta":
-            return <Maruta />;
+            if (builtInEffects.maruta) {
+                return <Maruta />;
+            }
+            break;
         case "rain":
-            return <Rain />;
+            if (builtInEffects.rain) {
+                return <Rain />;
+            }
+            break;
         default:
             return null;
     }
+
+    return null;
 };
 
 /**
@@ -257,12 +285,14 @@ const shouldFilterComment = (text: string): boolean => {
 /**
  * Twitchのメッセージテキストをエモートでレンダリングする関数
  * @param text - コメントのテキスト
+ * @param builtInEffects - ビルトインエフェクトの設定
  * @param twitchEmotes - Twitchのエモートデータ
  * @param externalEmotes - 外部エモートのマップ
  * @param customStamps - カスタムスタンプのマップ
  * @returns レンダリングされたReactノードの配列
  */
 export const getNodes = (text: string, 
+    builtInEffects: BuiltInEffects,
     twitchEmotes: Emote[], 
     externalEmotes: ExternalEmoteMap, 
     customStamps: CustomStampMap) : Comment[] => {
@@ -281,7 +311,7 @@ export const getNodes = (text: string,
     const { tokens: headTokens, remainingText } = phase1(text);
 
     if (headTokens.effect) {
-        const effectNode = getEffectNode(headTokens.effect);
+        const effectNode = getEffectNode(headTokens.effect, builtInEffects);
         if (effectNode) {
             nodes.push({ id: `effect-${uuidv4()}`, node: effectNode });
         }

@@ -1,7 +1,8 @@
 import { useEffect, useCallback, useRef, useMemo } from 'react';
-import type { CustomStampConfig, CustomStampMap } from '../domain/types';
+import type { CustomStampConfig, CustomStampMap, BuiltInEffects } from '../domain/types';
 import type { ExternalEmoteMap } from '../domain/types';
 import { getNodes } from '../utils/pipeline';
+import { builtInEffectsDefault } from '../domain/constant';
 
 /**
  * TwitchユーザーIDに基づいて外部エモートをロードする関数
@@ -81,13 +82,13 @@ export function loadCustomStamps(stamps: CustomStampConfig[]): CustomStampMap {
  * Twitchのエモートをロードしてメッセージテキストをエモートでレンダリングするためのカスタムフック
  * @returns エモートマップとレンダリング関数
  */
-export function useTwitchEmotes(customStamps: CustomStampConfig[] = []) {
+export function useTwitchEmotes(customStamps: CustomStampConfig[] = [], builtInEffects: BuiltInEffects = builtInEffectsDefault) {
     const emotesCache = useRef<ExternalEmoteMap>(new Map());
     const customStampMap = useMemo(() => loadCustomStamps(customStamps), [customStamps]);
 
     const getNodesInternal = useCallback((text: string, twitchEmotes: any) => {
-        return getNodes(text, twitchEmotes, emotesCache.current, customStampMap);
-    }, [emotesCache, customStampMap]);
+        return getNodes(text, builtInEffects, twitchEmotes, emotesCache.current, customStampMap);
+    }, [emotesCache, customStampMap, builtInEffects]);
 
      useEffect(() => {
         loadExternalEmotes().then((loadedEmotes) => {

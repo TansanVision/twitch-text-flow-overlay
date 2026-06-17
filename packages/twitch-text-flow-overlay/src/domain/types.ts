@@ -84,6 +84,7 @@ export type CustomStampConfig = {
  * password: Streamer Botのパスワード（省略可能）
  * customStamps: カスタムスタンプの設定の配列
  * monitorInteractions: 視聴者のインタラクションを監視するかどうか
+ * builtInEffects: 組み込みエフェクトの有効/無効設定
  */
 export type AppConfig = {
   host: string;
@@ -92,6 +93,7 @@ export type AppConfig = {
   password: string | undefined;
   customStamps: CustomStampConfig[];
   monitorInteractions: boolean;
+  builtInEffects: BuiltInEffects;
 };
 
 /**
@@ -328,4 +330,15 @@ export type AudienceMap = {
     cheer: string[];
     raid: string[];
     gift: string[];
+}
+
+export type BuiltInEffects = {
+    sakura: boolean;
+    snow: boolean;
+    balloons: boolean;
+    marutai: boolean;
+    maruta: boolean;
+    chikuwa: boolean;
+    kamifubuki: boolean;
+    rain: boolean;
 }

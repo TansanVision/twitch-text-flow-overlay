@@ -2,16 +2,18 @@ import { useEffect, useState, useMemo, useCallback} from 'react';
 import { CommentServiceContainer } from './components/CommentService/CommentServiceContainer';
 import { useStreamerBot } from './hooks/useStreamerbot';
 import { useTwitchEmotes } from './hooks/useTwitchEmotes';
-import type { Comment, Message, AppConfig } from './domain/types';
+import type { Comment, Message, AppConfig, BuiltInEffects } from './domain/types';
 import { isCommand } from './domain/types';
+import { builtInEffectsDefault } from './domain/constant';
 
-const defaultConfig = {
+const defaultConfig: AppConfig = {
   host: "127.0.0.1",
   port: 8080,
   endpoint: "/",
   password: undefined,
   customStamps: [],
   monitorInteractions: false,
+  builtInEffects: builtInEffectsDefault
 };
 
 /**
@@ -30,6 +32,20 @@ function getConfig(): AppConfig {
         ? (parsedConfig as Record<string, unknown>)
         : {};
       const port = Number(config.port);
+      const rawBuiltInEffects =
+        config.builtInEffects && typeof config.builtInEffects === 'object'
+          ? (config.builtInEffects as Record<string, unknown>)
+          : {};
+       const builtInEffects: BuiltInEffects = {
+         sakura: typeof rawBuiltInEffects.sakura === 'boolean' ? rawBuiltInEffects.sakura : defaultConfig.builtInEffects.sakura,
+         snow: typeof rawBuiltInEffects.snow === 'boolean' ? rawBuiltInEffects.snow : defaultConfig.builtInEffects.snow,
+         balloons: typeof rawBuiltInEffects.balloons === 'boolean' ? rawBuiltInEffects.balloons : defaultConfig.builtInEffects.balloons,
+         marutai: typeof rawBuiltInEffects.marutai === 'boolean' ? rawBuiltInEffects.marutai : defaultConfig.builtInEffects.marutai,
+         maruta: typeof rawBuiltInEffects.maruta === 'boolean' ? rawBuiltInEffects.maruta : defaultConfig.builtInEffects.maruta,
+         chikuwa: typeof rawBuiltInEffects.chikuwa === 'boolean' ? rawBuiltInEffects.chikuwa : defaultConfig.builtInEffects.chikuwa,
+         kamifubuki: typeof rawBuiltInEffects.kamifubuki === 'boolean' ? rawBuiltInEffects.kamifubuki : defaultConfig.builtInEffects.kamifubuki,
+         rain: typeof rawBuiltInEffects.rain === 'boolean' ? rawBuiltInEffects.rain : defaultConfig.builtInEffects.rain,
+       };
 
       return {
         host: typeof config.host === 'string' && config.host !== '' 
@@ -105,6 +121,7 @@ function getConfig(): AppConfig {
              )
            : defaultConfig.customStamps,
          monitorInteractions: typeof config.monitorInteractions === 'boolean' ? config.monitorInteractions : defaultConfig.monitorInteractions,
+         builtInEffects: builtInEffects,
       };
     } catch (error) {
       console.error('Failed to parse config JSON:', error);
@@ -123,7 +140,7 @@ function App() {
   const [comments, setComments] = useState<Comment[]>([]);
   const config = useMemo(() => getConfig(), []);
 
-  const { getNodes } = useTwitchEmotes(config.customStamps);
+  const { getNodes } = useTwitchEmotes(config.customStamps, config.builtInEffects);
 
   const handleComment = useCallback((message: Message) => {
     addComment(message);
