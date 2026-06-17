@@ -50,9 +50,6 @@ export const Tabs = ({ tabs, activeTab, onTabChange }: TabsProps) => {
                  return (
                      <button
                          type="button"
-                         role="tab"
-                         aria-selected={isActive}
-                         tabIndex={isActive ? 0 : -1}
                          key={tab.id}
                          className={`${tabButtonStyle} ${isActive ? activeTabButtonStyle : ''}`}
                          onClick={() => handleTabChange(tab.id)}

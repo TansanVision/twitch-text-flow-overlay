@@ -757,7 +757,7 @@ const SettingForm : React.FC<SettingFormProps> = ({ html, config }) => {
                     <span>インタラクション監視</span>
                     <span>(レイド完了時またはStreamerbotのカスタムイベント発生時にインタラクション結果を取得するかどうか)</span>
                 </div>
-                <ToggleButton checked={monitorInteractions} onChange={(checked) => setMonitorInteractions(checked)} />
+                <ToggleButton ariaLabel="interactive-monitoring" checked={monitorInteractions} onChange={(checked) => setMonitorInteractions(checked)} />
             </div>
         </div>}
         {activeTab === "CustomStamps" && <><div className={customStampArea}>

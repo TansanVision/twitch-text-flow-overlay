@@ -253,6 +253,8 @@ const getEffectNode = (effect: string,
         default:
             return null;
     }
+
+    return null;
 };
 
 /**
@@ -283,6 +285,7 @@ const shouldFilterComment = (text: string): boolean => {
 /**
  * Twitchのメッセージテキストをエモートでレンダリングする関数
  * @param text - コメントのテキスト
+ * @param builtInEffects - ビルトインエフェクトの設定
  * @param twitchEmotes - Twitchのエモートデータ
  * @param externalEmotes - 外部エモートのマップ
  * @param customStamps - カスタムスタンプのマップ
