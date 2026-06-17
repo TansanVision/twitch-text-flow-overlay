@@ -2,9 +2,9 @@ import React, { useRef, useMemo, useEffect } from "react";
 import { css } from "@emotion/css";
 
 type FallingImagesProps = {
-  id: string;
+  id?: string;
   src: string;
-  onAnimationEnd: (id: string) => void;
+  onAnimationEnd?: (id?: string) => void;
 };
 
 type Item = {

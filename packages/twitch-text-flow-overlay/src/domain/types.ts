@@ -323,7 +323,7 @@ export type Token = {
     subType: 'none' | 'twitch' | 'external' | 'custom';
     dataUri?: string;
     imageUrl?: string;
-    effectType?: string;
+    effectType?: CustomStampConfig['effectType'];
 };
 
 

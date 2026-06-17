@@ -338,11 +338,8 @@ export const getNodes = (text: string,
         const nodes = tokens.map((token, tokenIndex) => {
             if (token.isKeyword) {
                 if (token.subType === 'custom') {
-                    if (token.effectType && token.effectType === "default") {
-                        return <img key={`token-${index}-${tokenIndex}`} src={token.dataUri} alt={token.text} />;
-                    } else {
-                        return null;
-                    }
+                    if (token.effectType === "falling") return null;
+                    return <img key={`token-${index}-${tokenIndex}`} src={token.dataUri} alt={token.text} />;
                 } else if (token.subType === 'twitch' || token.subType === 'external') {
                     return <img key={`token-${index}-${tokenIndex}`} src={token.imageUrl} alt={token.text} />;
                 }

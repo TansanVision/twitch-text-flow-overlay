@@ -109,6 +109,7 @@ function getConfig(): AppConfig {
                    console.warn(
                     `無効なカスタムスタンプ "${candidate.commandName}" at index ${index}: "effectType" は "default" または "falling" のみ対応しています。指定された値 "${candidate.effectType}" はサポートされていないため、"default" として扱います。`
                    );
+                   candidate.effectType = 'default';
                  }
                  validStamps.push({
                    commandName: candidate.commandName,
