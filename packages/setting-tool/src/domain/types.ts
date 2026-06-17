@@ -33,3 +33,22 @@ export type Config = {
     monitorInteractions: boolean;
     builtInEffects?: BuiltInEffects;
 };
+
+/**
+ * エフェクトの種類のリスト
+ */
+export const EFFECT_TYPES = ["default", "falling"] as const;
+
+/**
+ * エフェクトの種類を表す型
+ */
+export type EffectType = typeof EFFECT_TYPES[number];
+
+/**
+ * EffectTypeの文字列かどうかを判定する関数
+ * @param value - 判定する文字列
+ * @returns 文字列がEffectTypeである場合はtrue、それ以外の場合はfalse
+ */
+export const IsEffectType = (value: string): value is EffectType => {
+    return EFFECT_TYPES.includes(value as EffectType);
+}

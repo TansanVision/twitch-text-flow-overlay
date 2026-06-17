@@ -363,10 +363,7 @@ export const getNodes = (text: string,
     });
 
     const fallingEffectNodes = breaklinesTexts.flatMap(tokens => tokens.filter(token => token.isKeyword && token.subType === 'custom' && token.effectType === "falling").map(token => <FallingImages
-            key={`falling-${uuidv4()}`}
-            id={`falling-${uuidv4()}`}
             src={token.dataUri!}
-            onAnimationEnd={() => { }}
         />));
 
     // 落下エフェクトは行ノードとは別にまとめておく

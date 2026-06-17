@@ -2,7 +2,8 @@ import { css } from '@emotion/css';
 import { getConfigJson, isHtmlFile, writeConfigToHtml, hasConfigScript, download } from '../domain/utils';
 import React, { useState, useEffect } from 'react';
 import { Toast } from './Toast';
-import type { Config, CustomStamp, BuiltInEffects } from '../domain/types';
+import type { Config, CustomStamp, BuiltInEffects, EffectType } from '../domain/types';
+import { IsEffectType } from '../domain/types';
 import type { JSX } from 'react';
 import { Tabs } from './Tabs';
 import { ToggleButton } from './ToggleButton';
@@ -278,7 +279,7 @@ const CustomStampForm = ({
                         <div>
                             <span>エフェクト種類:</span>
                             <select
-                                value={customStamp?.effectType || "default"}
+                                value={IsEffectType(customStamp?.effectType || "default") ? customStamp?.effectType : "default"}
                                 onChange={(e) => setCustomStamp(previous => {
                                     const effectType = e.target.value;
                                     if (!previous) return { commandName: "", dataUri: "", effectType };
@@ -728,7 +729,7 @@ const SettingForm : React.FC<SettingFormProps> = ({ html, config }) => {
             customStamps: customStamps.map(stamp => ({
                 commandName: stamp.commandName,
                 dataUri: stamp.dataUri,
-                effectType: stamp.effectType || "default",
+                effectType: IsEffectType(stamp.effectType || "default") ? stamp.effectType as EffectType : "default",
             })),
             monitorInteractions: monitorInteractions,
             builtInEffects: builtInEffects,

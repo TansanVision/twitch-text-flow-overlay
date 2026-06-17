@@ -65,6 +65,25 @@ export type UseStreamerBotOptions = {
 }
 
 /**
+ * エフェクトの種類のリスト
+ */
+export const EFFECT_TYPES = ["default", "falling"] as const;
+
+/**
+ * エフェクトの種類を表す型
+ */
+export type EffectType = typeof EFFECT_TYPES[number];
+
+/**
+ * EffectTypeの文字列かどうかを判定する関数
+ * @param value - 判定する文字列
+ * @returns 文字列がEffectTypeである場合はtrue、それ以外の場合はfalse
+ */
+export const IsEffectType = (value: string): value is EffectType => {
+    return EFFECT_TYPES.includes(value as EffectType);
+}
+
+/**
  * カスタムスタンプの設定を表す型
  * commandName: コマンド名（例: "stamp1"）
  * dataUri: スタンプの画像URI （例: "data:image/png;base64,..."）
@@ -73,7 +92,7 @@ export type UseStreamerBotOptions = {
 export type CustomStampConfig = {
   commandName: string;
   dataUri: string;
-  effectType: "default" | 'falling';
+  effectType: EffectType;
 }
 
 /**
@@ -323,7 +342,7 @@ export type Token = {
     subType: 'none' | 'twitch' | 'external' | 'custom';
     dataUri?: string;
     imageUrl?: string;
-    effectType?: CustomStampConfig['effectType'];
+    effectType?: EffectType;
 };
 
 

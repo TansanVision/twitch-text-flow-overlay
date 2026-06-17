@@ -2,8 +2,8 @@ import { useEffect, useState, useMemo, useCallback} from 'react';
 import { CommentServiceContainer } from './components/CommentService/CommentServiceContainer';
 import { useStreamerBot } from './hooks/useStreamerbot';
 import { useTwitchEmotes } from './hooks/useTwitchEmotes';
-import type { Comment, Message, AppConfig, BuiltInEffects } from './domain/types';
-import { isCommand } from './domain/types';
+import type { Comment, Message, AppConfig, BuiltInEffects, EffectType } from './domain/types';
+import { isCommand, IsEffectType } from './domain/types';
 import { builtInEffectsDefault } from './domain/constant';
 
 const defaultConfig: AppConfig = {
@@ -114,7 +114,7 @@ function getConfig(): AppConfig {
                  validStamps.push({
                    commandName: candidate.commandName,
                    dataUri: candidate.dataUri,
-                   effectType: candidate.effectType as 'default' | 'falling' || 'default',
+                   effectType: IsEffectType(candidate.effectType as string) ? candidate.effectType as EffectType : 'default',
                  });
                  return validStamps;
                },
