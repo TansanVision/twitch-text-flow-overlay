@@ -8,6 +8,20 @@ export type CustomStamp = {
 };
 
 /**
+ * 組み込みエフェクトの型定義
+ */
+export type BuiltInEffects = {
+    sakura: boolean;
+    snow: boolean;
+    balloons: boolean;
+    marutai: boolean;
+    maruta: boolean;
+    chikuwa: boolean;
+    kamifubuki: boolean;
+    rain: boolean;
+}
+
+/**
  * 設定の型定義
  */
 export type Config = {
@@ -17,4 +31,5 @@ export type Config = {
     password?: string;
     customStamps: CustomStamp[];
     monitorInteractions: boolean;
+    builtInEffects: BuiltInEffects;
 };

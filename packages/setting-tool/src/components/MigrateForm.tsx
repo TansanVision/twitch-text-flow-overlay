@@ -6,25 +6,35 @@ import { Toast } from './Toast';
 const migrateFormClassName = css`
     display: flex;
     flex-direction: row;
-    width: 95vw;
-    justify-content: space-between;
+    justify-content: center;
+    width: 100%;
     align-items: center;
     gap: 1rem;
-    padding: 8px;
-    & > div {
+    padding: 16px;
+    & > .contents {
         display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-        .explain {
-            font-size: 0.875rem;
-            color: #666;
-            white-space: nowrap;
-        }
-        input[type="file"] {
-            padding: 0.5rem;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            cursor: pointer;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px;
+        gap: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        & > .file-input {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            .explain {
+                font-size: 0.875rem;
+                color: #666;
+                white-space: nowrap;
+            }
+            input[type="file"] {
+                padding: 0.5rem;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                cursor: pointer;
+            }
         }
     }
 `;
@@ -123,26 +133,30 @@ export const MigrateForm: React.FC = () => {
 
     return <>
         <div className={migrateFormClassName}>
-            <div>
-                <div className="explain">移行元HTMLファイルを選択してください。</div>
+            <div className="contents">
+                <div className="file-input">
+                    <div className="explain">移行元HTMLファイルを選択してください。</div>
                     <input type="file" accept=".html" onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (file) {
-                            handleChangeFile(file, 'source');
-                        }
-                    }} />
+                            const file = e.target.files?.[0];
+                            if (file) {
+                                handleChangeFile(file, 'source');
+                            }
+                        }} 
+                    />
                 </div>
                 <div>⇒</div>
-                <div>
+                <div className="file-input">
                     <div className="explain">移行先のHTMLファイルを選択してください。</div>
-                        <input type="file" accept=".html" onChange={(e) => {
+                    <input type="file" accept=".html" onChange={(e) => {
                             const file = e.target.files?.[0];
                             if (file) {
                                 handleChangeFile(file, 'target');
                             }
-                        }} />
+                        }} 
+                    />
+                    </div>
                 </div>
-        </div>
+            </div>
         {sourceFile && targetFile && <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
             <button className={migrateButtonClassName} onClick={handleMigrate}>移行する</button>
         </div>}

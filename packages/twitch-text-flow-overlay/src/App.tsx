@@ -2,16 +2,26 @@ import { useEffect, useState, useMemo, useCallback} from 'react';
 import { CommentServiceContainer } from './components/CommentService/CommentServiceContainer';
 import { useStreamerBot } from './hooks/useStreamerbot';
 import { useTwitchEmotes } from './hooks/useTwitchEmotes';
-import type { Comment, Message, AppConfig } from './domain/types';
+import type { Comment, Message, AppConfig, BuiltInEffects } from './domain/types';
 import { isCommand } from './domain/types';
 
-const defaultConfig = {
+const defaultConfig: AppConfig = {
   host: "127.0.0.1",
   port: 8080,
   endpoint: "/",
   password: undefined,
   customStamps: [],
   monitorInteractions: false,
+  builtInEffects: {
+    sakura: false,
+    snow: false,
+    balloons: false,
+    marutai: false,
+    maruta: false,
+    chikuwa: false,
+    kamifubuki: false,
+    rain: false,
+  }
 };
 
 /**
@@ -30,6 +40,9 @@ function getConfig(): AppConfig {
         ? (parsedConfig as Record<string, unknown>)
         : {};
       const port = Number(config.port);
+      const builtInEffects : BuiltInEffects = config.builtInEffects && typeof config.builtInEffects === 'object' 
+        ? { ...defaultConfig.builtInEffects, ...config.builtInEffects }
+        : defaultConfig.builtInEffects;
 
       return {
         host: typeof config.host === 'string' && config.host !== '' 
@@ -105,6 +118,7 @@ function getConfig(): AppConfig {
              )
            : defaultConfig.customStamps,
          monitorInteractions: typeof config.monitorInteractions === 'boolean' ? config.monitorInteractions : defaultConfig.monitorInteractions,
+         builtInEffects: builtInEffects,
       };
     } catch (error) {
       console.error('Failed to parse config JSON:', error);
@@ -123,7 +137,7 @@ function App() {
   const [comments, setComments] = useState<Comment[]>([]);
   const config = useMemo(() => getConfig(), []);
 
-  const { getNodes } = useTwitchEmotes(config.customStamps);
+  const { getNodes } = useTwitchEmotes(config.customStamps, config.builtInEffects);
 
   const handleComment = useCallback((message: Message) => {
     addComment(message);

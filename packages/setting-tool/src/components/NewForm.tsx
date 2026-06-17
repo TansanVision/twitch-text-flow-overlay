@@ -2,8 +2,10 @@ import { css } from '@emotion/css';
 import { getConfigJson, isHtmlFile, writeConfigToHtml, hasConfigScript, download } from '../domain/utils';
 import React, { useState, useEffect } from 'react';
 import { Toast } from './Toast';
-import type { Config, CustomStamp } from '../domain/types';
+import type { Config, CustomStamp, BuiltInEffects } from '../domain/types';
 import type { JSX } from 'react';
+import { Tabs } from './Tabs';
+import { ToggleButton } from './ToggleButton';
 
 /**
  * Loadフェーズのプロパティの型定義
@@ -15,10 +17,16 @@ type LoadPhaseProps = {
 const LoadPhaseClassName = css`
     display: flex;
     flex-direction: column;
+    width: 100%;
+    align-items: center;
+    padding: 16px;
     gap: 1rem;
     .upload-area {
         display: flex;
         flex-direction: column;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 16px;
         gap: 0.5rem;
         input[type="file"] {
             padding: 0.5rem;
@@ -92,9 +100,8 @@ const LoadPhase : React.FC<LoadPhaseProps> = ({ onConfigLoaded }) => {
 
     return <div className={LoadPhaseClassName}>
         <div className="upload-area">
-            <span>オーバーレイhtmlを指定してください。</span>
+            <span>twitch-text-flow-overlay.htmlを指定してください。</span>
             <input type="file" onChange={handleFileChange} />
-            <span>※オーバーレイhtmlは、twitch-text-flow-overlayのビルド後のindex.htmlを指定してください。</span>
         </div>
         {error && <Toast message={error} onClose={() => setError(null)} variant="error" />}
     </div>
@@ -279,6 +286,12 @@ const CustomStampForm = ({
         );
 }
 
+type BaseFormValue = {
+    address: string;
+    port: string;
+    endpoint: string;
+    password?: string;
+}
 
 const baseFormStyle = css`
     display: flex;
@@ -301,6 +314,66 @@ const baseFormStyle = css`
     }
 `;
 
+/**
+ * BaseFormコンポーネントは、Websocketの基本設定を入力するためのフォームを提供します。
+ * @param value - フォームの初期値を含むオブジェクト
+ * @param onChange - フォームの値が変更されたときに呼び出されるコールバック関数。引数として現在のフォームの値を含むオブジェクトが渡されます。
+ * @returns JSX.Element
+ */
+const BaseForm: React.FC<{ value: BaseFormValue; onChange: (value: BaseFormValue) => void }> = ({ value, onChange }) => {
+    const [address, setAddress] = useState<string>(value.address);
+    const [port, setPort] = useState<string>(value.port);
+    const [endpoint, setEndpoint] = useState<string>(value.endpoint);
+    const [password, setPassword] = useState<string | undefined>(value.password);
+
+    useEffect(() => {
+        setAddress(value.address);
+        setPort(value.port);
+        setEndpoint(value.endpoint);
+        setPassword(value.password);
+    }, [value]);
+
+    const handleChange = (field: 'address' | 'port' | 'endpoint' | 'password', value: string) => {
+        switch (field) {
+            case 'address':
+                setAddress(value);
+                onChange({ address: value, port, endpoint, password });
+                break;
+            case 'port':
+                setPort(value);
+                onChange({ address, port: value, endpoint, password });
+                break;
+            case 'endpoint':
+                setEndpoint(value);
+                onChange({ address, port, endpoint: value, password });
+                break;
+            case 'password':
+                setPassword(value);
+                onChange({ address, port, endpoint, password: value });
+                break;
+        }
+    }
+
+    return <div className={baseFormStyle} style={{ paddingTop: "1rem" }}>
+        <div>
+            <span>Address:</span>
+            <input type="text" value={address} onChange={(e) => handleChange('address', e.target.value)} />
+        </div>
+        <div>
+            <span>Port:</span>
+            <input type="text" value={port} onChange={(e) => handleChange('port', e.target.value)} />
+        </div>
+        <div>
+            <span>Endpoint:</span>
+            <input type="text" value={endpoint} onChange={(e) => handleChange('endpoint', e.target.value)} />
+        </div>
+        <div>
+            <span>Password:</span>
+            <input type="text" value={password || ''} onChange={(e) => handleChange('password', e.target.value)} />
+        </div>
+    </div>;
+}
+
 const customStampArea = css`
     display: flex;
     flex-direction: column;
@@ -321,17 +394,6 @@ const customStampArea = css`
             cursor: pointer;
             &:hover {
                 background-color: #4b3580;
-            }
-        }
-        .save {
-            padding: 0.25rem 0.5rem;
-            background-color: #4caf50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            &:hover {
-                background-color: #388e3c;
             }
         }
     }
@@ -408,6 +470,143 @@ const customStampArea = css`
     }
 `;
 
+const builtInRoot = css`
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    padding-top: 1rem;
+    & > span {
+        font-size: 1.25rem;
+        font-weight: bold;
+        padding-bottom: 1rem;
+    }
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: 44vh;
+`;
+
+const builtInFormField = css`
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0.5rem;
+    width: 100%;
+    & > .label {
+        font-size: 1rem;
+        font-weight: bold;
+        width: 100px;
+    }
+    &:hover {
+        background-color: #f0f0f0;
+    }
+`;
+
+type BuiltInFormProps = {
+    value: BuiltInEffects;
+    onChange: (value: BuiltInEffects) => void;
+}
+
+/**
+ * BuiltInFormコンポーネントは、組み込みエフェクトのON/OFFを切り替えるためのフォームを提供します。
+ * @param param0 - value: 組み込みエフェクトの現在の状態を含むオブジェクト
+ * @returns JSX.Element
+ * @remarks 組み込みエフェクトのON/OFFを切り替えるためのトグルボタンを提供します。
+ */
+const BuiltInForm : React.FC<BuiltInFormProps> = ({ value, onChange }) => {
+    const [balloonsEffect, setBalloonsEffect] = useState<boolean>(value.balloons);
+    const [marutaiEffect, setMarutaiEffect] = useState<boolean>(value.marutai);
+    const [marutaEffect, setMarutaEffect] = useState<boolean>(value.maruta);
+    const [chikuwaEffect, setChikuwaEffect] = useState<boolean>(value.chikuwa);
+    const [kamifubukiEffect, setKamifubukiEffect] = useState<boolean>(value.kamifubuki);
+    const [rainEffect, setRainEffect] = useState<boolean>(value.rain);
+    const [sakuraEffect, setSakuraEffect] = useState<boolean>(value.sakura);
+    const [snowEffect, setSnowEffect] = useState<boolean>(value.snow);
+
+    useEffect(() => {
+        setBalloonsEffect(value.balloons);
+        setMarutaiEffect(value.marutai);
+        setMarutaEffect(value.maruta);
+        setChikuwaEffect(value.chikuwa);
+        setKamifubukiEffect(value.kamifubuki);
+        setRainEffect(value.rain);
+        setSakuraEffect(value.sakura);
+        setSnowEffect(value.snow);
+    }, [value]);
+
+    const handleChange = (key: string, checked: boolean) => {
+        switch (key) {
+            case 'balloons':
+                setBalloonsEffect(checked);
+                onChange({ ...value, balloons: checked });
+                break;
+            case 'marutai':
+                setMarutaiEffect(checked);
+                onChange({ ...value, marutai: checked });
+                break;
+            case 'maruta':
+                setMarutaEffect(checked);
+                onChange({ ...value, maruta: checked });
+                break;
+            case 'chikuwa':
+                setChikuwaEffect(checked);
+                onChange({ ...value, chikuwa: checked });
+                break;
+            case 'kamifubuki':
+                setKamifubukiEffect(checked);
+                onChange({ ...value, kamifubuki: checked });
+                break;
+            case 'rain':
+                setRainEffect(checked);
+                onChange({ ...value, rain: checked });
+                break;
+            case 'sakura':
+                setSakuraEffect(checked);
+                onChange({ ...value, sakura: checked });
+                break;
+            case 'snow':
+                setSnowEffect(checked);
+                onChange({ ...value, snow: checked });
+                break;
+        }
+    }
+
+    return <div className={builtInRoot}>
+            <span>組み込みエフェクトのON/OFFを切り替えます</span>
+            <div className={builtInFormField}>
+                <div className="label">sakura</div>
+                <ToggleButton checked={sakuraEffect} onChange={(checked) => handleChange('sakura', checked)} />
+            </div>
+            <div className={builtInFormField}>
+                <div className="label">snow</div>
+                <ToggleButton checked={snowEffect} onChange={(checked) => handleChange('snow', checked)} />
+            </div>
+            <div className={builtInFormField}>
+                <div className="label">balloons</div>
+                <ToggleButton checked={balloonsEffect} onChange={(checked) => handleChange('balloons', checked)} />
+            </div>
+            <div className={builtInFormField}>
+                <div className="label">marutai</div>
+                <ToggleButton checked={marutaiEffect} onChange={(checked) => handleChange('marutai', checked)} />
+            </div>
+            <div className={builtInFormField}>
+                <div className="label">maruta</div>
+                <ToggleButton checked={marutaEffect} onChange={(checked) => handleChange('maruta', checked)} />
+            </div>
+            <div className={builtInFormField}>
+                <div className="label">chikuwa</div>
+                <ToggleButton checked={chikuwaEffect} onChange={(checked) => handleChange('chikuwa', checked)} />
+            </div>
+            <div className={builtInFormField}>
+                <div className="label">kamifubuki</div>
+                <ToggleButton checked={kamifubukiEffect} onChange={(checked) => handleChange('kamifubuki', checked)} />
+            </div>
+            <div className={builtInFormField}>
+                <div className="label">rain</div>
+                <ToggleButton checked={rainEffect} onChange={(checked) => handleChange('rain', checked)} />
+            </div>
+        </div>;
+}
+
 type SettingFormProps = {
     html: string;
     config: Config;
@@ -436,6 +635,17 @@ const SettingForm : React.FC<SettingFormProps> = ({ html, config }) => {
     const [monitorInteractions, setMonitorInteractions] = useState<boolean>(false);
     const [isCustomStampFormOpen, setIsCustomStampFormOpen] = useState<boolean>(false);
     const [editData, setEditData] = useState<{ stamp: CustomStamp; index: number } | null>(null);
+    const [builtInEffects, setBuiltInEffects] = useState<BuiltInEffects>({
+        sakura: config.builtInEffects?.sakura ?? true,
+        snow: config.builtInEffects?.snow ?? true,
+        balloons: config.builtInEffects?.balloons ?? true,
+        marutai: config.builtInEffects?.marutai ?? true,
+        maruta: config.builtInEffects?.maruta ?? true,
+        chikuwa: config.builtInEffects?.chikuwa ?? true,
+        kamifubuki: config.builtInEffects?.kamifubuki ?? true,
+        rain: config.builtInEffects?.rain ?? true,
+    });
+    const [activeTab, setActiveTab] = useState<string>('Websocket');
 
     const handleCloseCustomStampForm = () => {
         setIsCustomStampFormOpen(false);
@@ -497,46 +707,53 @@ const SettingForm : React.FC<SettingFormProps> = ({ html, config }) => {
                 effectType: "default",
             })),
             monitorInteractions: monitorInteractions,
+            builtInEffects: builtInEffects,
         };
 
         const updatedHtml = writeConfigToHtml(html, newConfig);
         download(updatedHtml);
     }
 
-    return <div> 
-        <div className={baseFormStyle}>
-            <div>
-                <span>Address:</span>
-                <input type="text" value={address} onChange={(e) => setAddress(e.target.value)} />
-            </div>
-            <div>
-                <span>Port:</span>
-                <input type="text" value={port} onChange={(e) => setPort(e.target.value)} />
-            </div>
-            <div>
-                <span>Endpoint:</span>
-                <input type="text" value={endpoint} onChange={(e) => setEndpoint(e.target.value)} />
-            </div>
-            <div>
-                <span>Password:</span>
-                <input type="text" value={password || ''} onChange={(e) => setPassword(e.target.value)} />
-            </div>
-            <div>
-                <div>
+    return <div>
+        <Tabs
+            tabs={[
+                { id: "Websocket", label: "Websocket" },
+                { id: "InteractiveMonitoring", label: "インタラクティブ監視" },
+                { id: "CustomStamps", label: "カスタムスタンプ" },
+                { id: "BuiltIn", label: "組み込み" },
+            ]}
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
+        />
+        <button className="save" onClick={handleSave}>オーバーレイファイルを保存</button>
+        {activeTab === "Websocket" && <BaseForm
+            value={{ address: address, port: port, endpoint: endpoint, password: password }}
+            onChange={(value) => {
+                setAddress(value.address);
+                setPort(value.port);
+                setEndpoint(value.endpoint);
+                setPassword(value.password);
+            }}
+        />}
+        {activeTab === "InteractiveMonitoring" && <div style={{ paddingTop: "1rem" }}>
+            <div style={{ 
+                display: 'flex', 
+                flexDirection: 'row', 
+                alignItems: 'center', 
+                justifyContent: 'space-between',
+                gap: '0.5rem',
+            }}>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
                     <span>インタラクション監視</span>
                     <span>(レイド完了時またはStreamerbotのカスタムイベント発生時にインタラクション結果を取得するかどうか)</span>
                 </div>
-                <input type="checkbox" checked={monitorInteractions} onChange={(e) => {
-                    const monitorInteractions = e.target.checked;
-                    setMonitorInteractions(monitorInteractions);
-                }} />
+                <ToggleButton checked={monitorInteractions} onChange={(checked) => setMonitorInteractions(checked)} />
             </div>
-        </div>
-        <div className={customStampArea}>
+        </div>}
+        {activeTab === "CustomStamps" && <><div className={customStampArea}>
             <header>
                 <span>カスタムスタンプ</span>
                 <button className="add" onClick={() => setIsCustomStampFormOpen(true)}>追加</button>
-                <button className="save" onClick={handleSave}>オーバーレイファイルを保存</button>
             </header>
             <div>
                  {customStamps.map((stamp, index) => (
@@ -564,7 +781,13 @@ const SettingForm : React.FC<SettingFormProps> = ({ html, config }) => {
             value={editData ? editData.stamp : undefined}
             onClose={handleCloseCustomStampForm}
             onAdd={handleAddOrEditCustomStamp}
-        />
+        /></>}
+        {activeTab === "BuiltIn" && <BuiltInForm
+            value={builtInEffects}
+                onChange={(value) => {
+                    setBuiltInEffects(value);
+                }}
+            />}
     </div>
 }
 
@@ -573,6 +796,18 @@ const newFormClass = css`
     flex-direction: column;
     gap: 1rem;
     padding: 1rem;
+    .save {
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        padding: 0.5rem 1rem;
+        margin: 0.5rem auto;
+        &:hover {
+            background-color: #388e3c;
+        }
+    }
 `;
 
 /**
