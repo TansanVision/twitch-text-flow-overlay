@@ -279,7 +279,7 @@ const CustomStampForm = ({
                         <div>
                             <span>エフェクト種類:</span>
                             <select
-                                value={isEffectType(customStamp?.effectType || "default") ? customStamp?.effectType : "default"}
+                                value={isEffectType(customStamp?.effectType ?? '') ? (customStamp?.effectType ?? "default") : "default"}
                                 onChange={(e) => setCustomStamp(previous => {
                                     const effectType = isEffectType(e.target.value) ? e.target.value : "default";
                                     if (!previous) return { commandName: "", dataUri: "", effectType };
@@ -729,7 +729,7 @@ const SettingForm : React.FC<SettingFormProps> = ({ html, config }) => {
             customStamps: customStamps.map(stamp => ({
                 commandName: stamp.commandName,
                 dataUri: stamp.dataUri,
-                effectType: isEffectType(stamp.effectType || "default") ? stamp.effectType as EffectType : "default",
+                effectType: isEffectType(stamp.effectType || "") ? stamp.effectType as EffectType : "default",
             })),
             monitorInteractions: monitorInteractions,
             builtInEffects: builtInEffects,

@@ -348,6 +348,10 @@ export const getNodes = (text: string,
             return <span key={`token-${index}-${tokenIndex}`}>{token.text}</span>;
         }).filter(Boolean);
 
+        if (nodes.length === 0) {
+            return null;
+        }
+
         return <div
             key={`line-${index}`}
             style={{
@@ -360,7 +364,7 @@ export const getNodes = (text: string,
             }}>
             {nodes}
         </div>;
-    });
+    }).filter(Boolean);
 
     const fallingEffectNodes = breaklinesTexts.flatMap(tokens => tokens.filter(token => token.isKeyword && token.subType === 'custom' && token.effectType === "falling").map(token => <FallingImages
             src={token.dataUri!}
