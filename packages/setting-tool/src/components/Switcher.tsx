@@ -64,13 +64,13 @@ export const Switcher: React.FC<SwitcherProps> = ({ onChange }) => {
     };
 
     return <div className={switcherClassName}>
-        <div className={optionClassName} data-checked={checked === "new"} onClick={() => handleChange("new")}>
+        <button type="button" className={optionClassName} data-checked={checked === "new"} onClick={() => handleChange("new")} aria-pressed={checked === "new"}>
             <label>新規</label>
             <span className="explanation">初期設定や追加の設定を行う場合はこちらを選択してください</span>
-        </div>
-        <div className={optionClassName} data-checked={checked === "migrate"} onClick={() => handleChange("migrate")}>
+        </button>
+        <button type="button" className={optionClassName} data-checked={checked === "migrate"} onClick={() => handleChange("migrate")} aria-pressed={checked === "migrate"}>
             <label>移行</label>
             <span className="explanation">既存の設定を引き継ぐ場合はこちらを選択してください</span>
-        </div>
+        </button>
     </div>
 }

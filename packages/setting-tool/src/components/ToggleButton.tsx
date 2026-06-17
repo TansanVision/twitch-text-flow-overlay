@@ -51,7 +51,6 @@ export const ToggleButton: React.FC<ToggleButtonProps> = ({
       className={toggleRoot}
       onClick={handleClick}
       aria-pressed={checked}
-      aria-label="Toggle"
     >
       <span className={toggleTrack(checked)}>
         <span className={toggleThumb(checked)} />

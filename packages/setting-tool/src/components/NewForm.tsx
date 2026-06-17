@@ -533,7 +533,7 @@ const BuiltInForm : React.FC<BuiltInFormProps> = ({ value, onChange }) => {
         setSnowEffect(value.snow);
     }, [value]);
 
-    const handleChange = (key: string, checked: boolean) => {
+    const handleChange = (key: keyof BuiltInEffects, checked: boolean) => {
         switch (key) {
             case 'balloons':
                 setBalloonsEffect(checked);
