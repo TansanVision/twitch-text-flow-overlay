@@ -77,11 +77,7 @@ export function loadCustomStamps(stamps: CustomStampConfig[]): CustomStampMap {
     return map;
 }
 
-/**
- * Twitchのエモートをロードしてメッセージテキストをエモートでレンダリングするためのカスタムフック
- * @returns エモートマップとレンダリング関数
- */
-export function useTwitchEmotes(customStamps: CustomStampConfig[] = [], builtInEffects: BuiltInEffects = {
+const builtInEffectsDefault: BuiltInEffects = {
     balloons: true,
     chikuwa: true,
     kamifubuki: true,
@@ -90,7 +86,13 @@ export function useTwitchEmotes(customStamps: CustomStampConfig[] = [], builtInE
     rain: true,
     sakura: true,
     snow: true,
-}) {
+};
+
+/**
+ * Twitchのエモートをロードしてメッセージテキストをエモートでレンダリングするためのカスタムフック
+ * @returns エモートマップとレンダリング関数
+ */
+export function useTwitchEmotes(customStamps: CustomStampConfig[] = [], builtInEffects: BuiltInEffects = builtInEffectsDefault) {
     const emotesCache = useRef<ExternalEmoteMap>(new Map());
     const customStampMap = useMemo(() => loadCustomStamps(customStamps), [customStamps]);
 

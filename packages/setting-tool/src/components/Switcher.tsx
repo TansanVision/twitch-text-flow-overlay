@@ -30,14 +30,6 @@ const optionClassName = css`
         border-color: black;
         color: white;
     }
-
-    input[type="radio"] {
-        position: absolute;
-        opacity: 0;
-        width: 1px;
-        height: 1px;
-        margin: -1px;
-    }
     label {
         white-space: nowrap;
         padding: 0.5rem 1rem;
@@ -51,7 +43,7 @@ const optionClassName = css`
 `;
 
 /**
- * Switcherコンポーネントは、新規設定と移行の選択肢を提供するラジオボタンのグループです。
+ * Switcherコンポーネントは、新規設定と移行の選択肢を提供するコンポーネントです。
  * @param param0 - SwitcherPropsオブジェクト
  * @returns JSX.Element
  */

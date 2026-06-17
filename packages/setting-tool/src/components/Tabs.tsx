@@ -44,17 +44,23 @@ export const Tabs = ({ tabs, activeTab, onTabChange }: TabsProps) => {
     }, [onTabChange]);
 
     return (
-        <div className={tabsContainerStyle}>
-            {memoizedTabs.map((tab) => (
-                <button
-                    type="button"
-                    key={tab.id}
-                    className={`${tabButtonStyle} ${activeTab === tab.id ? activeTabButtonStyle : ''}`}
-                    onClick={() => handleTabChange(tab.id)}
-                >
-                    {tab.label}
-                </button>
-            ))}
-        </div>
+         <div className={tabsContainerStyle} role="tablist">
+             {memoizedTabs.map((tab) => {
+                 const isActive = activeTab === tab.id;
+                 return (
+                     <button
+                         type="button"
+                         role="tab"
+                         aria-selected={isActive}
+                         tabIndex={isActive ? 0 : -1}
+                         key={tab.id}
+                         className={`${tabButtonStyle} ${isActive ? activeTabButtonStyle : ''}`}
+                         onClick={() => handleTabChange(tab.id)}
+                     >
+                         {tab.label}
+                     </button>
+                 );
+             })}
+         </div>
     );
 }
