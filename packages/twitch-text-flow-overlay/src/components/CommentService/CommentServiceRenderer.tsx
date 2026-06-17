@@ -11,7 +11,7 @@ export const CommentServiceRenderer : React.FC<CommentServiceRendererProps> = ({
     onAnimationEnd
 }) => {
      const handleAnimationEnd = useCallback(
-         (id: string) => () => onAnimationEnd(id),
+         (id: string) => onAnimationEnd(id),
          [onAnimationEnd]
      );
 
@@ -25,7 +25,7 @@ export const CommentServiceRenderer : React.FC<CommentServiceRendererProps> = ({
                     }>, {
                         key: id,
                         id: id,
-                        onAnimationEnd: handleAnimationEnd(id)
+                        onAnimationEnd: () => handleAnimationEnd(id)
                     })
                     : node
             )}
