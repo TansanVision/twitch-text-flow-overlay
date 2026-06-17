@@ -31,5 +31,5 @@ export type Config = {
     password?: string;
     customStamps: CustomStamp[];
     monitorInteractions: boolean;
-    builtInEffects: BuiltInEffects;
+    builtInEffects?: BuiltInEffects;
 };

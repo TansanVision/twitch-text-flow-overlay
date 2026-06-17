@@ -625,6 +625,16 @@ const SettingForm : React.FC<SettingFormProps> = ({ html, config }) => {
         setPassword(config.password);
         setCustomStamps(config.customStamps || []);
         setMonitorInteractions(config.monitorInteractions === undefined ? false : config.monitorInteractions);
+        setBuiltInEffects({
+            sakura: config.builtInEffects?.sakura ?? true,
+            snow: config.builtInEffects?.snow ?? true,
+            balloons: config.builtInEffects?.balloons ?? true,
+            marutai: config.builtInEffects?.marutai ?? true,
+            maruta: config.builtInEffects?.maruta ?? true,
+            chikuwa: config.builtInEffects?.chikuwa ?? true,
+            kamifubuki: config.builtInEffects?.kamifubuki ?? true,
+            rain: config.builtInEffects?.rain ?? true,
+        });
     }, [html, config]);
 
     const [address, setAddress] = useState<string>('');
