@@ -2,6 +2,7 @@ import { useEffect, useCallback, useRef, useMemo } from 'react';
 import type { CustomStampConfig, CustomStampMap, BuiltInEffects } from '../domain/types';
 import type { ExternalEmoteMap } from '../domain/types';
 import { getNodes } from '../utils/pipeline';
+import { builtInEffectsDefault } from '../domain/constant';
 
 /**
  * TwitchユーザーIDに基づいて外部エモートをロードする関数
@@ -76,17 +77,6 @@ export function loadCustomStamps(stamps: CustomStampConfig[]): CustomStampMap {
 
     return map;
 }
-
-const builtInEffectsDefault: BuiltInEffects = {
-    balloons: true,
-    chikuwa: true,
-    kamifubuki: true,
-    maruta: true,
-    marutai: true,
-    rain: true,
-    sakura: true,
-    snow: true,
-};
 
 /**
  * Twitchのエモートをロードしてメッセージテキストをエモートでレンダリングするためのカスタムフック

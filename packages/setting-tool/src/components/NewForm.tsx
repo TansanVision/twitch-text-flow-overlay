@@ -574,35 +574,35 @@ const BuiltInForm : React.FC<BuiltInFormProps> = ({ value, onChange }) => {
             <span>組み込みエフェクトのON/OFFを切り替えます</span>
             <div className={builtInFormField}>
                 <div className="label">sakura</div>
-                <ToggleButton checked={sakuraEffect} onChange={(checked) => handleChange('sakura', checked)} />
+                <ToggleButton ariaLabel="Sakura Effect" checked={sakuraEffect} onChange={(checked) => handleChange('sakura', checked)} />
             </div>
             <div className={builtInFormField}>
                 <div className="label">snow</div>
-                <ToggleButton checked={snowEffect} onChange={(checked) => handleChange('snow', checked)} />
+                <ToggleButton ariaLabel="Snow Effect" checked={snowEffect} onChange={(checked) => handleChange('snow', checked)} />
             </div>
             <div className={builtInFormField}>
                 <div className="label">balloons</div>
-                <ToggleButton checked={balloonsEffect} onChange={(checked) => handleChange('balloons', checked)} />
+                <ToggleButton ariaLabel="Balloons Effect" checked={balloonsEffect} onChange={(checked) => handleChange('balloons', checked)} />
             </div>
             <div className={builtInFormField}>
                 <div className="label">marutai</div>
-                <ToggleButton checked={marutaiEffect} onChange={(checked) => handleChange('marutai', checked)} />
+                <ToggleButton ariaLabel="Marutai Effect" checked={marutaiEffect} onChange={(checked) => handleChange('marutai', checked)} />
             </div>
             <div className={builtInFormField}>
                 <div className="label">maruta</div>
-                <ToggleButton checked={marutaEffect} onChange={(checked) => handleChange('maruta', checked)} />
+                <ToggleButton ariaLabel="Maruta Effect" checked={marutaEffect} onChange={(checked) => handleChange('maruta', checked)} />
             </div>
             <div className={builtInFormField}>
                 <div className="label">chikuwa</div>
-                <ToggleButton checked={chikuwaEffect} onChange={(checked) => handleChange('chikuwa', checked)} />
+                <ToggleButton ariaLabel="Chikuwa Effect" checked={chikuwaEffect} onChange={(checked) => handleChange('chikuwa', checked)} />
             </div>
             <div className={builtInFormField}>
                 <div className="label">kamifubuki</div>
-                <ToggleButton checked={kamifubukiEffect} onChange={(checked) => handleChange('kamifubuki', checked)} />
+                <ToggleButton ariaLabel="Kamifubuki Effect" checked={kamifubukiEffect} onChange={(checked) => handleChange('kamifubuki', checked)} />
             </div>
             <div className={builtInFormField}>
                 <div className="label">rain</div>
-                <ToggleButton checked={rainEffect} onChange={(checked) => handleChange('rain', checked)} />
+                <ToggleButton ariaLabel="Rain Effect" checked={rainEffect} onChange={(checked) => handleChange('rain', checked)} />
             </div>
         </div>;
 }

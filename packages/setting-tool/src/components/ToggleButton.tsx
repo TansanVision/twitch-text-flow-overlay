@@ -5,7 +5,7 @@ import { css } from "@emotion/css";
 type ToggleButtonProps = {
     checked?: boolean;
     onChange?: (value: boolean) => void;
-    areaLabel?: string;
+    ariaLabel?: string;
 };
 
 const toggleRoot = css`
@@ -41,7 +41,7 @@ const toggleThumb = (on: boolean) => css`
 export const ToggleButton: React.FC<ToggleButtonProps> = ({
   checked = false,
   onChange,
-  areaLabel = "Toggle Button",
+  ariaLabel = "Toggle Button",
 }) => {
   const handleClick = () => {
     onChange?.(!checked);
@@ -53,7 +53,7 @@ export const ToggleButton: React.FC<ToggleButtonProps> = ({
       className={toggleRoot}
       onClick={handleClick}
       aria-pressed={checked}
-      aria-label={areaLabel}
+      aria-label={ariaLabel}
     >
       <span className={toggleTrack(checked)}>
         <span className={toggleThumb(checked)} />

@@ -30,7 +30,7 @@ const optionClassName = css`
         border-color: black;
         color: white;
     }
-    label {
+    .label {
         white-space: nowrap;
         padding: 0.5rem 1rem;
         border: 1px solid #ccc;
@@ -57,11 +57,11 @@ export const Switcher: React.FC<SwitcherProps> = ({ onChange }) => {
 
     return <div className={switcherClassName}>
         <button type="button" className={optionClassName} data-checked={checked === "new"} onClick={() => handleChange("new")} aria-pressed={checked === "new"}>
-            <label>新規</label>
+            <span className="label">新規</span>
             <span className="explanation">初期設定や追加の設定を行う場合はこちらを選択してください</span>
         </button>
         <button type="button" className={optionClassName} data-checked={checked === "migrate"} onClick={() => handleChange("migrate")} aria-pressed={checked === "migrate"}>
-            <label>移行</label>
+            <span className="label">移行</span>
             <span className="explanation">既存の設定を引き継ぐ場合はこちらを選択してください</span>
         </button>
     </div>

@@ -4,6 +4,7 @@ import { useStreamerBot } from './hooks/useStreamerbot';
 import { useTwitchEmotes } from './hooks/useTwitchEmotes';
 import type { Comment, Message, AppConfig, BuiltInEffects } from './domain/types';
 import { isCommand } from './domain/types';
+import { builtInEffectsDefault } from './domain/constant';
 
 const defaultConfig: AppConfig = {
   host: "127.0.0.1",
@@ -12,16 +13,7 @@ const defaultConfig: AppConfig = {
   password: undefined,
   customStamps: [],
   monitorInteractions: false,
-  builtInEffects: {
-    sakura: true,
-    snow: true,
-    balloons: true,
-    marutai: true,
-    maruta: true,
-    chikuwa: true,
-    kamifubuki: true,
-    rain: true,
-  }
+  builtInEffects: builtInEffectsDefault
 };
 
 /**
