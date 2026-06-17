@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { css } from '@emotion/css';
 
 const container = css`
@@ -61,7 +61,13 @@ const ChikuwaSVG = () => <svg viewBox="0 0 260 80" xmlns="http://www.w3.org/2000
  * ちくわが落ちてくるアニメーションコンポーネント
  * @returns JSX.Element
  */
- export const Chikuwa: React.FC<{ onAnimationEnd?: () => void }> = ({ onAnimationEnd }) => {
+ export const Chikuwa: React.FC<{ id?: string, onAnimationEnd?: (id?: string) => void }> = ({ id, onAnimationEnd }) => {
+    const onAnimationEndRef = useRef(onAnimationEnd);
+
+    useEffect(() => {
+      onAnimationEndRef.current = onAnimationEnd;
+    }, [onAnimationEnd]);
+
    const chikuwaConfigs = React.useMemo(
      () =>
        Array.from({ length: 8 }).map(() => {
@@ -82,17 +88,14 @@ const ChikuwaSVG = () => <svg viewBox="0 0 260 80" xmlns="http://www.w3.org/2000
    const maxAnimationDurationMs = Math.max(...chikuwaConfigs.map((config) => config.totalDurationMs));
 
    React.useEffect(() => {
-     if (!onAnimationEnd) {
-       return;
-     }
-
      const timeoutId = window.setTimeout(() => {
-       onAnimationEnd();
+       onAnimationEndRef.current?.(id);
      }, maxAnimationDurationMs);
+
      return () => {
        window.clearTimeout(timeoutId);
      };
-   }, [maxAnimationDurationMs, onAnimationEnd]);
+   }, [maxAnimationDurationMs, id]);
 
    const chikuwaElements = chikuwaConfigs.map(({ left, duration, delay }, i) => (
      <div
@@ -108,5 +111,6 @@ const ChikuwaSVG = () => <svg viewBox="0 0 260 80" xmlns="http://www.w3.org/2000
        <ChikuwaSVG />
      </div>
    ));
-   return <div className={`${container} ${keyframes}`}>{chikuwaElements}</div>;
+
+   return <div id={id} className={`${container} ${keyframes}`}>{chikuwaElements}</div>;
  };

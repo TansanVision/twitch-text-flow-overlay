@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import { css } from "@emotion/css";
 
 const container = css`
@@ -55,17 +55,22 @@ const keyframes = css`
  * 桜の花びらが舞うアニメーションコンポーネント
  * @returns JSX.Element
  */
-export const Sakura: React.FC<{ onAnimationEnd?: () => void }> = ({ onAnimationEnd }) => {
+export const Sakura: React.FC<{ id?: string, onAnimationEnd?: (id?: string) => void }> = ({ id, onAnimationEnd }) => {
+  const onAnimationEndRef = useRef(onAnimationEnd);
+
   useEffect(() => {
-    const maxAnimationDurationMs = 30000;
+    onAnimationEndRef.current = onAnimationEnd;
+  }, [onAnimationEnd]);
+
+  useEffect(() => {
     const timeoutId = window.setTimeout(() => {
-      onAnimationEnd?.();
-    }, maxAnimationDurationMs);
+      onAnimationEndRef.current?.(id);
+    }, 1000 * 30);
 
     return () => {
       window.clearTimeout(timeoutId);
     };
-  }, [onAnimationEnd]);
+  }, [id]);
 
   const { petals } = useMemo(() => {
     const petals = Array.from({ length: 50 }).map((_, i) => {
@@ -105,5 +110,5 @@ export const Sakura: React.FC<{ onAnimationEnd?: () => void }> = ({ onAnimationE
     return { petals };
   }, []);
 
-  return <div className={`${container} ${keyframes}`}>{petals}</div>;
+  return <div id={id} className={`${container} ${keyframes}`}>{petals}</div>;
 };
