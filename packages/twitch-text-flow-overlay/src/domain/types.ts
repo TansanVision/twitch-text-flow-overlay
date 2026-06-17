@@ -68,12 +68,12 @@ export type UseStreamerBotOptions = {
  * カスタムスタンプの設定を表す型
  * commandName: コマンド名（例: "stamp1"）
  * dataUri: スタンプの画像URI （例: "data:image/png;base64,..."）
- * effectType: スタンプのエフェクトタイプ（現状は "default" のみ）
+ * effectType: スタンプのエフェクトタイプ（"default" または "falling"）
  */
 export type CustomStampConfig = {
   commandName: string;
   dataUri: string;
-  effectType: "default";
+  effectType: "default" | 'falling';
 }
 
 /**
@@ -313,6 +313,8 @@ export type Comment = {
  * type: トークンの種類（キーワードかテキストか）
  * subType: トークンのサブタイプ（Twitchのエモート、外部エモート、カスタムスタンプなど）
  * dataUri: エモートやスタンプの画像URL（キーワードでサブタイプがエモートやスタンプの場合に使用）
+ * imageUrl: エモートの画像URL（サブタイプがエモートの場合に使用）
+ * effectType: エフェクトの種類（カスタムスタンプでエフェクトがある場合に使用）
  */
 export type Token = {
     text: string;
@@ -321,6 +323,7 @@ export type Token = {
     subType: 'none' | 'twitch' | 'external' | 'custom';
     dataUri?: string;
     imageUrl?: string;
+    effectType?: string;
 };
 
 

@@ -61,7 +61,7 @@ function getConfig(): AppConfig {
           ? config.password
           : defaultConfig.password,
         customStamps: Array.isArray(config.customStamps)
-           ? config.customStamps.reduce<Array<{ commandName: string; dataUri: string; effectType: 'default' }>>(
+           ? config.customStamps.reduce<Array<{ commandName: string; dataUri: string; effectType: 'default' | 'falling' }>>(
                (validStamps, stamp, index) => {
                  if (!stamp || typeof stamp !== 'object') {
                     console.warn(`無効なカスタムスタンプ at index ${index}: オブジェクトである必要があります。スキップします。`);
@@ -105,15 +105,15 @@ function getConfig(): AppConfig {
                   );
                   return validStamps;
                  }
-                 if (typeof candidate.effectType === 'string' && candidate.effectType !== 'default') {
+                 if (typeof candidate.effectType === 'string' && candidate.effectType !== 'default' && candidate.effectType !== 'falling') {
                    console.warn(
-                    `無効なカスタムスタンプ "${candidate.commandName}" at index ${index}: "effectType" は現状 "default" のみ対応しています。指定された値 "${candidate.effectType}" はサポートされていないため、"default" として扱います。`
+                    `無効なカスタムスタンプ "${candidate.commandName}" at index ${index}: "effectType" は "default" または "falling" のみ対応しています。指定された値 "${candidate.effectType}" はサポートされていないため、"default" として扱います。`
                    );
                  }
                  validStamps.push({
                    commandName: candidate.commandName,
                    dataUri: candidate.dataUri,
-                   effectType: 'default', // 現状はdefaultのみ対応。未対応のeffectType指定時は警告してdefaultにフォールバックする。
+                   effectType: candidate.effectType as 'default' | 'falling' || 'default',
                  });
                  return validStamps;
                },
