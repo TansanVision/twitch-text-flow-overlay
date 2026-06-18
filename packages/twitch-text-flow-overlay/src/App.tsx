@@ -15,7 +15,7 @@ const defaultConfig: AppConfig = {
   password: undefined,
   customStamps: [],
   monitorInteractions: false,
-  builtInEffects: builtInEffectsDefault
+  builtInEffects: builtInEffectsDefault,
   autoRaiderIntro: false,
   introCountDisplayLimit: 60,
 };

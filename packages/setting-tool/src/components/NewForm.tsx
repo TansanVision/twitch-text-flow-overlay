@@ -754,6 +754,7 @@ const SettingForm : React.FC<SettingFormProps> = ({ html, config }) => {
             tabs={[
                 { id: "Websocket", label: "Websocket" },
                 { id: "InteractiveMonitoring", label: "インタラクティブ監視" },
+                { id: "autoRaiderIntro", label: "レイダー自動紹介" },
                 { id: "CustomStamps", label: "カスタムスタンプ" },
                 { id: "BuiltIn", label: "組み込み" },
             ]}
@@ -778,28 +779,27 @@ const SettingForm : React.FC<SettingFormProps> = ({ html, config }) => {
                 justifyContent: 'space-between',
                 gap: '0.5rem',
             }}>
-                    <div style={{ display: 'flex', flexDirection: 'column' }}>
-                        <span>インタラクション監視</span>
-                        <span>(レイド完了時またはStreamerbotのカスタムイベント発生時にインタラクション結果を取得するかどうか)</span>
-                    </div>
-                    <ToggleButton ariaLabel="interactive-monitoring" checked={monitorInteractions} onChange={(checked) => setMonitorInteractions(checked)} />
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <span>インタラクション監視</span>
+                    <span>(レイド完了時またはStreamerbotのカスタムイベント発生時にインタラクション結果を取得するかどうか)</span>
+                </div>
+                <ToggleButton ariaLabel="interactive-monitoring" checked={monitorInteractions} onChange={(checked) => setMonitorInteractions(checked)} />
             </div>
         </div>}
         {activeTab === "autoRaiderIntro" && <div style={{ paddingTop: "1rem" }}>
             <div style={{ 
                 display: 'flex', 
-                flexDirection: 'row', 
-                alignItems: 'center', 
-                justifyContent: 'space-between',
+                flexDirection: 'column', 
                 gap: '0.5rem',
             }}>
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <span>レイダー自動紹介</span>
-                <div>(ONの場合、レイド完了時に自動で紹介を行います)</div>
-                    <ToggleButton ariaLabel="auto-raider-intro" checked={autoRaiderIntro} onChange={(checked) => setAutoRaiderIntro(checked)} />
+                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '0.5rem', justifyContent: 'space-between' }}>
+                    <span>レイダー自動紹介</span>
+                    <div>
+                        <ToggleButton ariaLabel="auto-raider-intro" checked={autoRaiderIntro} onChange={(checked) => setAutoRaiderIntro(checked)} />
+                    </div>
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <span>(ONの場合のカウントダウン(秒))</span>
+                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '0.5rem', justifyContent: 'space-between' }}>
+                    <span>(ONの場合のカウントダウン[秒])</span>
                     <input
                         type="number"
                         min={1}
@@ -809,9 +809,10 @@ const SettingForm : React.FC<SettingFormProps> = ({ html, config }) => {
                             setIntroCountDisplayLimit(Number.isFinite(value) && value > 0 ? value : 60);
                         }}
                     />
+                </div>
             </div>
-        </div>
-        <div className={customStampArea}>
+        </div>}
+        {activeTab === "CustomStamps" && <><div className={customStampArea}>
             <header>
                 <span>カスタムスタンプ</span>
                 <button className="add" onClick={() => setIsCustomStampFormOpen(true)}>追加</button>
