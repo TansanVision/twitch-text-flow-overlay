@@ -105,7 +105,7 @@ function getConfig(): AppConfig {
                   );
                   return validStamps;
                  }
-                 if (typeof candidate.effectType === 'string' && candidate.effectType !== 'default' && candidate.effectType !== 'falling') {
+                 if (!isEffectType(candidate.effectType as string)) {
                    console.warn(
                     `無効なカスタムスタンプ "${candidate.commandName}" at index ${index}: "effectType" は "default" または "falling" のみ対応しています。指定された値 "${candidate.effectType}" はサポートされていないため、"default" として扱います。`
                    );
