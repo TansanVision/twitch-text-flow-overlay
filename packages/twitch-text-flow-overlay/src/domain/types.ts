@@ -65,15 +65,34 @@ export type UseStreamerBotOptions = {
 }
 
 /**
+ * エフェクトの種類のリスト
+ */
+export const EFFECT_TYPES = ["default", "falling"] as const;
+
+/**
+ * エフェクトの種類を表す型
+ */
+export type EffectType = typeof EFFECT_TYPES[number];
+
+/**
+ * EffectTypeの文字列かどうかを判定する関数
+ * @param value - 判定する文字列
+ * @returns 文字列がEffectTypeである場合はtrue、それ以外の場合はfalse
+ */
+ export const isEffectType = (value: unknown): value is EffectType => {
+     return typeof value === 'string' && EFFECT_TYPES.includes(value as EffectType);
+ }
+
+/**
  * カスタムスタンプの設定を表す型
  * commandName: コマンド名（例: "stamp1"）
  * dataUri: スタンプの画像URI （例: "data:image/png;base64,..."）
- * effectType: スタンプのエフェクトタイプ（現状は "default" のみ）
+ * effectType: スタンプのエフェクトタイプ（"default" または "falling"）
  */
 export type CustomStampConfig = {
   commandName: string;
   dataUri: string;
-  effectType: "default";
+  effectType: EffectType;
 }
 
 /**
@@ -313,6 +332,8 @@ export type Comment = {
  * type: トークンの種類（キーワードかテキストか）
  * subType: トークンのサブタイプ（Twitchのエモート、外部エモート、カスタムスタンプなど）
  * dataUri: エモートやスタンプの画像URL（キーワードでサブタイプがエモートやスタンプの場合に使用）
+ * imageUrl: エモートの画像URL（サブタイプがエモートの場合に使用）
+ * effectType: エフェクトの種類（カスタムスタンプでエフェクトがある場合に使用）
  */
 export type Token = {
     text: string;
@@ -321,6 +342,7 @@ export type Token = {
     subType: 'none' | 'twitch' | 'external' | 'custom';
     dataUri?: string;
     imageUrl?: string;
+    effectType?: EffectType;
 };
 
 

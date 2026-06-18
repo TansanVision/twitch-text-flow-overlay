@@ -11,6 +11,7 @@ import { Chikuwa } from '../components/Comment/Chikuwa';
 import { Flow } from '../components/Comment/Flow';
 import { Maruta } from '../components/Comment/Maruta';
 import { Rain } from '../components/Comment/Rain';
+import { FallingImages } from '../components/Comment/FallingImages';
 
 
 /**
@@ -21,7 +22,7 @@ import { Rain } from '../components/Comment/Rain';
  * @param keywords　キーワードのリスト
  * @returns トークンの配列。各トークンはテキスト、キーワードフラグ、タイプを含むオブジェクト。
  */
-const tokenize = (text: string, keywords: string[]) : Token[] => {
+const tokenize = (text: string, keywords: string[]): Token[] => {
     if (!keywords || keywords.length === 0) {
         return [{
             text,
@@ -29,15 +30,15 @@ const tokenize = (text: string, keywords: string[]) : Token[] => {
             type: 'text',
             subType: 'none',
             dataUri: undefined,
-            imageUrl: undefined
+            imageUrl: undefined,
         }];
     }
 
-    const normalizedKeywords = 
+    const normalizedKeywords =
         keywords.filter(Boolean)
-                .sort((a, b) => b.length - a.length);
+            .sort((a, b) => b.length - a.length);
 
-    const escapedKeywords = 
+    const escapedKeywords =
         normalizedKeywords.map((keyword) => keyword.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&'));
 
     const regex = new RegExp(`(?<=^|\\s)(${escapedKeywords.join('|')})(?=\\s|$)`, 'g');
@@ -57,7 +58,7 @@ const tokenize = (text: string, keywords: string[]) : Token[] => {
             type: isKeyword ? 'keyword' : 'text',
             subType: 'none',
             dataUri: undefined,
-            imageUrl: undefined
+            imageUrl: undefined,
         };
     });
 }
@@ -69,11 +70,11 @@ const tokenize = (text: string, keywords: string[]) : Token[] => {
  */
 const phase1 = (
     text: string,
-): { 
-    tokens: Record<string, string | undefined>, 
+): {
+    tokens: Record<string, string | undefined>,
     remainingText: string,
     removeLength: number
- } => {
+} => {
     // 先頭の空白を許容するなら、解析前に先頭の空白をスキップする
     const parts = text.trimStart().split(/\s+/);
     const tokens: Record<string, string | undefined> = {
@@ -117,14 +118,14 @@ const phase1 = (
 
     for (let i = 0; i < commandCount; i++) {
         // 先頭空白をスキップして現在のコマンド開始位置まで進める
-         while (scanIndex < text.length && /\s/.test(text[scanIndex])) {
-             scanIndex++;
-         }
+        while (scanIndex < text.length && /\s/.test(text[scanIndex])) {
+            scanIndex++;
+        }
 
-         // コマンド本体をスキャンして次の区切り位置まで進める
-         while (scanIndex < text.length && !/\s/.test(text[scanIndex])) {
-             scanIndex++;
-         }
+        // コマンド本体をスキャンして次の区切り位置まで進める
+        while (scanIndex < text.length && !/\s/.test(text[scanIndex])) {
+            scanIndex++;
+        }
 
         // 最後のコマンドに続く空白も除去対象に含め、残りテキストの開始位置に揃える
         while (scanIndex < text.length && /\s/.test(text[scanIndex])) {
@@ -136,7 +137,7 @@ const phase1 = (
         tokens,
         remainingText: text.slice(scanIndex),
         removeLength: scanIndex,
-     };
+    };
 }
 
 /**
@@ -144,7 +145,7 @@ const phase1 = (
  * @param text 分割対象の文字列
  * @return 改行で分割された文字列の配列
  */
-const phase2 = (text: string) : string[] => {
+const phase2 = (text: string): string[] => {
     const breaklineCommand = "U+2003";
     return text.split(breaklineCommand);
 }
@@ -157,10 +158,10 @@ const phase2 = (text: string) : string[] => {
  * @param customStamps　カスタムスタンプのマップ
  * @returns トークンの配列。各トークンはテキスト、キーワードフラグ、タイプを含むオブジェクト。
  */
-const phase3 = (text: string, 
-    twitchEmotes: Emote[], 
-    externalEmotes: ExternalEmoteMap, 
-    customStamps: CustomStampMap) : Token[] => {
+const phase3 = (text: string,
+    twitchEmotes: Emote[],
+    externalEmotes: ExternalEmoteMap,
+    customStamps: CustomStampMap): Token[] => {
     const keywords = [
         ...twitchEmotes.filter(emote => !emote.imageUrl.includes("twemoji")).map(emote => emote.name),
         ...Array.from(externalEmotes.values()).map(emote => emote.name),
@@ -178,6 +179,7 @@ const phase3 = (text: string,
                     subType: 'custom',
                     dataUri: stampData.dataUri,
                     imageUrl: undefined,
+                    effectType: stampData.effectType,
                 };
             } else if (externalEmotes.has(token.text)) {
                 return {
@@ -207,7 +209,7 @@ const phase3 = (text: string,
  * @param builtInEffects ビルトインエフェクトの設定
  * @returns エフェクトに対応するReactノード
  */
-const getEffectNode = (effect: string, 
+const getEffectNode = (effect: string,
     builtInEffects: BuiltInEffects): React.ReactNode => {
     switch (effect) {
         case "sakura":
@@ -291,11 +293,11 @@ const shouldFilterComment = (text: string): boolean => {
  * @param customStamps - カスタムスタンプのマップ
  * @returns レンダリングされたReactノードの配列
  */
-export const getNodes = (text: string, 
+export const getNodes = (text: string,
     builtInEffects: BuiltInEffects,
-    twitchEmotes: Emote[], 
-    externalEmotes: ExternalEmoteMap, 
-    customStamps: CustomStampMap) : Comment[] => {
+    twitchEmotes: Emote[],
+    externalEmotes: ExternalEmoteMap,
+    customStamps: CustomStampMap): Comment[] => {
 
     if (!text) {
         return [];
@@ -328,11 +330,12 @@ export const getNodes = (text: string,
     // フェーズ2: 各キーワードに対処する
     const breaklinesTexts = textWithoutBreaklines.map(line => phase3(line, twitchEmotes, externalEmotes, customStamps));
 
-    // 行でまとめる
+    // 行でまとめる(カスタムのfallingは除外)
     const lineNodes = breaklinesTexts.map((tokens, index) => {
         const nodes = tokens.map((token, tokenIndex) => {
             if (token.isKeyword) {
-                if (token.subType === 'custom' ) {
+                if (token.subType === 'custom') {
+                    if (token.effectType === "falling") return null;
                     return <img key={`token-${index}-${tokenIndex}`} src={token.dataUri} alt={token.text} />;
                 } else if (token.subType === 'twitch' || token.subType === 'external') {
                     return <img key={`token-${index}-${tokenIndex}`} src={token.imageUrl} alt={token.text} />;
@@ -340,10 +343,14 @@ export const getNodes = (text: string,
             }
 
             return <span key={`token-${index}-${tokenIndex}`}>{token.text}</span>;
-        });
+        }).filter(Boolean);
 
-       return <div 
-            key={`line-${index}`} 
+        if (nodes.length === 0) {
+            return null;
+        }
+
+        return <div
+            key={`line-${index}`}
             style={{
                 display: "flex",
                 flexDirection: "row",
@@ -354,28 +361,44 @@ export const getNodes = (text: string,
             }}>
             {nodes}
         </div>;
-    });
+    }).filter(Boolean);
+
+    const fallingEffectNodes = breaklinesTexts.flatMap(tokens => tokens.filter(token => token.isKeyword && token.subType === 'custom' && token.effectType === "falling").map(token => <FallingImages
+            src={token.dataUri!}
+        />));
+
+    // 落下エフェクトは行ノードとは別にまとめておく
+    if (fallingEffectNodes.length > 0) {
+        nodes.push(...fallingEffectNodes.map(node => ({ id: `effect-${uuidv4()}`, node })));
+    }
+
+    if (lineNodes.length === 0) {
+        return nodes;
+    }
 
     // 改行のためのdivでまとめる
-    const flowNode = <div 
-        style={{ 
-            display: "flex", 
-            flexDirection: "column", 
-            gap: 0, 
-            margin: 0 }}>
+    const flowNode = <div
+        style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 0,
+            margin: 0
+        }}>
         {lineNodes}
     </div>;
 
     // 文字列系トークン
     let flowClassName = getFlowStyle([
-            headTokens.size || "default",
-            headTokens.color || "default",
-            headTokens.alignment || "default",
-        ]);
+        headTokens.size || "default",
+        headTokens.color || "default",
+        headTokens.alignment || "default",
+    ]);
 
-    nodes.push({ id: `flow-${uuidv4()}`, node: <Flow className={flowClassName}>
-        {flowNode}
-    </Flow> });
+    nodes.push({
+        id: `flow-${uuidv4()}`, node: <Flow className={flowClassName}>
+            {flowNode}
+        </Flow>
+    });
 
     return nodes;
 }

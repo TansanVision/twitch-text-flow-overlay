@@ -2,7 +2,8 @@ import { css } from '@emotion/css';
 import { getConfigJson, isHtmlFile, writeConfigToHtml, hasConfigScript, download } from '../domain/utils';
 import React, { useState, useEffect } from 'react';
 import { Toast } from './Toast';
-import type { Config, CustomStamp, BuiltInEffects } from '../domain/types';
+import type { Config, CustomStamp, BuiltInEffects, EffectType } from '../domain/types';
+import { isEffectType } from '../domain/types';
 import type { JSX } from 'react';
 import { Tabs } from './Tabs';
 import { ToggleButton } from './ToggleButton';
@@ -274,6 +275,20 @@ const CustomStampForm = ({
                         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '0.5rem' }}>
                             <span>スタンプ画像:</span>
                             <input type="file" accept='.gif,.jpg,.png,.bmp' onChange={handleFileChange} />
+                        </div>
+                        <div>
+                            <span>エフェクト種類:</span>
+                            <select
+                                value={isEffectType(customStamp?.effectType ?? '') ? (customStamp?.effectType ?? "default") : "default"}
+                                onChange={(e) => setCustomStamp(previous => {
+                                    const effectType = isEffectType(e.target.value) ? e.target.value : "default";
+                                    if (!previous) return { commandName: "", dataUri: "", effectType };
+                                    return { ...previous, effectType };
+                                })}
+                            >
+                                <option value="default">デフォルト</option>
+                                <option value="falling">落下</option>
+                            </select>
                         </div>
                         {customStamp?.dataUri && <img src={customStamp.dataUri || "プレビュー"} alt="プレビュー"  />}
                     </div>
@@ -714,7 +729,7 @@ const SettingForm : React.FC<SettingFormProps> = ({ html, config }) => {
             customStamps: customStamps.map(stamp => ({
                 commandName: stamp.commandName,
                 dataUri: stamp.dataUri,
-                effectType: "default",
+                effectType: isEffectType(stamp.effectType || "") ? stamp.effectType as EffectType : "default",
             })),
             monitorInteractions: monitorInteractions,
             builtInEffects: builtInEffects,
@@ -776,6 +791,10 @@ const SettingForm : React.FC<SettingFormProps> = ({ html, config }) => {
                              <div>
                                  <span>画像:</span>
                                  <img src={stamp.dataUri} alt="プレビュー" style={{ width: "56px", height: "56px" }} />
+                             </div>
+                             <div>
+                                 <span>エフェクト種類:</span>
+                                 <span>{stamp.effectType === "falling" ? "落下" : "デフォルト"}</span>
                              </div>
                              <div>
                                  <button className="edit" onClick={() => handleEditCustomStamp(stamp, index)}>編集</button>
