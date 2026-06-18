@@ -31,7 +31,6 @@ const tokenize = (text: string, keywords: string[]): Token[] => {
             subType: 'none',
             dataUri: undefined,
             imageUrl: undefined,
-            effectType: "default",
         }];
     }
 
@@ -60,7 +59,6 @@ const tokenize = (text: string, keywords: string[]): Token[] => {
             subType: 'none',
             dataUri: undefined,
             imageUrl: undefined,
-            effectType: "default",
         };
     });
 }
