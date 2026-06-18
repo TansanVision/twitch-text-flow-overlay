@@ -66,11 +66,11 @@ export const FallingImages: React.FC<FallingImagesProps> = ({ id, src, onAnimati
   const itemsRef = React.useRef<Item[]>([]);
 
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
+    const containerEl = containerRef.current;
+    if (!containerEl) return;
 
     const safeCount = Math.max(1, count); // countが0以下の場合は1にする
-    const rect = container.getBoundingClientRect();
+    const rect = containerEl.getBoundingClientRect();
     const width = rect.width;
     const height = rect.height;
 
@@ -89,7 +89,7 @@ export const FallingImages: React.FC<FallingImagesProps> = ({ id, src, onAnimati
         };
     });
 
-    const elements = Array.from(container.querySelectorAll('img'));
+    const elements = Array.from(containerEl.querySelectorAll('img'));
 
     const gravity = 0.35;
     const bounce = 0.38;

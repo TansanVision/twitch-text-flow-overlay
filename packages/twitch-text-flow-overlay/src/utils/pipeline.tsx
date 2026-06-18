@@ -84,7 +84,6 @@ const phase1 = (
         size: undefined,
         alignment: undefined,
         effect: undefined,
-        effectType: undefined,
     };
 
     let index = 0;
