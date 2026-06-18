@@ -1,5 +1,5 @@
 import { css } from "@emotion/css";
-import React from "react";
+import React, { useRef, useEffect } from "react";
 
 const rain = css`
     position: absolute;
@@ -108,22 +108,24 @@ const rain = css`
  * @param param0 - onAnimationEnd: アニメーション終了時のコールバック関数
  * @returns JSX.Element
  */
-export const Rain: React.FC<{ onAnimationEnd?: () => void }> = ({ onAnimationEnd }) => {
-        React.useEffect(() => {
-            if (!onAnimationEnd) {
-                return;
-            }
+export const Rain: React.FC<{ id?: string, onAnimationEnd?: (id?: string) => void }> = ({ id, onAnimationEnd }) => {
+    const onAnimationEndRef = useRef(onAnimationEnd);
 
-            const timeoutId = window.setTimeout(() => {
-                onAnimationEnd();
-            }, 30000); // アニメーションの最大時間を30秒と仮定
+    useEffect(() => {
+        onAnimationEndRef.current = onAnimationEnd;
+     }, [onAnimationEnd]);
 
-            return () => {
-                window.clearTimeout(timeoutId);
-            };
-        }, [onAnimationEnd]);
+    React.useEffect(() => {
+        const timeoutId = window.setTimeout(() => {
+            onAnimationEndRef.current?.(id);
+        }, 30000); // アニメーションの最大時間を30秒と仮定
 
-    return <div className={rain}>
+        return () => {
+            window.clearTimeout(timeoutId);
+        };
+    }, [id]);
+
+    return <div id={id} className={rain}>
         <div></div>
         <div></div>
         <div></div>

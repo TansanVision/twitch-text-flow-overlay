@@ -65,15 +65,34 @@ export type UseStreamerBotOptions = {
 }
 
 /**
+ * エフェクトの種類のリスト
+ */
+export const EFFECT_TYPES = ["default", "falling"] as const;
+
+/**
+ * エフェクトの種類を表す型
+ */
+export type EffectType = typeof EFFECT_TYPES[number];
+
+/**
+ * EffectTypeの文字列かどうかを判定する関数
+ * @param value - 判定する文字列
+ * @returns 文字列がEffectTypeである場合はtrue、それ以外の場合はfalse
+ */
+ export const isEffectType = (value: unknown): value is EffectType => {
+     return typeof value === 'string' && EFFECT_TYPES.includes(value as EffectType);
+ }
+
+/**
  * カスタムスタンプの設定を表す型
  * commandName: コマンド名（例: "stamp1"）
  * dataUri: スタンプの画像URI （例: "data:image/png;base64,..."）
- * effectType: スタンプのエフェクトタイプ（現状は "default" のみ）
+ * effectType: スタンプのエフェクトタイプ（"default" または "falling"）
  */
 export type CustomStampConfig = {
   commandName: string;
   dataUri: string;
-  effectType: "default";
+  effectType: EffectType;
 }
 
 /**
@@ -84,6 +103,7 @@ export type CustomStampConfig = {
  * password: Streamer Botのパスワード（省略可能）
  * customStamps: カスタムスタンプの設定の配列
  * monitorInteractions: 視聴者のインタラクションを監視するかどうか
+ * builtInEffects: 組み込みエフェクトの有効/無効設定
  * autoRaiderIntro: レイダー自動紹介機能を有効にするかどうか
  * introCountDisplayLimit: ご紹介までのカウントダウン秒数
  */
@@ -94,6 +114,7 @@ export type AppConfig = {
   password: string | undefined;
   customStamps: CustomStampConfig[];
   monitorInteractions: boolean;
+  builtInEffects: BuiltInEffects;
   autoRaiderIntro: boolean;
   introCountDisplayLimit: number;
 };
@@ -315,6 +336,8 @@ export type Comment = {
  * type: トークンの種類（キーワードかテキストか）
  * subType: トークンのサブタイプ（Twitchのエモート、外部エモート、カスタムスタンプなど）
  * dataUri: エモートやスタンプの画像URL（キーワードでサブタイプがエモートやスタンプの場合に使用）
+ * imageUrl: エモートの画像URL（サブタイプがエモートの場合に使用）
+ * effectType: エフェクトの種類（カスタムスタンプでエフェクトがある場合に使用）
  */
 export type Token = {
     text: string;
@@ -323,6 +346,7 @@ export type Token = {
     subType: 'none' | 'twitch' | 'external' | 'custom';
     dataUri?: string;
     imageUrl?: string;
+    effectType?: EffectType;
 };
 
 
@@ -332,6 +356,17 @@ export type AudienceMap = {
     cheer: string[];
     raid: string[];
     gift: string[];
+}
+
+export type BuiltInEffects = {
+    sakura: boolean;
+    snow: boolean;
+    balloons: boolean;
+    marutai: boolean;
+    maruta: boolean;
+    chikuwa: boolean;
+    kamifubuki: boolean;
+    rain: boolean;
 }
 
 export type Clip = {

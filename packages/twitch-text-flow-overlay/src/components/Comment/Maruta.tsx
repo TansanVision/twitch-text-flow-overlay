@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { css } from "@emotion/css";
 
 const container = css`
@@ -47,7 +47,13 @@ const LogSVG = () => (
  * 丸太が落ちてくるアニメーションコンポーネント
  * @returns JSX.Element
  */
- export const Maruta: React.FC<{ onAnimationEnd?: () => void }> = ({ onAnimationEnd }) => {
+ export const Maruta: React.FC<{ id?: string, onAnimationEnd?: (id?: string) => void }> = ({ id, onAnimationEnd }) => {
+   const onAnimationEndRef = useRef(onAnimationEnd);
+
+   useEffect(() => {
+     onAnimationEndRef.current = onAnimationEnd;
+   }, [onAnimationEnd]);
+
    const logConfigs = React.useMemo(
      () =>
        Array.from({ length: 8 }).map(() => {
@@ -68,17 +74,14 @@ const LogSVG = () => (
    const maxAnimationDurationMs = Math.max(...logConfigs.map((log) => log.totalDurationMs));
 
    React.useEffect(() => {
-     if (!onAnimationEnd) {
-       return;
-     }
-
      const timeoutId = window.setTimeout(() => {
-       onAnimationEnd();
+       onAnimationEndRef.current?.(id);
      }, maxAnimationDurationMs);
+
      return () => {
        window.clearTimeout(timeoutId);
      };
-   }, [maxAnimationDurationMs, onAnimationEnd]);
+   }, [maxAnimationDurationMs, id]);
 
    const logs = logConfigs.map(({ left, duration, delay }, i) => (
      <div
@@ -94,5 +97,5 @@ const LogSVG = () => (
        <LogSVG />
      </div>
    ));
-   return <div className={`${container} ${keyframes}`}>{logs}</div>;
+   return <div id={id} className={`${container} ${keyframes}`}>{logs}</div>;
  };

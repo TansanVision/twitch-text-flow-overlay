@@ -1,19 +1,21 @@
 import { useEffect, useState, useMemo, useCallback } from 'react';
 import { CommentServiceContainer } from './components/CommentService/CommentServiceContainer';
 import { useTwitchEmotes } from './hooks/useTwitchEmotes';
-import type { Comment, Message, AppConfig } from './domain/types';
-import { isCommand } from './domain/types';
+import type { Comment, Message, AppConfig, BuiltInEffects, EffectType } from './domain/types';
+import { isCommand, isEffectType } from './domain/types';
+import { builtInEffectsDefault } from './domain/constant';
 import { IntroProvider } from './providers/IntroProvider';
 import { RaiderIntro } from './components/Intro/RaiderIntro';
 import { StreamerBotProvider } from './providers/StreamerbotProvider';
 
-const defaultConfig = {
+const defaultConfig: AppConfig = {
   host: "127.0.0.1",
   port: 8080,
   endpoint: "/",
   password: undefined,
   customStamps: [],
   monitorInteractions: false,
+  builtInEffects: builtInEffectsDefault
   autoRaiderIntro: false,
   introCountDisplayLimit: 60,
 };
@@ -34,6 +36,20 @@ function getConfig(): AppConfig {
         ? (parsedConfig as Record<string, unknown>)
         : {};
       const port = Number(config.port);
+      const rawBuiltInEffects =
+        config.builtInEffects && typeof config.builtInEffects === 'object'
+          ? (config.builtInEffects as Record<string, unknown>)
+          : {};
+      const builtInEffects: BuiltInEffects = {
+        sakura: typeof rawBuiltInEffects.sakura === 'boolean' ? rawBuiltInEffects.sakura : defaultConfig.builtInEffects.sakura,
+        snow: typeof rawBuiltInEffects.snow === 'boolean' ? rawBuiltInEffects.snow : defaultConfig.builtInEffects.snow,
+        balloons: typeof rawBuiltInEffects.balloons === 'boolean' ? rawBuiltInEffects.balloons : defaultConfig.builtInEffects.balloons,
+        marutai: typeof rawBuiltInEffects.marutai === 'boolean' ? rawBuiltInEffects.marutai : defaultConfig.builtInEffects.marutai,
+        maruta: typeof rawBuiltInEffects.maruta === 'boolean' ? rawBuiltInEffects.maruta : defaultConfig.builtInEffects.maruta,
+        chikuwa: typeof rawBuiltInEffects.chikuwa === 'boolean' ? rawBuiltInEffects.chikuwa : defaultConfig.builtInEffects.chikuwa,
+        kamifubuki: typeof rawBuiltInEffects.kamifubuki === 'boolean' ? rawBuiltInEffects.kamifubuki : defaultConfig.builtInEffects.kamifubuki,
+        rain: typeof rawBuiltInEffects.rain === 'boolean' ? rawBuiltInEffects.rain : defaultConfig.builtInEffects.rain,
+      };
 
       return {
         host: typeof config.host === 'string' && config.host !== '' 
@@ -49,7 +65,7 @@ function getConfig(): AppConfig {
           ? config.password
           : defaultConfig.password,
         customStamps: Array.isArray(config.customStamps)
-           ? config.customStamps.reduce<Array<{ commandName: string; dataUri: string; effectType: 'default' }>>(
+           ? config.customStamps.reduce<Array<{ commandName: string; dataUri: string; effectType: EffectType }>>(
                (validStamps, stamp, index) => {
                  if (!stamp || typeof stamp !== 'object') {
                     console.warn(`無効なカスタムスタンプ at index ${index}: オブジェクトである必要があります。スキップします。`);
@@ -93,15 +109,20 @@ function getConfig(): AppConfig {
                   );
                   return validStamps;
                  }
-                 if (typeof candidate.effectType === 'string' && candidate.effectType !== 'default') {
+                 if (typeof candidate.effectType !== 'string' || !isEffectType(candidate.effectType as string)) {
                    console.warn(
-                    `無効なカスタムスタンプ "${candidate.commandName}" at index ${index}: "effectType" は現状 "default" のみ対応しています。指定された値 "${candidate.effectType}" はサポートされていないため、"default" として扱います。`
+                    `無効なカスタムスタンプ "${candidate.commandName}" at index ${index}: "effectType" は "default" または "falling" のみ対応しています。指定された値 "${candidate.effectType}" はサポートされていないため、"default" として扱います。`
                    );
                  }
+
+                 const effectType: EffectType = isEffectType(candidate.effectType as string)
+                   ? (candidate.effectType as EffectType)
+                   : 'default';
+
                  validStamps.push({
                    commandName: candidate.commandName,
                    dataUri: candidate.dataUri,
-                   effectType: 'default', // 現状はdefaultのみ対応。未対応のeffectType指定時は警告してdefaultにフォールバックする。
+                   effectType: effectType,
                  });
                  return validStamps;
                },
@@ -109,6 +130,7 @@ function getConfig(): AppConfig {
              )
            : defaultConfig.customStamps,
          monitorInteractions: typeof config.monitorInteractions === 'boolean' ? config.monitorInteractions : defaultConfig.monitorInteractions,
+         builtInEffects: builtInEffects,
          autoRaiderIntro: typeof config.autoRaiderIntro === 'boolean' ? config.autoRaiderIntro : defaultConfig.autoRaiderIntro,
          introCountDisplayLimit: typeof config.introCountDisplayLimit === 'number' && Number.isFinite(config.introCountDisplayLimit) && config.introCountDisplayLimit > 0
            ? config.introCountDisplayLimit
@@ -131,7 +153,7 @@ function App() {
   const [comments, setComments] = useState<Comment[]>([]);
   const config = useMemo(() => getConfig(), []);
 
-  const { getNodes } = useTwitchEmotes(config.customStamps);
+  const { getNodes } = useTwitchEmotes(config.customStamps, config.builtInEffects);
 
   const handleComment = useCallback((message: Message) => {
     addComment(message);

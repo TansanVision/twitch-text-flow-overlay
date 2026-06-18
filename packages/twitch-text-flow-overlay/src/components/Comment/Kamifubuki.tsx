@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { css } from "@emotion/css";
 
 const container = css`
@@ -32,7 +32,13 @@ const keyframes = css`
  * 紙吹雪が舞うアニメーションコンポーネント
  * @returns JSX.Element
  */
- export const Kamifubuki: React.FC<{ onAnimationEnd?: () => void }> = ({ onAnimationEnd }) => {
+ export const Kamifubuki: React.FC<{ id?: string, onAnimationEnd?: (id?: string) => void }> = ({ id, onAnimationEnd }) => {
+   const onAnimationEndRef = useRef(onAnimationEnd);
+
+   useEffect(() => {
+     onAnimationEndRef.current = onAnimationEnd;
+   }, [onAnimationEnd]);
+
    const { pieces, maxAnimationTimeMs } = React.useMemo(() => {
      const colors = ["#ff6b6b", "#feca57", "#48dbfb", "#1dd1a1", "#5f27cd"];
      let maxTimeMs = 0;
@@ -70,16 +76,14 @@ const keyframes = css`
    }, []);
 
    React.useEffect(() => {
-     if (!onAnimationEnd) {
-       return;
-     }
      const timeoutId = window.setTimeout(() => {
-       onAnimationEnd();
+       onAnimationEndRef.current?.(id);
      }, maxAnimationTimeMs);
+
      return () => {
        window.clearTimeout(timeoutId);
      };
-   }, [maxAnimationTimeMs, onAnimationEnd]);
+   }, [maxAnimationTimeMs, id]);
    
-   return <div className={`${container} ${keyframes}`}>{pieces}</div>;
+   return <div id={id} className={`${container} ${keyframes}`}>{pieces}</div>;
  };
