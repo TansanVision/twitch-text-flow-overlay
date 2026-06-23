@@ -12,6 +12,7 @@ type ClipPlayerProps = {
 const clipPlayerStyle = css`
     position: absolute;
     width: 60vw;
+    height: 90vh;
     left: 1vw;
     top: 50%;
     transform: translateY(-50%);
