@@ -90,7 +90,7 @@ export function useStreamerBot({
         client.on("Twitch.Raid", ({ data } : { data: any }) => {
             // raid
             if (monitorInteractions) {
-                const name = data?.user?.name;
+                const name = data?.from_broadcaster_user_name;
                 if (typeof name === 'string' && name !== '') {
                     addAudience("raid", name);
                 }
@@ -154,15 +154,15 @@ export function useStreamerBot({
             );
         });
 
-        client.on("General.Custom", (payload) => {
-            if (payload.data?.eventType === "Raid.IntroRequested") {
+        client.on("General.Custom", ({ data }) => {
+            if (data?.eventType === "Raid.IntroRequested") {
                 addIntro({
-                    raiderName: payload.data?.raider?.name ?? "Unknown Raider",
-                    displayName: payload.data?.raider?.displayName ?? "Unknown Raider",
-                    iconUrl: payload.data?.raider?.iconUrl ?? "",
-                    viewerCount: payload.data?.raider?.viewerCount ?? 0,
-                    clips: Array.isArray(payload.data?.raider?.clips) ? payload.data.raider.clips.map((clip: any) => ({
-                        videoUrl: clip?.url ?? "",
+                    raiderName: data?.raider?.name ?? "Unknown Raider",
+                    displayName: data?.raider?.displayName ?? "Unknown Raider",
+                    iconUrl: data?.raider?.iconUrl ?? "",
+                    viewerCount: data?.raider?.viewerCount ?? 0,
+                    clips: Array.isArray(data?.clips) ? data.clips.map((clip: any) => ({
+                        videoUrl: clip?.videoUrl ?? "",
                         title: clip?.title ?? "",
                         duration: typeof clip?.duration === 'number' ? clip.duration : 0,
                     })) : [],
@@ -198,7 +198,7 @@ export function useStreamerBot({
 
          try {
             await client.doAction({
-                name: "RaidShoutout",
+                name: "twitch-text-flow-overlay_raider_shoutout",
             }, {
                 raiderUserName: userName,
             });

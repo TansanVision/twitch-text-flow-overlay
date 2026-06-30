@@ -6,13 +6,12 @@ import { TwitchClipPlayer } from './TwitchClipPlayer';
 type ClipPlayerProps = {
     clips: Clip[];
     onFinished: () => void;
-    parent?: string;
 }
 
 const clipPlayerStyle = css`
     position: absolute;
-    width: 60vw;
-    height: 90vh;
+    width: 40vw;
+    height: 70vh;
     left: 1vw;
     top: 50%;
     transform: translateY(-50%);
@@ -39,7 +38,7 @@ const clipPlayerStyle = css`
  * @param param0 ClipPlayerProps
  * @returns React.FC
  */
-export const ClipPlayer: React.FC<ClipPlayerProps> = ({ clips, onFinished, parent = 'localhost' }) => {
+export const ClipPlayer: React.FC<ClipPlayerProps> = ({ clips, onFinished }) => {
     const [currentClipIndex, setCurrentClipIndex] = useState<number>(0);
     const onFinishedRef = useRef(onFinished);
 
@@ -68,7 +67,6 @@ export const ClipPlayer: React.FC<ClipPlayerProps> = ({ clips, onFinished, paren
         </div>
         <TwitchClipPlayer
             videoUrl={clips[safeClipIndex].videoUrl}
-            parent={parent}
             duration={clips[safeClipIndex].duration}
             onClipEnd={() => {
                 if (currentClipIndex < clips.length - 1) {

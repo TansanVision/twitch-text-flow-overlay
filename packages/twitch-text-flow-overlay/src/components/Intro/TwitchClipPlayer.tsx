@@ -3,7 +3,6 @@ import { css } from '@emotion/css';
 
 type TwitchClipPlayerProps = {
     videoUrl: string;
-    parent?: string;
     duration: number;
     onClipEnd?: () => void;
 }
@@ -15,11 +14,9 @@ type TwitchClipPlayerProps = {
  */
 export const TwitchClipPlayer: React.FC<TwitchClipPlayerProps> = ({ 
     videoUrl, 
-    parent = window.location.hostname || 'localhost',
     duration,
     onClipEnd,
 }) => {
-    const videoRef = useRef<HTMLVideoElement>(null);
     const onClipEndRef = useRef(onClipEnd);
 
      useEffect(() => {
@@ -27,11 +24,6 @@ export const TwitchClipPlayer: React.FC<TwitchClipPlayerProps> = ({
      }, [onClipEnd]);
 
     useEffect(() => {
-        const video = videoRef.current;
-        if (!video) {
-            return;
-        }
-
         let timer: number | undefined;
         let finished = false;
         const finish = () => {
@@ -47,34 +39,23 @@ export const TwitchClipPlayer: React.FC<TwitchClipPlayerProps> = ({
             onClipEndRef.current?.();
         };
 
-        video.addEventListener('ended', finish);
-
         timer = window.setTimeout(() => {
             finish();
         }, (duration + 5) * 1000);
 
-        video.volume = 0.8;
-        video.muted = false;
-        void video.play().catch(() => {
-             // autoplay がブロックされる可能性があるため、onEnded / timer にフォールバックする
-        });
-
         return () => {
-            video.removeEventListener('ended', finish);
             window.clearTimeout(timer);
         };
 
-    }, [videoUrl, parent, duration]);
+    }, [videoUrl, duration]);
 
-    return <video
-        ref={videoRef}
+    return <iframe
         className={css`
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            border: none;
         `}
-        src={videoUrl}
-        autoPlay
-        playsInline
+        src={`${videoUrl}&parent=${window.location.hostname || 'localhost'}&autoplay=true&muted=false`}
+        allowFullScreen
     />
 };

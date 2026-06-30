@@ -30,7 +30,7 @@ const IntroContext = createContext<{
  * enabled - コンテキストプロバイダーを有効にするかどうか（デフォルトはfalse）
  * @returns TwitchのRaidイベントのイントロ情報を提供するコンテキストプロバイダー
  */
-export const IntroProvider: React.FC<IntroProviderProps> = ({ children, enabled = false}) => {
+export const IntroProvider: React.FC<IntroProviderProps> = ({ children, enabled = false }) => {
     const [intros, setIntros] = useState<Intro[]>([]);
 
     const addIntro = useCallback((intro: Intro) => {
