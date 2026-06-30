@@ -2,6 +2,7 @@ import { StreamerbotClient } from '@streamerbot/client';
 import { useState, useEffect, useRef } from 'react';
 import type { ConnectionStatus, UseStreamerBotOptions, Message } from '../domain/types';
 import { useMonitorInteraction } from './useMonitorInteraction';
+import { useIntro } from '../providers/IntroProvider';
 
 /**
  * メッセージを取得します。
@@ -25,7 +26,7 @@ function getMessage({ data }: { data: any }): Message {
 /**
  * Streamerbotクライアントを使用するためのカスタムフック
  * @param param0 - オプションオブジェクト
- * @returns 接続状態
+ * @returns シャウトアウトコマンドを送信する関数と接続状態
  */
 export function useStreamerBot({ 
     host = "127.0.0.1", 
@@ -35,7 +36,8 @@ export function useStreamerBot({
     onComment,
     monitorInteractions = false,
 }: UseStreamerBotOptions) {
-    const { addAudience,  downloadAudienceData } = useMonitorInteraction();
+    const { addAudience,  audienceData } = useMonitorInteraction();
+    const { addIntro } = useIntro();
     const [status, setStatus] = useState<ConnectionStatus>('disconnected');
     const clientRef = useRef<StreamerbotClient | null>(null);
 
@@ -88,17 +90,17 @@ export function useStreamerBot({
         client.on("Twitch.Raid", ({ data } : { data: any }) => {
             // raid
             if (monitorInteractions) {
-                const name = data?.user?.name;
+                const name = data?.from_broadcaster_user_name;
                 if (typeof name === 'string' && name !== '') {
                     addAudience("raid", name);
                 }
             }
         });
 
-        client.on("Twitch.RaidSend", () => {
+        client.on("Twitch.RaidSend", async () => {
             if (monitorInteractions) {
                 // ダウンロード処理
-                downloadAudienceData();
+                await downloadAudienceData(audienceData);
             }
         });
 
@@ -152,46 +154,28 @@ export function useStreamerBot({
             );
         });
 
-        // テスト用のコメントイベント
-        client.on("Raw.Action", ({ data }) => {
+        client.on("General.Custom", ({ data }) => {
+            if (data?.eventType === "Raid.IntroRequested") {
+                addIntro({
+                    raiderName: data?.raider?.name ?? "Unknown Raider",
+                    displayName: data?.raider?.displayName ?? "Unknown Raider",
+                    iconUrl: data?.raider?.iconUrl ?? "",
+                    viewerCount: data?.raider?.viewerCount ?? 0,
+                    clips: Array.isArray(data?.clips) ? data.clips.map((clip: any) => ({
+                        videoUrl: clip?.videoUrl ?? "",
+                        title: clip?.title ?? "",
+                        duration: typeof clip?.duration === 'number' ? clip.duration : 0,
+                    })) : [],
+                });
+            }
+        });
+
+        client.on("Raw.Action", async ({ data }) => {
             if (data.arguments.isTest) {
                 if (data.arguments.triggerCategory === "Custom" && data.arguments["customEvent.event"] === "download") {
                     if (monitorInteractions) {
-                        downloadAudienceData();
+                        await downloadAudienceData(audienceData);
                     }
-                } else if (data.arguments.triggerName === "Test" &&
-                    data.arguments.triggerCategory === "Core") {
-                        const regex = /comment/i;
-                        for (let key in data.arguments) {
-                            if (regex.test(key.toString())) {
-                                handleComment({
-                                    data: {
-                                        message: {
-                                            message: data.arguments[key],
-                                            emotes: []
-                                        },
-                                    },
-                                });
-                            }
-                        }
-                    
-                        handleComment({
-                            data: {
-                                message: { 
-                                    message: "Kappa これはU+2003エモートテストです。",
-                                    emotes: [
-                                        {
-                                            id: "25",
-                                            name: "Kappa",
-                                            startIndex: 0,
-                                            endIndex: 4,
-                                            imageUrl: "https://static-cdn.jtvnw.net/emoticons/v2/25/default/dark/3.0",
-                                            type: "Twitch"
-                                        }
-                                    ]
-                                },
-                            },
-                        });
                 }
             }
         });
@@ -200,7 +184,45 @@ export function useStreamerBot({
             client.disconnect?.();
             clientRef.current = null;
         };
-    }, [host, port, endpoint, password, onComment, monitorInteractions, addAudience, downloadAudienceData]);
+    }, [host, port, endpoint, password, onComment, monitorInteractions, addAudience, audienceData, addIntro]);
 
-    return status;
+    /**
+     * シャウトアウトコマンドをStreamerBotに送信します。
+     * @param userName シャウトアウトするユーザーの名前
+     */
+    const sendShoutoutCommand = async (userName: string) => {
+        const client = clientRef.current;
+        if (!client) {
+            return;
+         }
+
+         try {
+            await client.doAction({
+                name: "twitch-text-flow-overlay_raider_shoutout",
+            }, {
+                raiderUserName: userName,
+            });
+         } catch (error) {
+            console.error('Failed to send shoutout command:', error);
+         }
+    };
+
+    const downloadAudienceData = async (data: string) => {
+        const client = clientRef.current;
+        if (!client) {
+            return;
+         }
+
+         try {
+            await client.doAction({
+                name: "twitch-text-flow-overlay_audience_download",
+            }, {
+                data,
+            });
+         } catch (error) {
+            console.error('Failed to download audience data:', error);
+         }
+    }
+
+    return { sendShoutoutCommand, status };
 }

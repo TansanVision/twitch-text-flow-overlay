@@ -31,6 +31,8 @@ export type Config = {
     password?: string;
     customStamps: CustomStamp[];
     monitorInteractions: boolean;
+    autoRaiderIntro: boolean;
+    introCountDisplayLimit: number;
     builtInEffects?: BuiltInEffects;
 };
 

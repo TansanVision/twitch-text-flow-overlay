@@ -88,7 +88,11 @@ const LoadPhase : React.FC<LoadPhaseProps> = ({ onConfigLoaded }) => {
                 ? configJson.customStamps 
                 : [];
              configJson.monitorInteractions =
-                 typeof configJson.monitorInteractions === 'boolean' ? configJson.monitorInteractions : false;;
+                 typeof configJson.monitorInteractions === 'boolean' ? configJson.monitorInteractions : false;
+            configJson.autoRaiderIntro = typeof configJson.autoRaiderIntro === 'boolean' ? configJson.autoRaiderIntro : false;
+            configJson.introCountDisplayLimit = typeof configJson.introCountDisplayLimit === 'number' && Number.isFinite(configJson.introCountDisplayLimit) && configJson.introCountDisplayLimit > 0
+                ? configJson.introCountDisplayLimit
+                : 60;
 
             onConfigLoaded(content, configJson);
             setError(null);
@@ -650,6 +654,8 @@ const SettingForm : React.FC<SettingFormProps> = ({ html, config }) => {
             kamifubuki: config.builtInEffects?.kamifubuki ?? true,
             rain: config.builtInEffects?.rain ?? true,
         });
+        setAutoRaiderIntro(config.autoRaiderIntro === undefined ? false : config.autoRaiderIntro);
+        setIntroCountDisplayLimit(config.introCountDisplayLimit === undefined ? 60 : config.introCountDisplayLimit);
     }, [html, config]);
 
     const [address, setAddress] = useState<string>('');
@@ -671,6 +677,8 @@ const SettingForm : React.FC<SettingFormProps> = ({ html, config }) => {
         rain: config.builtInEffects?.rain ?? true,
     });
     const [activeTab, setActiveTab] = useState<string>('Websocket');
+    const [autoRaiderIntro, setAutoRaiderIntro] = useState<boolean>(false);
+    const [introCountDisplayLimit, setIntroCountDisplayLimit] = useState<number>(60);
 
     const handleCloseCustomStampForm = () => {
         setIsCustomStampFormOpen(false);
@@ -733,6 +741,8 @@ const SettingForm : React.FC<SettingFormProps> = ({ html, config }) => {
             })),
             monitorInteractions: monitorInteractions,
             builtInEffects: builtInEffects,
+            autoRaiderIntro: autoRaiderIntro,
+            introCountDisplayLimit: introCountDisplayLimit,
         };
 
         const updatedHtml = writeConfigToHtml(html, newConfig);
@@ -744,6 +754,7 @@ const SettingForm : React.FC<SettingFormProps> = ({ html, config }) => {
             tabs={[
                 { id: "Websocket", label: "Websocket" },
                 { id: "InteractiveMonitoring", label: "インタラクティブ監視" },
+                { id: "autoRaiderIntro", label: "レイダー自動紹介" },
                 { id: "CustomStamps", label: "カスタムスタンプ" },
                 { id: "BuiltIn", label: "組み込み" },
             ]}
@@ -773,6 +784,32 @@ const SettingForm : React.FC<SettingFormProps> = ({ html, config }) => {
                     <span>(レイド完了時またはStreamerbotのカスタムイベント発生時にインタラクション結果を取得するかどうか)</span>
                 </div>
                 <ToggleButton ariaLabel="interactive-monitoring" checked={monitorInteractions} onChange={(checked) => setMonitorInteractions(checked)} />
+            </div>
+        </div>}
+        {activeTab === "autoRaiderIntro" && <div style={{ paddingTop: "1rem" }}>
+            <div style={{ 
+                display: 'flex', 
+                flexDirection: 'column', 
+                gap: '0.5rem',
+            }}>
+                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '0.5rem', justifyContent: 'space-between' }}>
+                    <span>レイダー自動紹介</span>
+                    <div>
+                        <ToggleButton ariaLabel="auto-raider-intro" checked={autoRaiderIntro} onChange={(checked) => setAutoRaiderIntro(checked)} />
+                    </div>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '0.5rem', justifyContent: 'space-between' }}>
+                    <span>(ONの場合のカウントダウン[秒])</span>
+                    <input
+                        type="number"
+                        min={1}
+                        value={introCountDisplayLimit}
+                        onChange={(e) => {
+                            const value = Number(e.target.value);
+                            setIntroCountDisplayLimit(Number.isFinite(value) && value > 0 ? value : 60);
+                        }}
+                    />
+                </div>
             </div>
         </div>}
         {activeTab === "CustomStamps" && <><div className={customStampArea}>

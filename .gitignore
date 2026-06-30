@@ -12,6 +12,7 @@ dist
 dist-ssr
 *.local
 index.html
+cosmos-export
 
 # Editor directories and files
 .vscode/*

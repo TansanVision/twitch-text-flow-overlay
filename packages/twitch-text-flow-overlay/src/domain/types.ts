@@ -104,6 +104,8 @@ export type CustomStampConfig = {
  * customStamps: カスタムスタンプの設定の配列
  * monitorInteractions: 視聴者のインタラクションを監視するかどうか
  * builtInEffects: 組み込みエフェクトの有効/無効設定
+ * autoRaiderIntro: レイダー自動紹介機能を有効にするかどうか
+ * introCountDisplayLimit: ご紹介までのカウントダウン秒数
  */
 export type AppConfig = {
   host: string;
@@ -113,6 +115,8 @@ export type AppConfig = {
   customStamps: CustomStampConfig[];
   monitorInteractions: boolean;
   builtInEffects: BuiltInEffects;
+  autoRaiderIntro: boolean;
+  introCountDisplayLimit: number;
 };
 
 /**
@@ -363,4 +367,14 @@ export type BuiltInEffects = {
     chikuwa: boolean;
     kamifubuki: boolean;
     rain: boolean;
+}
+
+export type Clip = {
+    videoUrl: string;
+    title: string;
+    duration: number;
+}
+
+export type StreamerBotContextType = {
+    sendShoutoutCommand: (userName: string) => Promise<void>;
 }

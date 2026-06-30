@@ -1,10 +1,12 @@
-import { useEffect, useState, useMemo, useCallback} from 'react';
+import { useEffect, useState, useMemo, useCallback } from 'react';
 import { CommentServiceContainer } from './components/CommentService/CommentServiceContainer';
-import { useStreamerBot } from './hooks/useStreamerbot';
 import { useTwitchEmotes } from './hooks/useTwitchEmotes';
 import type { Comment, Message, AppConfig, BuiltInEffects, EffectType } from './domain/types';
 import { isCommand, isEffectType } from './domain/types';
 import { builtInEffectsDefault } from './domain/constant';
+import { IntroProvider } from './providers/IntroProvider';
+import { RaiderIntro } from './components/Intro/RaiderIntro';
+import { StreamerBotProvider } from './providers/StreamerbotProvider';
 
 const defaultConfig: AppConfig = {
   host: "127.0.0.1",
@@ -13,7 +15,9 @@ const defaultConfig: AppConfig = {
   password: undefined,
   customStamps: [],
   monitorInteractions: false,
-  builtInEffects: builtInEffectsDefault
+  builtInEffects: builtInEffectsDefault,
+  autoRaiderIntro: false,
+  introCountDisplayLimit: 60,
 };
 
 /**
@@ -127,6 +131,10 @@ function getConfig(): AppConfig {
            : defaultConfig.customStamps,
          monitorInteractions: typeof config.monitorInteractions === 'boolean' ? config.monitorInteractions : defaultConfig.monitorInteractions,
          builtInEffects: builtInEffects,
+         autoRaiderIntro: typeof config.autoRaiderIntro === 'boolean' ? config.autoRaiderIntro : defaultConfig.autoRaiderIntro,
+         introCountDisplayLimit: typeof config.introCountDisplayLimit === 'number' && Number.isFinite(config.introCountDisplayLimit) && config.introCountDisplayLimit > 0
+           ? config.introCountDisplayLimit
+           : defaultConfig.introCountDisplayLimit,
       };
     } catch (error) {
       console.error('Failed to parse config JSON:', error);
@@ -150,15 +158,6 @@ function App() {
   const handleComment = useCallback((message: Message) => {
     addComment(message);
   }, []);
-
-  useStreamerBot({
-    host: config.host,
-    port: config.port,
-    endpoint: config.endpoint,
-    password: config.password,
-    onComment: handleComment,
-    monitorInteractions: config.monitorInteractions,
-  });
 
   useEffect(() => {
     setComments([]);
@@ -189,12 +188,17 @@ function App() {
   }, []);
 
   return (
-    <div className='overlay'>
-      <CommentServiceContainer 
-        comments={comments}
-        onRelease={releaseComment}
-      />
-    </div>
+      <IntroProvider enabled={config.autoRaiderIntro}>
+        <StreamerBotProvider config={config} handleComment={handleComment}>
+          <div className='overlay'>
+              <CommentServiceContainer 
+                comments={comments}
+                onRelease={releaseComment}
+            />
+            {config.autoRaiderIntro && <RaiderIntro introCountDisplayLimit={config.introCountDisplayLimit} />}
+          </div>
+        </StreamerBotProvider>
+    </IntroProvider>
   )
 }
 
